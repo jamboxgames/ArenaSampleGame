@@ -1,0 +1,33 @@
+fileFormatVersion: 2
+guid: 6ffc55e119b4d49efa56ba204b374719
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - LBPanel_LS: {instanceID: 0}
+  - LBPanel_PT: {instanceID: 0}
+  - ResultPanel_LS: {instanceID: 0}
+  - ResultPanel_PT: {fileID: 6716251625931576782, guid: 055830a9955fb432c9eb1485824eacbc,
+      type: 3}
+  - Tourneylist_LS: {instanceID: 0}
+  - Tourneylist_PT: {fileID: 505171423103647373, guid: c377057b1bd944dd8af635994aace4ee,
+      type: 3}
+  - CompletedPanel_LS: {instanceID: 0}
+  - CompletedPanel_PT: {instanceID: 0}
+  - MatchmakingPanel_LS: {instanceID: 0}
+  - MatchmakingPanel_PT: {fileID: 4539391796603208196, guid: b4f67996df347e34d9e89bfbc15f75ca,
+      type: 3}
+  - DuelResult_LS: {fileID: 4566045355409717030, guid: 97ee6fbd26227034796bba8a726b41b1,
+      type: 3}
+  - DuelResult_PT: {fileID: 4566045355409717030, guid: 97ee6fbd26227034796bba8a726b41b1,
+      type: 3}
+  - detailsPanel_LS: {instanceID: 0}
+  - detailsPanel_PT: {fileID: 6742894214812208226, guid: 946c8a233c659432ca1044b5a2e4b883,
+      type: 3}
+  - friendlyDetailsPanel_PT: {fileID: 7488193016705059153, guid: ddf9bdd280d12454a8ea520ced585777,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

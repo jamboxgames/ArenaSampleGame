@@ -1,0 +1,166 @@
+namespace Jambox.Common
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Jambox.Common.Utility;
+    using UnityEngine;
+
+    public class JamboxController : MonoSingleton<JamboxController>
+    {
+        private CommonIClient _client;
+        public IApiSession CurrentSession;
+        private String _gameID, _userName, _appSecret, _userID;
+        private bool _isProduction;
+
+        private string _normalServerIP = "staging.jambox.games";
+        private string _productionServerIP = "api.jambox.games";
+
+        public event Action UserProfileUpdated;
+
+        public void SetupSDKVariable(string _gameID, string _AppSecret, bool _isProduction = false)
+        {
+            if (String.IsNullOrEmpty(_gameID) || String.IsNullOrEmpty(_AppSecret))
+            {
+                Debug.LogError("Game initialization parameters empty");
+                return;
+            }
+            Init(_gameID, _AppSecret, _isProduction);
+        }
+
+        public string getMyuserId()
+        {
+            if (CurrentSession == null)
+                return null;
+            return CurrentSession.MyID;
+        }
+
+        public void setAuthToken(string _token)
+        {
+            JamboxController.Instance.CurrentSession.Token = _token;
+        }
+
+        public string getAuthToken()
+        {
+            if (CurrentSession == null)
+                return string.Empty;
+            return CurrentSession.Token;
+        }
+
+        public bool isGameIdSet()
+        {
+            if (String.IsNullOrEmpty(_gameID) || String.IsNullOrEmpty(_appSecret))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void Init(string gameID, String AppSecret, bool IsProduction)
+        {
+            _gameID = gameID;
+            _appSecret = AppSecret;
+            _isProduction = IsProduction;
+            if (IsProduction)
+                _client = new CommonClient("https", _productionServerIP, 0000, _appSecret);
+            else
+                _client = new CommonClient("http", _normalServerIP, 0000, _appSecret);
+        }
+
+        public async Task StartSession(String UserName, String UserID)
+        {
+            _userName = UserName;
+            _userID = UserID;
+            if (UserID == null)
+            {
+                _userID = UnityEngine.SystemInfo.deviceUniqueIdentifier;
+            }
+            if (UnityEngine.Application.internetReachability == UnityEngine.NetworkReachability.NotReachable)
+            {
+                return;
+            }
+            if (String.IsNullOrEmpty(_gameID) || String.IsNullOrEmpty(_appSecret))
+            {
+                Debug.LogError("You are trying to start session without being Set up SDK Variables ");
+            }
+            UnityDebug.Debug.Log("Starting Session with UserID : " + _userID);
+            CurrentSession = await _client.AuthenticateUser(_gameID, _userID, UserName, _appSecret);
+            UnityDebug.Debug.Log("Session created! - Token of CurrentSession is  :  " + CurrentSession.Token +
+                "  And Id is : " + CurrentSession.MyID);
+            CommonUserData.Instance.userName = CurrentSession.Name;
+            CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
+            CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
+            Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
+        }
+
+        public async Task CreateSession(Action sessionCreated = null)
+        {
+            CurrentSession = await _client.AuthenticateUser(_gameID, _userID, _userName, _appSecret);
+            UnityDebug.Debug.Log("Session created! - Token of CurrentSession is  :  " + CurrentSession.Token +
+                "  And Id is : " + CurrentSession.MyID);
+            CommonUserData.Instance.userName = CurrentSession.Name;
+            CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
+            CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
+            Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
+            if (sessionCreated != null)
+                sessionCreated();
+        }
+
+        public bool ChechkForSession()
+        {
+            if (JamboxController.Instance.CurrentSession != null && !String.IsNullOrEmpty(JamboxController.Instance.CurrentSession.Token))
+                return true;
+
+            return false;
+        }
+
+        public bool CheckForNetwork()
+        {
+            if (UnityEngine.Application.internetReachability == UnityEngine.NetworkReachability.NotReachable)
+            {                
+                return false;
+            }
+            return true;
+        }
+
+        public async Task RefreshSession()
+        {
+            JamboxController.Instance.CurrentSession = await _client.AuthenticateUser(_gameID, _userID, _userName, _appSecret);
+            CommonUserData.Instance.userName = CurrentSession.Name;
+            CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
+            CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
+            Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
+        }
+        public async Task UpdateUserOnServer (String authToken, String name, int avatarId, string avatarGroup)
+        {
+            if (!ChechkForSession())
+            {
+                await RefreshSession();
+            }
+            authToken = CurrentSession.Token;
+            var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+            if(UserProfileUpdated != null)
+            {
+                UserProfileUpdated();
+            }
+        }
+
+        public async Task<IAPIUpdateUserData> UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup)
+        {
+            if (!ChechkForSession())
+            {
+                await RefreshSession();
+            }
+            authToken = CurrentSession.Token;
+            var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+            CommonUserData.Instance.userName = name;
+            return result;
+        }
+
+        public CommonClient BaseClient() {
+            return (CommonClient)_client;
+        }
+
+    }
+}

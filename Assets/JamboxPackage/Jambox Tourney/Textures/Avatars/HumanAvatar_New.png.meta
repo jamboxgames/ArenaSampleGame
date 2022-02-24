@@ -1,0 +1,1320 @@
+fileFormatVersion: 2
+guid: baa94e69b6a913747a7b17855b245c3f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5314691566465414668
+    second: HumanAvatar_New_0
+  - first:
+      213: 2769242139161973752
+    second: HumanAvatar_New_1
+  - first:
+      213: -6510608094793662817
+    second: HumanAvatar_New_2
+  - first:
+      213: -6833071871411763979
+    second: HumanAvatar_New_3
+  - first:
+      213: -8095206485700161447
+    second: HumanAvatar_New_4
+  - first:
+      213: -1329030030452503044
+    second: HumanAvatar_New_5
+  - first:
+      213: 7805058831298016536
+    second: HumanAvatar_New_6
+  - first:
+      213: -9217792281949493316
+    second: HumanAvatar_New_7
+  - first:
+      213: -4649221456916927037
+    second: HumanAvatar_New_8
+  - first:
+      213: -2348742271566616563
+    second: HumanAvatar_New_9
+  - first:
+      213: 3017466625096953684
+    second: HumanAvatar_New_10
+  - first:
+      213: 2199170323849138194
+    second: HumanAvatar_New_11
+  - first:
+      213: -6603307403881964262
+    second: HumanAvatar_New_12
+  - first:
+      213: -3568244169314457675
+    second: HumanAvatar_New_13
+  - first:
+      213: -5342159118767216365
+    second: HumanAvatar_New_14
+  - first:
+      213: -5448713072930696610
+    second: HumanAvatar_New_15
+  - first:
+      213: 7041899126026086142
+    second: HumanAvatar_New_16
+  - first:
+      213: -1719664504914612053
+    second: HumanAvatar_New_17
+  - first:
+      213: 4086685318518497130
+    second: HumanAvatar_New_18
+  - first:
+      213: 2869147968717983355
+    second: HumanAvatar_New_19
+  - first:
+      213: -3033042434104827492
+    second: HumanAvatar_New_20
+  - first:
+      213: -925820067492191671
+    second: HumanAvatar_New_21
+  - first:
+      213: 1728303187060092392
+    second: HumanAvatar_New_22
+  - first:
+      213: -5785774733996581334
+    second: HumanAvatar_New_23
+  - first:
+      213: -3364131738936329369
+    second: HumanAvatar_New_24
+  - first:
+      213: -8860628470040436800
+    second: HumanAvatar_New_25
+  - first:
+      213: 3911588884167730954
+    second: HumanAvatar_New_26
+  - first:
+      213: 7969592603788283202
+    second: HumanAvatar_New_27
+  - first:
+      213: 1107275629125936971
+    second: HumanAvatar_New_28
+  - first:
+      213: 5997097624037133000
+    second: HumanAvatar_New_29
+  - first:
+      213: -3012558371263454643
+    second: HumanAvatar_New_30
+  - first:
+      213: -7735782333855794503
+    second: HumanAvatar_New_31
+  - first:
+      213: 5146344770957969107
+    second: HumanAvatar_New_32
+  - first:
+      213: -8580042151595269546
+    second: HumanAvatar_New_33
+  - first:
+      213: 9099724010296010588
+    second: HumanAvatar_New_34
+  - first:
+      213: 7399563740502333544
+    second: HumanAvatar_New_35
+  - first:
+      213: -386226055388562565
+    second: HumanAvatar_New_36
+  - first:
+      213: 8384679261170023659
+    second: HumanAvatar_New_37
+  - first:
+      213: 6734341508787348878
+    second: HumanAvatar_New_38
+  - first:
+      213: 9166532074745766507
+    second: HumanAvatar_New_39
+  - first:
+      213: -1340058088585593217
+    second: HumanAvatar_New_40
+  - first:
+      213: 6855809522740856867
+    second: HumanAvatar_New_41
+  - first:
+      213: 4478130408351454997
+    second: HumanAvatar_New_42
+  - first:
+      213: 1751887162778281263
+    second: HumanAvatar_New_43
+  - first:
+      213: -8883704697837421443
+    second: HumanAvatar_New_44
+  - first:
+      213: -2767538278130563830
+    second: HumanAvatar_New_45
+  - first:
+      213: -1022890262555552180
+    second: HumanAvatar_New_46
+  - first:
+      213: 1831712500686328725
+    second: HumanAvatar_New_47
+  - first:
+      213: -1723688933932780835
+    second: HumanAvatar_New_48
+  - first:
+      213: 4082771645498149123
+    second: HumanAvatar_New_49
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HumanAvatar_New_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2608
+        width: 258
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f98012cd2c6e36b0800000000000000
+      internalID: -5314691566465414668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_1
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 2608
+        width: 259
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f3dac1bd035e6620800000000000000
+      internalID: 2769242139161973752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_2
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 2608
+        width: 259
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9e7a06be6ca5a5a0800000000000000
+      internalID: -6510608094793662817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_3
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 2608
+        width: 260
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f4c9cb065d0c21a0800000000000000
+      internalID: -6833071871411763979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_4
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 2608
+        width: 258
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 950576c679c08af80800000000000000
+      internalID: -8095206485700161447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2318
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfd4d039a365e8de0800000000000000
+      internalID: -1329030030452503044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_6
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 2318
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8153b8277a3215c60800000000000000
+      internalID: 7805058831298016536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_7
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 2318
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb7201de1c2d31080800000000000000
+      internalID: -9217792281949493316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_8
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 2318
+        width: 260
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cda752b7b5aa7fb0800000000000000
+      internalID: -4649221456916927037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_9
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 2318
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d08e3522957976fd0800000000000000
+      internalID: -2348742271566616563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2028
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45f208688e130e920800000000000000
+      internalID: 3017466625096953684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_11
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 2028
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 210db9102c5058e10800000000000000
+      internalID: 2199170323849138194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_12
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 2028
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1d98e8e6e65c54a0800000000000000
+      internalID: -6603307403881964262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_13
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 2028
+        width: 260
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b7272855dc0b7ec0800000000000000
+      internalID: -3568244169314457675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_14
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 2028
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3192440e596dcd5b0800000000000000
+      internalID: -5342159118767216365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1739
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5250f424584264b0800000000000000
+      internalID: -5448713072930696610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_16
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 1739
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef62bee02f9d9b160800000000000000
+      internalID: 7041899126026086142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_17
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 1739
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba077b37e368228e0800000000000000
+      internalID: -1719664504914612053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_18
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 1739
+        width: 260
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6f591f15a2d6b830800000000000000
+      internalID: 4086685318518497130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_19
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 1739
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7e087b40e241d720800000000000000
+      internalID: 2869147968717983355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1448
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c91ee76d9f778e5d0800000000000000
+      internalID: -3033042434104827492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_21
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 1448
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9422337cd83d623f0800000000000000
+      internalID: -925820067492191671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_22
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 1448
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ed64e8779a2cf710800000000000000
+      internalID: 1728303187060092392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_23
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 1448
+        width: 260
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2e14b5a88cc4bfa0800000000000000
+      internalID: -5785774733996581334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_24
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 1448
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76b3513e1043051d0800000000000000
+      internalID: -3364131738936329369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1158
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cfd6842a59b80580800000000000000
+      internalID: -8860628470040436800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_26
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 1158
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a072f2c9d51c84630800000000000000
+      internalID: 3911588884167730954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_27
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 1158
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24d81699f3ea99e60800000000000000
+      internalID: 7969592603788283202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_28
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 1158
+        width: 260
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b47af7e6155dd5f00800000000000000
+      internalID: 1107275629125936971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_29
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 1158
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ca821cd388f93350800000000000000
+      internalID: 5997097624037133000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 868
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4266bf5f1e3136d0800000000000000
+      internalID: -3012558371263454643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_31
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 868
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ba78ca04faf4a490800000000000000
+      internalID: -7735782333855794503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_32
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 868
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d683ac7d4d7b6740800000000000000
+      internalID: 5146344770957969107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_33
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 868
+        width: 260
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65229444f119de880800000000000000
+      internalID: -8580042151595269546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_34
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 868
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5769c366c6b84e70800000000000000
+      internalID: 9099724010296010588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 579
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8689085740880b660800000000000000
+      internalID: 7399563740502333544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_36
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 579
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7b709de279d3aaf0800000000000000
+      internalID: -386226055388562565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_37
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 579
+        width: 259
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: becbf953d5d5c5470800000000000000
+      internalID: 8384679261170023659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_38
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 579
+        width: 260
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8520731cef257d50800000000000000
+      internalID: 6734341508787348878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_39
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 579
+        width: 258
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6222790b50163f70800000000000000
+      internalID: 9166532074745766507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 288
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7e7773b448276de0800000000000000
+      internalID: -1340058088585593217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_41
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 288
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32885b2ff6ab42f50800000000000000
+      internalID: 6855809522740856867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_42
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 288
+        width: 259
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 517d9a751e3852e30800000000000000
+      internalID: 4478130408351454997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_43
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 288
+        width: 260
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2567f7b714ff4810800000000000000
+      internalID: 1751887162778281263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_44
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 288
+        width: 258
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7c7eeb25adb6b480800000000000000
+      internalID: -8883704697837421443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 258
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a054bbd599ab799d0800000000000000
+      internalID: -2767538278130563830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_46
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 0
+        width: 259
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c469b28c9b6fdc1f0800000000000000
+      internalID: -1022890262555552180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_47
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 0
+        width: 259
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5931d0680dc8b6910800000000000000
+      internalID: 1831712500686328725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_48
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 0
+        width: 260
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd23aad0c0a3418e0800000000000000
+      internalID: -1723688933932780835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HumanAvatar_New_49
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 0
+        width: 258
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30944fc1e2be8a830800000000000000
+      internalID: 4082771645498149123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
