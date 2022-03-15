@@ -24,6 +24,7 @@
         public Text MyScore;
         public Text EndTime;
         //public Button LeaderBoard;
+        private bool isFriendly = false;
         private CompletedTourneyDetail _ComptourneyDet;
 
         public CompletedTourneyDetail CompTourneyDet
@@ -34,6 +35,11 @@
                 _ComptourneyDet = value;
                 UpdateUI();
             }
+        }
+
+        public void IsFriendlyCompleted(bool _value)
+        {
+            isFriendly = _value;
         }
 
         private void UpdateUI()
@@ -153,7 +159,7 @@
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             metadata.Add("lbid", _ComptourneyDet.LeaderBoardID);
-            UIPanelController.Instance.ShowPanel(Panels.DetailsPanel, Panels.CompletedPanel, metadata);
+            UIPanelController.Instance.ShowPanel(Panels.DetailsPanel, Panels.CompletedPanel, metadata, _friendlyCompleted: isFriendly);
         }
     }
 }

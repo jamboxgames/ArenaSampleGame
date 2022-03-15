@@ -104,7 +104,7 @@
             }
         }
 
-        private void ErrorFromServerRcvd(string errorString)
+        public void ErrorFromServerRcvd(string errorString)
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             metadata.Add("Header", "Server Error");
@@ -123,15 +123,15 @@
             //Camera _cam = Instantiate(jamboxCamera).GetComponent<Camera>();
             //ParentPanel.GetComponentInParent<Canvas>().worldCamera = _cam;
         }
-        public void UpdateMoneyOnUI ()
+        public void UpdateMoneyOnUI (bool _showConfetti = true)
         {
             if(TourneylistLoaded != null && TourneylistLoaded.isActiveAndEnabled)
             {
-                TourneylistLoaded.UpdateCurrency(true);
+                TourneylistLoaded.UpdateCurrency(_showConfetti);
             }
             if(DetailsPanelLoaded != null && DetailsPanelLoaded.isActiveAndEnabled)
             {
-                DetailsPanelLoaded.UpdateMoneyOnUI(true);
+                DetailsPanelLoaded.UpdateMoneyOnUI(_showConfetti);
             }
         }
         
@@ -174,7 +174,8 @@
         }
         public void UpdateMoneyOnTourneyPanel ()
         {
-            TourneylistLoaded.UpdateCurrency();
+            if(TourneylistLoaded != null)
+                TourneylistLoaded.UpdateCurrency();
         }
 
         public void SubtractMoneyAnimation(int _amnt)
@@ -276,7 +277,7 @@
             return newPath;
         }
 
-        public void ShowPanel(Panels panelName, Panels prevPanel = Panels.None, Dictionary<string, string> metaData = null, bool checkUnclaimed = false)
+        public void ShowPanel(Panels panelName, Panels prevPanel = Panels.None, Dictionary<string, string> metaData = null, bool checkUnclaimed = false, bool _friendlyCompleted = false)
         {
             if (ParentPanel == null)
             {
@@ -289,12 +290,13 @@
                 panelName == Panels.DuelPanel || panelName == Panels.FriendlyPanel)
             {
                 resourcePath = ThemePath("TourneyPanel");
+                Debug.Log("resourcePath : " + resourcePath);
                 TourneylistLoaded = Instantiate(Resources.Load(resourcePath) as GameObject).GetComponent<TourneyPanel>();
                 TourneylistLoaded.RectTransform.SetParent(ParentPanel.GetComponent<RectTransform>(), false);
                 m_Viewport  = TourneylistLoaded.GetComponent<RectTransform>();
                 SetPanelUI(m_Viewport);
                 TourneylistLoaded.gameObject.SetActive(true);
-                TourneylistLoaded.ShowTourneyItem(prevPanel, panelName, metaData);
+                TourneylistLoaded.ShowTourneyItem(prevPanel, panelName, metaData, ShowFriendlyCompleted: _friendlyCompleted);
 
                 if (checkUnclaimed)
                     if (panelName == Panels.TourneyPanel)
@@ -328,7 +330,7 @@
                 {
                     metaData.TryGetValue("tourneyid", out tid);
                 }
-                DetailsPanelLoaded.SetTourneyId(tid, prevPanel);
+                DetailsPanelLoaded.SetTourneyId(tid, prevPanel, _friendlyCompleted);
             }
             if (panelName == Panels.MatchMakingPanel)
             {

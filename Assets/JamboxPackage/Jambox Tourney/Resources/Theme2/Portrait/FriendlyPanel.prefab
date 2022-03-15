@@ -4833,6 +4833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df5bc9983daf41419aff4ceca48a298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsLandscape: 0
   TourneyPrefab: {fileID: 8965388324970030203, guid: 88b77269bcafd4c93931b254afe244c0,
     type: 3}
   duelTourneyPrefab: {fileID: 0}

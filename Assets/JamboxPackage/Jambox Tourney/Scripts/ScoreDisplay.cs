@@ -88,6 +88,9 @@
             {
                 UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(TourneyData._tournament.Tourneyid, out tourneyDet);
             }
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
+#endif
             StartCoroutine(AttemptAnimation(() =>
             {
                 _ = CommunicationController.Instance.PlayTourney("", TourneyData._tournament.Tourneyid, "adv", (data) => { PlayedSuccess(data); });
@@ -131,6 +134,9 @@
 
         void PlayAfterAttemptAnimation()
         {
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
+#endif
             StartCoroutine(AttemptAnimation(() =>
             {
                 _ = CommunicationController.Instance.PlayTourney("", TourneyData._tournament.Tourneyid, "free", (data) => {

@@ -2,9 +2,7 @@
 using UnityEditor;
 using System.IO;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Jambox.Common.TinyJson;
 
 public enum ConfigMessage
 {
@@ -38,6 +36,7 @@ public class CustomizeMessageEditor : EditorWindow
 	{
 		myWindow = EditorWindow.GetWindow<CustomizeMessageEditor>();
 	}
+
 	int i = 0;
 	void OnGUI()
 	{
@@ -72,7 +71,7 @@ public class CustomizeMessageEditor : EditorWindow
 				_data[i].MessageBody = data[i];
 			}
 			Debug.Log(" data Length :  " + _data.Length);
-			string json = CustomJsonHelper.ToJson(_data, true);
+			string json = Jambox.Common.TinyJson.CustomJsonHelper.ToJson(_data, true);
 			string filePath = "Assets/Resources/ConfigMessage.json";
 			if (File.Exists(filePath))
 			{

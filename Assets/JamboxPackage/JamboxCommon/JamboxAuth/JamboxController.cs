@@ -5,6 +5,7 @@ namespace Jambox.Common
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Jambox.Common.Utility;
+    using Jambox.Server;
     using UnityEngine;
 
     public class JamboxController : MonoSingleton<JamboxController>
@@ -18,6 +19,7 @@ namespace Jambox.Common
         private string _productionServerIP = "api.jambox.games";
 
         public event Action UserProfileUpdated;
+        public event Action<String> ErrorFromServer;
 
         public void SetupSDKVariable(string _gameID, string _AppSecret, bool _isProduction = false)
         {
@@ -68,6 +70,7 @@ namespace Jambox.Common
                 _client = new CommonClient("http", _normalServerIP, 0000, _appSecret);
         }
 
+        private bool WaitForSession = false;
         public async Task StartSession(String UserName, String UserID)
         {
             _userName = UserName;
@@ -84,27 +87,19 @@ namespace Jambox.Common
             {
                 Debug.LogError("You are trying to start session without being Set up SDK Variables ");
             }
-            UnityDebug.Debug.Log("Starting Session with UserID : " + _userID);
-            CurrentSession = await _client.AuthenticateUser(_gameID, _userID, UserName, _appSecret);
-            UnityDebug.Debug.Log("Session created! - Token of CurrentSession is  :  " + CurrentSession.Token +
-                "  And Id is : " + CurrentSession.MyID);
-            CommonUserData.Instance.userName = CurrentSession.Name;
-            CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
-            CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
-            Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
-        }
-
-        public async Task CreateSession(Action sessionCreated = null)
-        {
-            CurrentSession = await _client.AuthenticateUser(_gameID, _userID, _userName, _appSecret);
-            UnityDebug.Debug.Log("Session created! - Token of CurrentSession is  :  " + CurrentSession.Token +
-                "  And Id is : " + CurrentSession.MyID);
-            CommonUserData.Instance.userName = CurrentSession.Name;
-            CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
-            CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
-            Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
-            if (sessionCreated != null)
-                sessionCreated();
+            if (!ChechkForSession() && !WaitForSession)
+            {
+                WaitForSession = true;
+                UnityDebug.Debug.Log("Starting Session with UserID : " + _userID);
+                CurrentSession = await _client.AuthenticateUser(_gameID, _userID, UserName, _appSecret);
+                UnityDebug.Debug.Log("Session created! - Token of CurrentSession is  :  " + CurrentSession.Token +
+                    "  And Id is : " + CurrentSession.MyID);
+                WaitForSession = false;
+                CommonUserData.Instance.userName = CurrentSession.Name;
+                CommonUserData.Instance.MyAvatarURL = CurrentSession.MyAvatar;
+                CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
+                Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
+            }
         }
 
         public bool ChechkForSession()
@@ -139,10 +134,21 @@ namespace Jambox.Common
                 await RefreshSession();
             }
             authToken = CurrentSession.Token;
-            var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
-            if(UserProfileUpdated != null)
+            try
             {
-                UserProfileUpdated();
+                var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+                if (UserProfileUpdated != null)
+                {
+                    UserProfileUpdated();
+                }
+            }
+            catch (Exception Ex)
+            {
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                if (ErrorFromServer != null)
+                {
+                    ErrorFromServer(Ex.Message);
+                }
             }
         }
 

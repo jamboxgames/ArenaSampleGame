@@ -11,8 +11,9 @@
 
     public class UpdatePlayerDetails : MonoBehaviour
     {
-
+        public Image BG;
         public InputField nameInput;
+        public Text namePlaceholder;
         public Image selectedAvatar;
         public Button updateButton;
         public Button closeButton;
@@ -47,21 +48,21 @@
         {
             if (TabletDetect.IsTablet())
             {
-                GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
             }
             else
             {
-                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToDefault();
             }
         }
         #endregion
 
         public void OnUpdateClick()
         {
-            if (string.IsNullOrWhiteSpace(nameInput.text) || (nameInput.text).Equals("Your name")
-                || (nameInput.text).Equals("Enter Valid Name"))
+            if (string.IsNullOrWhiteSpace(nameInput.text))
             {
-                nameInput.text = "Enter Valid Name";
+                nameInput.text = "";
+                namePlaceholder.text = "Enter Valid Name";
                 UnityDebug.Debug.Log("Enter Valid Name >>>> ");
                 return;
             }
@@ -80,13 +81,14 @@
         {
             closeButton.gameObject.SetActive(false);
             StartCoroutine(Loading());
-
-            TabletCheck();
         }
 
         private void OnDisable()
         {
-            GetComponentInParent<CanvasScaleChange>().SetToDefault();
+            if (GetComponentInParent<CanvasScaleChange>() != null)
+            {
+                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+            }
         }
 
         IEnumerator Loading()
@@ -109,8 +111,25 @@
             }
         }
 
-        public void SetMetaData(string _name, Texture2D _avatar)
+        public void SetMetaData(string _name, Texture2D _avatar, bool isRewardSDK = false)
         {
+            TabletCheck();
+            if (isRewardSDK)
+            {
+                if (JamboxSDKParams.Instance.rewardBG != null)
+                {
+                    BG.sprite = JamboxSDKParams.Instance.rewardBG;
+                    BG.color = Color.white;
+                }
+            }
+            else
+            {
+                if (JamboxSDKParams.Instance.bgSprite != null)
+                {
+                    BG.sprite = JamboxSDKParams.Instance.bgSprite;
+                    BG.color = Color.white;
+                }
+            }
             CheckNameInput();
             //Hide Close button if no username already
             if (string.IsNullOrEmpty(CommonUserData.Instance.userName))
@@ -214,13 +233,13 @@
 
         public void CheckNameInput()
         {
-            if (nameInput.text.Length > 0)
+            if (string.IsNullOrWhiteSpace(nameInput.text))
             {
-                updateButton.interactable = true;
+                updateButton.interactable = false;
             }
             else
             {
-                updateButton.interactable = false;
+                updateButton.interactable = true;
             }
         }
 

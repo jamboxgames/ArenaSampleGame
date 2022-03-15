@@ -76,11 +76,11 @@
         {
             if (TabletDetect.IsTablet())
             {
-                GetComponentInParent<CanvasScaleChange>().SetToTabletView(canvasCustomValue);
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
             }
             else
             {
-                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToDefault();
             }
         }
         #endregion
@@ -145,7 +145,7 @@
                 yield return new WaitForSeconds(data.delayInResultDisplay);
             }
             UpdateWaitingDialogue(false, "");
-            EnableButtons();
+            //EnableButtons();
             UnityDebug.Debug.Log("Result : " + data.result.resultDisplay.ToString());
             bool won = false;
             bool lose = false;
@@ -210,20 +210,26 @@
             CoinsWonOpponent.Particle = JamboxSDKParams.Instance.CoinBG;
             if (won)
             {
+                TotalMoney = data.result.rewardList.Virtual.Value;
+                RewardText.text = TotalMoney.ToString();
+                RewardContainer.SetActive(true);
+                yield return new WaitForSeconds(0.5f);
                 myPlayer.IncreaseRewards(data.result.rewardList.Virtual.Value);
                 opponentPlayer.IncreaseRewards(0);
-                TotalMoney = data.result.rewardList.Virtual.Value;
                 CoinsWon.Play();
             }
             else if (lose)
             {
-                myPlayer.IncreaseRewards(0);
                 foreach (var playerData in data.LeaderRecords)
                 {
                     if (!JamboxController.Instance.getMyuserId().Equals(playerData.PlayerId))
                     {
-                        opponentPlayer.IncreaseRewards(playerData.rewardList.Virtual.Value);
                         TotalMoney = playerData.rewardList.Virtual.Value;
+                        RewardText.text = TotalMoney.ToString();
+                        RewardContainer.SetActive(true);
+                        yield return new WaitForSeconds(0.5f);
+                        myPlayer.IncreaseRewards(0);
+                        opponentPlayer.IncreaseRewards(playerData.rewardList.Virtual.Value);
                         break;
                     }
                 }
@@ -231,14 +237,16 @@
             }
             else
             {
+                TotalMoney = (data.result.rewardList.Virtual.Value * 2);
+                RewardText.text = TotalMoney.ToString();
+                RewardContainer.SetActive(true);
+                yield return new WaitForSeconds(0.5f);
                 myPlayer.IncreaseRewards(data.result.rewardList.Virtual.Value);
                 opponentPlayer.IncreaseRewards(data.result.rewardList.Virtual.Value);
-                TotalMoney = (data.result.rewardList.Virtual.Value * 2);
                 CoinsWon.Play();
                 CoinsWonOpponent.Play();
             }
 
-            RewardContainer.SetActive(true);
             float rewardMoney = TotalMoney;
             RewardImage.sprite = JamboxSDKParams.Instance.CoinBG;
             SetCurrencyPreferredSize(rewardMoney.ToString());
@@ -258,6 +266,7 @@
             CoinsWonOpponent.Stop();
 
             RewardContainer.SetActive(false);
+            EnableButtons();
         }
 
         void SetCurrencyPreferredSize(string _text)

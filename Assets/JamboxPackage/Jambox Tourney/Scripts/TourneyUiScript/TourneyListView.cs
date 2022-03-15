@@ -19,6 +19,7 @@
     [RequireComponent(typeof(ScrollRect))]
     public class TourneyListView : MonoBehaviour
     {
+        public bool IsLandscape = false;
         [Tooltip("Prefab for all the child view objects in the list")]
         public TourneyListViewItem TourneyPrefab;
         public TourneyListViewItem duelTourneyPrefab;
@@ -37,6 +38,15 @@
         {
             get => scrollRect.verticalNormalizedPosition;
             set => scrollRect.verticalNormalizedPosition = value;
+        }
+
+        /// <summary>
+        /// Set the horizontal normalized scroll position. 0 is bottom, 1 is top (as with ScrollRect) 
+        /// </summary>
+        public float HorizontalNormalizedPosition
+        {
+            get => scrollRect.horizontalNormalizedPosition;
+            set => scrollRect.horizontalNormalizedPosition = value;
         }
 
         public void UpdateItem(bool isTourneyPrefab = true, bool isDuelPrefab = false)
@@ -175,6 +185,11 @@
         /// <param name="row"></param>
         public virtual void ScrollToRow(int row)
         {
+            if (IsLandscape)
+            {
+                scrollRect.horizontalNormalizedPosition = GetRowScrollPosition(row);
+                return;
+            }
             scrollRect.verticalNormalizedPosition = GetRowScrollPosition(row);
         }
 
@@ -193,7 +208,11 @@
             // Clamp to top of content
             float vpTop = Mathf.Max(0, rowCentre - halfVpHeight);
             float vpBottom = vpTop + vpHeight;
-            float contentHeight = scrollRect.content.sizeDelta.y;
+            float contentHeight;
+            if (IsLandscape)
+                contentHeight = scrollRect.content.sizeDelta.x;
+            else
+                contentHeight = scrollRect.content.sizeDelta.y;
             // clamp to bottom of content
             if (vpBottom > contentHeight) // if content is shorter than vp always stop at 0
                 vpTop = Mathf.Max(0, vpTop - (vpBottom - contentHeight));
@@ -267,6 +286,7 @@
 
         protected virtual void OnEnable()
         {
+            IsLandscape = UIPanelController.Instance.IsLandScape();
             scrollRect.onValueChanged.AddListener(OnScrollChanged);
             ignoreScrollChange = false;
         }
@@ -291,16 +311,28 @@
             if (clearContents)
             {
                 scrollRect.StopMovement();
-                scrollRect.verticalNormalizedPosition = 1; // 1 == top
+                if (IsLandscape)
+                    scrollRect.horizontalNormalizedPosition = 0;
+                else
+                    scrollRect.verticalNormalizedPosition = 1; // 1 == top
             }
 
             bool childrenChanged = CheckChildItems();
             bool populateAll = childrenChanged || clearContents;
 
             // Figure out which is the first virtual slot visible
-            float ymin = scrollRect.content.localPosition.y;
+            float ymin;
+            if (IsLandscape)
+                ymin = scrollRect.content.localPosition.x;
+            else
+                ymin = scrollRect.content.localPosition.y;
+
             // round down to find first visible
-            int firstVisibleIndex = (int)(ymin / RowHeight());
+            int firstVisibleIndex;
+            if (IsLandscape)
+                firstVisibleIndex = (int)(-ymin / RowHeight());
+            else
+                firstVisibleIndex = (int)(ymin / RowHeight());
             // we always want to start our buffer before
             int newRowStart = firstVisibleIndex - rowsAboveBelow;
             // If we've moved too far to be able to reuse anything, same as init case
@@ -363,14 +395,21 @@
 
         private float RowHeight()
         {
-            float yHit = loadedItem.RectTransform.rect.height;
+            float yHit;
+            if (IsLandscape)
+                yHit = loadedItem.RectTransform.rect.width;
+            else
+                yHit = loadedItem.RectTransform.rect.height;
             return RowPadding + yHit;
             //return RowPadding + loadedItem.RectTransform.rect.height;
         }
 
         private float ViewportHeight()
         {
-            return scrollRect.viewport.rect.height;
+            if (IsLandscape)
+                return scrollRect.viewport.rect.width;
+            else
+                return scrollRect.viewport.rect.height;
         }
 
         protected virtual void UpdateChild(TourneyListViewItem child, int rowIdx)
@@ -392,8 +431,18 @@
                 var childRect = loadedItem.RectTransform.rect;
                 Vector2 pivot = loadedItem.RectTransform.pivot;
                 float ytoppos = RowHeight() * rowIdx;
-                float ypos = ytoppos + (1f - pivot.y) * childRect.height;
-                float xpos = 0 + pivot.x * childRect.width;
+                float ypos;
+                float xpos;
+                if (IsLandscape)
+                {
+                    xpos = ytoppos + (1f - pivot.y) * childRect.height;
+                    ypos = 0 + pivot.x * childRect.width;
+                }
+                else
+                {
+                    ypos = ytoppos + (1f - pivot.y) * childRect.height;
+                    xpos = 0 + pivot.x * childRect.width;
+                }
                 child.RectTransform.anchoredPosition = new Vector2(xpos, -ypos);
                 child.NotifyCurrentAssignment(this, rowIdx);
 
@@ -405,10 +454,20 @@
 
         protected virtual void UpdateContentHeight()
         {
-            float height = loadedItem.RectTransform.rect.height * rowCount + (rowCount - 1) * RowPadding;
-            // apparently 'sizeDelta' is the way to set w / h 
-            var sz = scrollRect.content.sizeDelta;
-            scrollRect.content.sizeDelta = new Vector2(sz.x, height);
+            if (IsLandscape)
+            {
+                float width = loadedItem.RectTransform.rect.width * rowCount + (rowCount - 1) * RowPadding;
+                // apparently 'sizeDelta' is the way to set w / h 
+                var sz = scrollRect.content.sizeDelta;
+                scrollRect.content.sizeDelta = new Vector2(width, sz.y);
+            }
+            else
+            {
+                float height = loadedItem.RectTransform.rect.height * rowCount + (rowCount - 1) * RowPadding;
+                // apparently 'sizeDelta' is the way to set w / h 
+                var sz = scrollRect.content.sizeDelta;
+                scrollRect.content.sizeDelta = new Vector2(sz.x, height);
+            }
         }
 
         protected virtual void DisableAllChildren()

@@ -32,7 +32,11 @@
                 //leaderboard = null;
             }
 
-            InGameJamboxCanvas  = (GameObject) Instantiate(Resources.Load("JamboxInGameCanvas"));
+            if (UIPanelController.Instance.IsLandScape())
+                InGameJamboxCanvas = (GameObject)Instantiate(Resources.Load("JamboxInGameCanvas_Landscape"));
+            else
+                InGameJamboxCanvas = (GameObject)Instantiate(Resources.Load("JamboxInGameCanvas"));
+
             thelist = FindObjectOfType<RealtimeLbListView>();
 
             thelist.ToggleScrolling(scrollable);

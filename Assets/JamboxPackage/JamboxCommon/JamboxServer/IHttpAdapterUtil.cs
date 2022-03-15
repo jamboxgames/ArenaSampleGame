@@ -28,11 +28,13 @@ namespace Jambox.Server
     {
         public long StatusCode { get; }
         public int GrpcStatusCode { get; }
+        public string ErrorMessage { get; }
 
         public ApiResponseException(long statusCode, string content, int grpcCode) : base(content)
         {
             StatusCode = statusCode;
             GrpcStatusCode = grpcCode;
+            ErrorMessage = content;
         }
 
         public ApiResponseException(string message, Exception e) : base(message, e)

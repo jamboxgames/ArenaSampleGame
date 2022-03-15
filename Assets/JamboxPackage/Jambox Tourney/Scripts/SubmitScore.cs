@@ -86,11 +86,11 @@
         {
             if (TabletDetect.IsTablet())
             {
-                GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
             }
             else
             {
-                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToDefault();
             }
         }
         #endregion

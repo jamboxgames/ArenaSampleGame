@@ -204,6 +204,9 @@
             }
             else
             {
+        #if !UNITY_EDITOR
+                Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
+        #endif
                 UIPanelController.Instance.LoadingDialogue(true, false);
                 _ = CommunicationController.Instance.JoinTourney("", tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); });
             }
@@ -214,6 +217,10 @@
             UIPanelController.Instance.SetTourneyScrollActive(true);
             //PlayJoinBtn.interactable = true;
             UnityDebug.Debug.Log("Watch Video >>>");
+
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
+#endif
 
             TourneyDetail tourneyDet = null;
             UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(UniqueTID, out tourneyDet);
@@ -377,6 +384,9 @@
                 }
                 else
                 {
+                #if !UNITY_EDITOR
+                    Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
+                #endif
                     UIPanelController.Instance.LoadingDialogue(true, false);
                     _ = CommunicationController.Instance.JoinTourney("", tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); });
                 }
@@ -387,6 +397,9 @@
 
         void PlayAfterAttemptAnimation(TourneyDetail tourneyDet)
         {
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
+#endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
                 _ = CommunicationController.Instance.PlayTourney("", UniqueTID, "free", (data) => { PlayedSuccess(data); });

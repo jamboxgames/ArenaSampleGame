@@ -12,6 +12,7 @@
     using Jambox.Common.Utility;
     using Random = UnityEngine.Random;
     using System.Threading.Tasks;
+    using UnityEngine;
 
     /// <summary>
     /// UI Panel script responsible to populate the data on UI.
@@ -22,6 +23,7 @@
         public Image profilePicture;
         public TourneyListView theList;
         public Panels prevPanel;
+        private bool InFriendlyCompleted = false;
         public RewarDetail RewardPanel;
         public Text CurrencyText;
         public Text CurrencySubtractAnimText;
@@ -105,9 +107,15 @@
             FriendlyPanel.SetActive(false);
             TourneyDetail.SetActive(true);
             updateUser = StartCoroutine(UpdateUserBasicData());
-
             CheckForUnclaimedRewardsExclamation();
             JamboxController.Instance.UserProfileUpdated += OnProfileUpdate;
+            JamboxController.Instance.ErrorFromServer += OnErrorFromServer;
+        }
+
+        private void OnErrorFromServer(string ErrorMsg = "")
+        {
+            Debug.Log("OnErrorFromServer Inside Tpourneypanel Hit >>>>"  + ErrorMsg);
+            UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
         }
 
         private void OnProfileUpdate()
@@ -119,9 +127,16 @@
             _ = GetDetailsAfterNameUpdate(CurrentPanelEnable, metaData);
         }
 
+        private void OnDestroy()
+        {
+            if (updateUser != null)
+                StopCoroutine(updateUser);
+        }
+
         private void OnDisable()
         {
             JamboxController.Instance.UserProfileUpdated -= OnProfileUpdate;
+            JamboxController.Instance.ErrorFromServer -= OnErrorFromServer;
             if (updateUser != null)
                 StopCoroutine(updateUser);
         }
@@ -159,6 +174,8 @@
 
         public void UpdateCurrency(bool _rewardClaimed = false)
         {
+            Debug.Log("CurrencyText.text : " + (CurrencyText.text != null));
+            Debug.Log("UserDataContainer.Instance : " + (UserDataContainer.Instance != null));
             CurrencyText.text = UserDataContainer.Instance.GetDisplayCurrencyText();
 
             if (_rewardClaimed)
@@ -201,6 +218,12 @@
             if (CurrentPanel == Panels.FriendlyPanel)
             {
                 FriendlyBtnProcess(metaData);
+            }
+
+            if (metaData.ContainsKey("AllRewardsClaimed") && metaData.ContainsKey("RewardAmount") && metaData.ContainsKey("RewardKey"))
+            {
+                UIPanelController.Instance.ShowClaimSuccessPanel(int.Parse(metaData["RewardAmount"]), metaData["RewardKey"]);
+                ConfettiAnimation();
             }
         }
 
@@ -245,8 +268,8 @@
                     LoadingDialogue.SetActive(false);
             }
         }
-        public void ShowTourneyItem(Panels prevPanelDet, Panels Currentpanel,
-                        Dictionary<string, string> metaData, bool ShowDialogue = false)
+        public async Task ShowTourneyItem(Panels prevPanelDet, Panels Currentpanel,
+                        Dictionary<string, string> metaData, bool ShowDialogue = false, bool ShowFriendlyCompleted = false)
         {
             //UserDataContainer.Instance.userName = String.Empty;
             if (ShowDialogue)
@@ -259,9 +282,10 @@
             }
             else if (!JamboxController.Instance.ChechkForSession())
             {
-                _ = JamboxController.Instance.CreateSession(() => {
+                await JamboxController.Instance.RefreshSession();
+                //_ = JamboxController.Instance.CreateSession(() => {
                     ShowTourneyItem(prevPanelDet, Currentpanel, metaData, ShowDialogue);
-                });
+                //});
             }
             else if (String.IsNullOrEmpty(CommonUserData.Instance.userName))
             {
@@ -275,7 +299,7 @@
             {
                 //_ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); });
 
-                ShowTourneyItemNew( Currentpanel, metaData);                
+                ShowTourneyItemNew( Currentpanel, metaData, ShowFriendlyCompleted);                
             }
         }
 
@@ -292,8 +316,10 @@
                 _dict.Add("Unclaimed", "");
                 _dict.Add("Header", "Unclaimed Rewards");
                 _dict.Add("DialogBody", "There are rewards pending for your previous Tournament Entry. Claim your rewards!");
-                _dict.Add("Btn1Name", "Cancel");
-                _dict.Add("Btn2Name", "Claim");
+                //_dict.Add("Btn1Name", "Cancel");
+                //_dict.Add("Btn2Name", "Claim");
+                _dict.Add("Btn1Name", "Claim");
+                _dict.Add("Btn2Name", "Collect All");
                 ShowDialogueOnUI(_dict);
             }
 
@@ -315,7 +341,10 @@
 
         IEnumerator ShowChangeNamePanel(Panels prevPanel, Panels currentPanel, Dictionary<string,string> metadata)
         {
-            ChangeName = Instantiate(Resources.Load("UpdatePlayer") as GameObject).GetComponent<UpdatePlayerDetails>();
+            if (UIPanelController.Instance.IsLandScape())
+                ChangeName = Instantiate(Resources.Load("UpdatePlayer_Landscape") as GameObject).GetComponent<UpdatePlayerDetails>();
+            else
+                ChangeName = Instantiate(Resources.Load("UpdatePlayer") as GameObject).GetComponent<UpdatePlayerDetails>();
             ChangeName.RectTransform.SetParent(JamboxSDKParams.Instance.gameObject.GetComponent<RectTransform>(), false);
             RectTransform m_Viewport = ChangeName.GetComponent<RectTransform>();
             UIPanelController.Instance.SetPanelUI(m_Viewport);
@@ -400,7 +429,8 @@
                 //DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, () => { RetryBtnClick(); },
                 //                           () => { HomeBtnCLick(); });OnRightArrowClicked
 
-                DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, OnBtn1Click: () => { CloseDialogueUI(); }, OnBtn2Click: () => { OnRightArrowClicked(); });
+                //DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, OnBtn1Click: () => { CloseDialogueUI(); }, OnBtn2Click: () => { OnRightArrowClicked(); });
+                DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, OnBtn1Click: () => { OnRightArrowClicked(); }, OnBtn2Click: () => { ClaimAllUnclaimedRewards(); }, true);
             }
             else
             {
@@ -437,9 +467,37 @@
             DialogueUI.gameObject.SetActive(false);
         }
 
+        void ClaimAllUnclaimedRewards()
+        {
+            LoadingDialog(true, false);
+            _ = CommunicationController.Instance.GetClaim("", "all", (data) => { OnUnclaimedRewardsClaimed(data); });
+        }
+
+        void OnUnclaimedRewardsClaimed(IAPIClaimData data)
+        {
+            LoadingDialog(false);
+            string UpdatedCurrencyKey = data.RewardInfo.Virtual.Key;
+            UserDataContainer.Instance.currencyList.TryGetValue(data.RewardInfo.Virtual.Key, out UpdatedCurrencyKey);
+            UserDataContainer.Instance.UpdateUserMoney(data.RewardInfo.Virtual.Value,
+                                                    data.RewardInfo.Virtual.Key, true);
+            UIPanelController.Instance.UpdateMoneyOnUI(false);
+
+            Dictionary<string, string> _metadata = new Dictionary<string, string>();
+            _metadata.Add("AllRewardsClaimed", " ");
+            _metadata.Add("RewardAmount", data.RewardInfo.Virtual.Value.ToString());
+            _metadata.Add("RewardKey", UpdatedCurrencyKey);
+            ShowTourneyItemNew(Panels.TourneyPanel, _metadata);
+
+            UserDataContainer.Instance.UnclaimedRewardsCount = 0;
+            CheckForUnclaimedRewardsExclamation();
+        }
+
         public void ShowUpdateDetailsPanel()
         {
-            ChangeName = Instantiate(Resources.Load("UpdatePlayer") as GameObject).GetComponent<UpdatePlayerDetails>();
+            if (UIPanelController.Instance.IsLandScape())
+                ChangeName = Instantiate(Resources.Load("UpdatePlayer_Landscape") as GameObject).GetComponent<UpdatePlayerDetails>();
+            else
+                ChangeName = Instantiate(Resources.Load("UpdatePlayer") as GameObject).GetComponent<UpdatePlayerDetails>();
             ChangeName.RectTransform.SetParent(JamboxSDKParams.Instance.gameObject.GetComponent<RectTransform>(), false);
             RectTransform m_Viewport = ChangeName.GetComponent<RectTransform>();
             UIPanelController.Instance.SetPanelUI(m_Viewport);
@@ -480,11 +538,18 @@
             ShowTourneyItemNew(Currentpanel, metaData);
         }
 
-        public void ShowTourneyItemNew(Panels Currentpanel, Dictionary<string, string> metaData)
+        public void ShowTourneyItemNew(Panels Currentpanel, Dictionary<string, string> metaData, bool ShowFriendlyCompleted = false)
         {
             LoadingDialog(true, false);
             if (Currentpanel == Panels.CompletedPanel)
+            {
+                if (ShowFriendlyCompleted)
+                    CurrentPanelEnable = Panels.FriendlyPanel;
+                else
+                    CurrentPanelEnable = Panels.TourneyPanel;
                 theList.UpdateItem(false);
+            }
+                
             string authToken = "";
             //_ = JamboxController.Instance.StartSession(null, null);
             _ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); });
@@ -851,6 +916,11 @@
             {
                 Category = "3";
                 screenName = "friendly_past";
+                InFriendlyCompleted = true;
+            }
+            else
+            {
+                InFriendlyCompleted = false;
             }
 
 #if GAME_FIREBASE_ENABLED
@@ -951,6 +1021,10 @@
             if (rowIndex < UserDataContainer.Instance.CompletedTourney.Count)
             {
                 tDet.CompTourneyDet = UserDataContainer.Instance.CompletedTourney[rowIndex];
+                if (InFriendlyCompleted)
+                    tDet.IsFriendlyCompleted(true);
+                else
+                    tDet.IsFriendlyCompleted(false);
             }
         }
 

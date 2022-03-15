@@ -30,7 +30,6 @@ namespace Jambox.Common.Utility
                 return m_Instance;
             }
         }
-
         // If no other monobehaviour request the instance in an awake function
         // executing before this one, no need to search the object.
         private void Start()

@@ -53,6 +53,7 @@
         public ClaimRewardPanel ClaimPanel;
 
         private Panels prevPanel;
+        private bool friendlyCompleted = false;
         private RectTransform rectTransform;
         public RectTransform RectTransform
         {
@@ -74,20 +75,21 @@
         {
             if (TabletDetect.IsTablet())
             {
-                GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
             }
             else
             {
-                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToDefault();
             }
         }
         #endregion
 
-        public void SetTourneyId(string Id, Panels prevPanelDet)
+        public void SetTourneyId(string Id, Panels prevPanelDet, bool IsFriendly)
         {
             UnityDebug.Debug.Log("Tourney ID : " +  Id);
             TourneyId = Id;
             prevPanel = prevPanelDet;
+            friendlyCompleted = IsFriendly;
             string screenName = "";
             if (prevPanel == Panels.TourneyPanel)
             {
@@ -137,7 +139,7 @@
         public void OnBackbuttonClick()
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
-            UIPanelController.Instance.ShowPanel(prevPanel, Panels.None, metadata);
+            UIPanelController.Instance.ShowPanel(prevPanel, Panels.None, metadata, _friendlyCompleted: friendlyCompleted);
         }
 
         public void UpdateMoneyOnUI(bool _rewardClaimed = false)
@@ -527,6 +529,9 @@
                     }
                     else
                     {
+                    #if !UNITY_EDITOR
+                        Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
+                    #endif
                         FullLoadingPanel.SetActive(true);
                         _ = CommunicationController.Instance.JoinTourney("", tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); });
                         UserDataContainer.Instance.UpdateUserMoney (tourneyDet._tournament.EntryFee,
@@ -545,6 +550,9 @@
 
         void PlayAfterAttemptAnimation(TourneyDetail tourneyDet)
         {
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
+#endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
                 _ = CommunicationController.Instance.PlayTourney("", TourneyId, "free", (data) => { PlayedSuccess(data); });
@@ -633,6 +641,9 @@
             {
                 UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(TourneyId, out tourneyDet);
             }
+#if !UNITY_EDITOR
+            Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
+#endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
                 _ = CommunicationController.Instance.PlayTourney("", TourneyId, "adv", (data) => { PlayedSuccess(data); });

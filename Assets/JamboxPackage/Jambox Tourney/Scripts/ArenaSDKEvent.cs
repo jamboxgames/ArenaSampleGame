@@ -20,6 +20,7 @@
         public event Action<int, string> OnPurchaseRequired;
         public event Action OnWatchAdRequired;
         public event Action<int, string, bool> UserMoneyUpdate;
+        public event Action<Dictionary<String, String>> OnServerError;
         private ReplayRecorder replayRecorder = null;
 
         private IAPIReplayData replayTestData = null;
@@ -32,16 +33,23 @@
 
         public void InitializeArenaSdk(string userName = null, string userID = null)
         {
-            CommunicationController.Instance.Init(JamboxController.Instance.BaseClient());
-            _ = JamboxController.Instance.StartSession(userName, userID);
-            if (UIPanelController.Instance != null)
+            if (JamboxController.Instance.isGameIdSet())
             {
-                UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
-                UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
+                CommunicationController.Instance.Init(JamboxController.Instance.BaseClient());
+                _ = JamboxController.Instance.StartSession(userName, userID);
+                if (UIPanelController.Instance != null)
+                {
+                    UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
+                    UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
+                }
+                else
+                {
+                    Debug.LogError("Error in SDK setup");
+                }
             }
             else
-            { 
-                Debug.LogError("Error in SDK setup");
+            {
+                Debug.LogError("You have not set either GameID or AppSecret code.");
             }
         }
 
@@ -295,6 +303,15 @@
             if (OnBackToLobby != null)
             {
                 OnBackToLobby();
+            }
+        }
+
+        public void OnErrorFromServer(Dictionary<String, String> ErrorMsg)
+        {
+            Debug.Log("On Back to Lobby Hit >>>>");
+            if (OnServerError != null)
+            {
+                OnServerError(ErrorMsg);
             }
         }
 

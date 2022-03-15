@@ -15,6 +15,7 @@ public class DialoguePanel : MonoBehaviour
     public Text Description;
     public Button CentreButton;
     public Text CentreButtonName;
+    public GameObject closeButton;
 
     public Action OnButtonOneClick;
     public Action OnButtonTwoClick;
@@ -45,11 +46,18 @@ public class DialoguePanel : MonoBehaviour
     }
 
     public void ShowDialogue (string header, string body, string Btn1Name, string Btn2name,
-        Action OnBtn1Click = null, Action OnBtn2Click = null)
+        Action OnBtn1Click = null, Action OnBtn2Click = null, bool closeBtn = false)
     {
-
         Header.text = header;
         Description.text = body;
+
+        if (closeButton != null)
+        {
+            if (closeBtn)
+                closeButton.SetActive(true);
+            else
+                closeButton.SetActive(false);
+        }
 
         if (Btn2name == null)
         {
@@ -88,6 +96,11 @@ public class DialoguePanel : MonoBehaviour
                 ButtonTwo.gameObject.SetActive(false);
             CentreButton.gameObject.SetActive(true);
         }
+    }
+
+    public void OnCloseBtnClicked()
+    {
+        gameObject.SetActive(false);
     }
 
 }

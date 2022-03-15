@@ -174,6 +174,7 @@ GameObject:
   - component: {fileID: 175152013934923862}
   - component: {fileID: 3988149471873850698}
   - component: {fileID: 7326909917954341783}
+  - component: {fileID: 4158759730602150072}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -251,6 +252,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 4
   m_AspectRatio: 1
+--- !u!114 &4158759730602150072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751585246556992424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbf48ab913efce4495b940214e3f881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 3988149471873850698}
+  fitter: {fileID: 7326909917954341783}
 --- !u!1 &2079625523667807683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,7 +1659,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7382379668043361200}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1710,7 +1725,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b94d87e7bd76d4498013d90dcc58cd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BG: {fileID: 3988149471873850698}
   nameInput: {fileID: 7382379667091982887}
+  namePlaceholder: {fileID: 0}
   selectedAvatar: {fileID: 7382379666977295649}
   updateButton: {fileID: 3122630752290024026}
   closeButton: {fileID: 7383414606015023933}
