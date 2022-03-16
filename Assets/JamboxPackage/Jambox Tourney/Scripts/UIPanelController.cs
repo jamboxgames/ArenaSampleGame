@@ -137,6 +137,7 @@
         
         public bool IsLandScape ()
         {
+#if !UNITY_EDITOR
             if(Screen.orientation == ScreenOrientation.Landscape)
             {
                 //UnityDebug.Debug.Log("This game is in Landscapee >>>>>>>>");
@@ -147,6 +148,16 @@
                 //UnityDebug.Debug.Log("This game is in Portrait >>>>>>>>");
             }
             return false;
+#elif UNITY_EDITOR
+            if (Screen.height > Screen.width)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+#endif
         }
 
         public void SetTourneyScrollActive (bool Active)

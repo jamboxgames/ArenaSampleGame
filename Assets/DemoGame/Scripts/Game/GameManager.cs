@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     public GameObject normalGameTitle;
     public GameObject tourneyTitle;
 
+    public CanvasScaler gameCanvas;
+    public GameObject gameContent;
+
     public Text scoreText;
     public Image timerProgress;
 
@@ -30,25 +33,17 @@ public class GameManager : MonoBehaviour
     private int score = 0;
 
     public Text endScreenScoreText;
-    public GameObject endScreenMenu;
+    public GameObject endScreenContainer;
+    public GameObject endScreenContent;
     public GameObject restartBtn;
 
     private bool gameOver = false;
 
     private void Start()
     {
-        endScreenMenu.SetActive(false);
+        endScreenContainer.SetActive(false);
 
-        if (TourneyManager.Instance.inTourney && TourneyManager.Instance.matchType != Jambox.EMatchType.EMatchTypeDuel)
-        {
-            tourneyTitle.SetActive(true);
-            normalGameTitle.SetActive(false);
-        }
-        else
-        {
-            tourneyTitle.SetActive(false);
-            normalGameTitle.SetActive(true);
-        }
+        SetGameTitle();
 
         increaseAmnt = Random.Range(minIncreaseAmnt, maxInscreasAmnt);
         increaseRate = Random.Range(minIncreaseRate, maxInscreasRate);
@@ -56,6 +51,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "" + score;
 
         StartCoroutine(UpdateScore());
+        CheckOrientation();
     }
 
     private void Update()
@@ -64,6 +60,72 @@ public class GameManager : MonoBehaviour
         {
             timer += Time.deltaTime;
             timerProgress.fillAmount = timer / totalTime;
+        }
+
+    }
+
+    public void CheckOrientation()
+    {
+        if (myScreenOrientation == ScreenOrientation.Portrait)
+        {
+            SetUIForPortrait();
+        }
+        else
+        {
+            SetUIForLandscape();
+        }
+    }
+
+    public ScreenOrientation myScreenOrientation
+    {
+        get
+        {
+#if !UNITY_EDITOR
+            return Screen.orientation;
+#elif UNITY_EDITOR
+            if (Screen.height > Screen.width)
+            {
+                return ScreenOrientation.Portrait;
+            }
+            else
+            {
+                return ScreenOrientation.Landscape;
+            }
+#endif
+        }
+    }
+
+    public void SetUIForLandscape()
+    {
+        gameCanvas.matchWidthOrHeight = 1f;
+
+        gameContent.transform.localScale = Vector3.one * 1.5f;
+        tourneyTitle.transform.localScale = Vector3.one * 1.75f;
+
+        endScreenContent.transform.localScale = Vector3.one;
+    }
+
+    public void SetUIForPortrait()
+    {
+        gameCanvas.matchWidthOrHeight = 0.5f;
+
+        gameContent.transform.localScale = Vector3.one;
+        tourneyTitle.transform.localScale = Vector3.one;
+
+        endScreenContent.transform.localScale = Vector3.one * 0.85f;
+    }
+
+    void SetGameTitle()
+    {
+        if ((TourneyManager.Instance.inTourney && TourneyManager.Instance.matchType != Jambox.EMatchType.EMatchTypeDuel) || myScreenOrientation == ScreenOrientation.Landscape)
+        {
+            tourneyTitle.SetActive(true);
+            normalGameTitle.SetActive(false);
+        }
+        else
+        {
+            tourneyTitle.SetActive(false);
+            normalGameTitle.SetActive(true);
         }
     }
 
@@ -104,7 +166,7 @@ public class GameManager : MonoBehaviour
     void EndGame()
     {
         endScreenScoreText.text = "" + score;
-        endScreenMenu.SetActive(true);
+        endScreenContainer.SetActive(true);
 
         if (TourneyManager.Instance.inTourney)
             restartBtn.SetActive(false);
