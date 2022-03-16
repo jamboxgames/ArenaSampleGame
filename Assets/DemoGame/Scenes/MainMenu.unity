@@ -249,17 +249,17 @@ PrefabInstance:
     - target: {fileID: 6492491078929894529, guid: 59d50f03a91594658ae6378be357afc1,
         type: 3}
       propertyPath: gameID
-      value: 
+      value: 1150
       objectReference: {fileID: 0}
     - target: {fileID: 6492491078929894529, guid: 59d50f03a91594658ae6378be357afc1,
         type: 3}
       propertyPath: AppSecret
-      value: 
+      value: yoyvl88otidutr1
       objectReference: {fileID: 0}
     - target: {fileID: 6492491078929894529, guid: 59d50f03a91594658ae6378be357afc1,
         type: 3}
       propertyPath: IsProduction
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8072061891600107109, guid: 59d50f03a91594658ae6378be357afc1,
         type: 3}
