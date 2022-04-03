@@ -11,6 +11,7 @@ public class SetAspectRatio : MonoBehaviour
 
     private void Start()
     {
+
         FindAspectRatio();
     }
 
@@ -18,15 +19,20 @@ public class SetAspectRatio : MonoBehaviour
     {
         if (image != null)
         {
-            if (image.sprite != null)
-            {
-                Texture _texture = image.mainTexture;
-                float _value = (float)_texture.width / (float)_texture.height;
-
-                if (fitter != null)
-                    fitter.aspectRatio = _value;
-            }
+            StartCoroutine(WaitForSpriteToBeSet());
         }
+    }
+
+    IEnumerator WaitForSpriteToBeSet()
+    {
+        while (image.sprite == null)
+            yield return null;
+
+        Texture _texture = image.mainTexture;
+        float _value = (float)_texture.width / (float)_texture.height;
+
+        if (fitter != null)
+            fitter.aspectRatio = _value;
     }
 
 }
