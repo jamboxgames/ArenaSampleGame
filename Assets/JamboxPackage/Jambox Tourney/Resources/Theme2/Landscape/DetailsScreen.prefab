@@ -3119,7 +3119,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -37, y: 0}
+  m_AnchoredPosition: {x: 8.6, y: 0}
   m_SizeDelta: {x: 117.319, y: 50}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &7212025137538852790
@@ -3151,7 +3151,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 57d84548eaf5c4a4f802531a25680f89, type: 3}
-    m_FontSize: 85
+    m_FontSize: 45
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -3345,7 +3345,7 @@ RectTransform:
   - {fileID: 4626199041887051492}
   - {fileID: 8680115260320762345}
   m_Father: {fileID: 3453351756846261642}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -3424,7 +3424,7 @@ RectTransform:
   - {fileID: 5149652114154293617}
   - {fileID: 4207197739582064487}
   m_Father: {fileID: 3453351756846261642}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -3945,8 +3945,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3453351756180379173}
   - {fileID: 3453351756226014823}
+  - {fileID: 3453351756180379173}
   - {fileID: 5466014887492614204}
   - {fileID: 346476856465461982}
   - {fileID: 842847147694213445}
@@ -9313,15 +9313,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8efaabe4af2bdad48bcf0de5a08e2898, type: 3}
---- !u!224 &346476856465461982 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1868402345279569276, guid: 8efaabe4af2bdad48bcf0de5a08e2898,
-    type: 3}
-  m_PrefabInstance: {fileID: 2099531562866552738}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &346476856465461981 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1868402345279569279, guid: 8efaabe4af2bdad48bcf0de5a08e2898,
+    type: 3}
+  m_PrefabInstance: {fileID: 2099531562866552738}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &346476856465461982 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1868402345279569276, guid: 8efaabe4af2bdad48bcf0de5a08e2898,
     type: 3}
   m_PrefabInstance: {fileID: 2099531562866552738}
   m_PrefabAsset: {fileID: 0}
