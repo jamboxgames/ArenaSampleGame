@@ -33,6 +33,7 @@
 
         public void InitializeArenaSdk(string userName = null, string userID = null)
         {
+            Debug.Log("InitializeArenaSdk Hit >>>>");
             if (JamboxController.Instance.isGameIdSet())
             {
                 CommunicationController.Instance.Init(JamboxController.Instance.BaseClient());
