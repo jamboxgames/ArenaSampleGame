@@ -221,11 +221,15 @@
                 FriendlyBtnProcess(metaData);
             }
 
-            if (metaData.ContainsKey("AllRewardsClaimed") && metaData.ContainsKey("RewardAmount") && metaData.ContainsKey("RewardKey"))
+            if (metaData != null)
             {
-                UIPanelController.Instance.ShowClaimSuccessPanel(int.Parse(metaData["RewardAmount"]), metaData["RewardKey"]);
-                ConfettiAnimation();
+                if (metaData.ContainsKey("AllRewardsClaimed") && metaData.ContainsKey("RewardAmount") && metaData.ContainsKey("RewardKey"))
+                {
+                    UIPanelController.Instance.ShowClaimSuccessPanel(int.Parse(metaData["RewardAmount"]), metaData["RewardKey"]);
+                    ConfettiAnimation();
+                }
             }
+            
         }
 
         public void SetScrollViewStatus(bool Status)
@@ -306,7 +310,7 @@
 
         public void CheckForUnclaimedRewards()
         {
-            _ = CommunicationController.Instance.UnclaimedRewards("", (data) => { OnUnclaimedRewardsRcvd(data); });
+            _ = CommunicationController.Instance.UnclaimedRewards("", (data) => { OnUnclaimedRewardsRcvd(data); }, this.gameObject);
         }
 
         void OnUnclaimedRewardsRcvd(IAPIUnclaimedRewards data)

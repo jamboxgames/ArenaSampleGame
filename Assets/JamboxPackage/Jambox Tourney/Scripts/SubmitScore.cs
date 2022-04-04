@@ -210,7 +210,7 @@
             {
                 showConfetti = dataNew;
             }));
-            _ = CommunicationController.Instance.GetLeaderBoard("", data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);});
+            _ = CommunicationController.Instance.GetLeaderBoard("", data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, this.gameObject);
         }
 
         public void RefreshLeaderBoard ()
@@ -219,7 +219,7 @@
             LbLoadingPanel.gameObject.SetActive(true);
             _ = CommunicationController.Instance.GetLeaderBoard("", LeaderBoardID, (dataN) => {
                 OnLeaderBoardRcvd(dataN);
-            });
+            }, this.gameObject);
         }
         private void OnLeaderBoardRcvd (IApiLeaderRecordList data)
         {

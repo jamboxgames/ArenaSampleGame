@@ -198,7 +198,7 @@
             TimeSpan elapsed = (DateTime.UtcNow).Subtract(DateTime.Parse(CompTourneyDet.EndTime).ToUniversalTime());
             EndTimeText.text = "ENDED : " + EndTimeInFormat(elapsed) + "  AGO";
             LbLoadingPanel.gameObject.SetActive(true);
-            _ = CommunicationController.Instance.GetLeaderBoard("", CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); });
+            _ = CommunicationController.Instance.GetLeaderBoard("", CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject);
             LeaderboardRefreshing(true);
         }
 
@@ -309,7 +309,7 @@
                 BestScore.gameObject.SetActive(true);
                 BestScore.text = "BEST: " + tourneyDet._joinedTourneyData.Score;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard("", tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); });
+                _ = CommunicationController.Instance.GetLeaderBoard("", tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject);
                 LeaderboardRefreshing(true);
                 updatePlayableStatus(tourneyDet);
             }
@@ -384,7 +384,7 @@
                     theList.RowCount = 0;
                     LbLoadingPanel.gameObject.SetActive(true);
                     LeaderboardRefreshing(true);
-                    _ = CommunicationController.Instance.GetLeaderBoard("", tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }); 
+                    _ = CommunicationController.Instance.GetLeaderBoard("", tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject); 
                 }
             }
             if (prevPanel == Panels.CompletedPanel)
@@ -399,7 +399,7 @@
                 }
                 theList.RowCount = 0;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard("", CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); });
+                _ = CommunicationController.Instance.GetLeaderBoard("", CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject);
                 LeaderboardRefreshing(true);
             }
         }

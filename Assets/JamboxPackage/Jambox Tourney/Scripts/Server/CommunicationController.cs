@@ -133,7 +133,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="duelId">The Unique Id of Duel held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel> OnReceived)
+        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel> OnReceived, GameObject caller)
         {
             if (!JamboxController.Instance.CheckForNetwork())
             {
@@ -150,7 +150,7 @@ namespace Jambox.Tourney.Connector
             {
                 var result = await _client.JoinDuel(authToken, tourneyId);
 
-                if (OnReceived != null)
+                if (OnReceived != null && caller != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
@@ -300,7 +300,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList> OnReceived)
+        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList> OnReceived, GameObject caller)
         {
             if (!JamboxController.Instance.CheckForNetwork())
             {
@@ -316,7 +316,7 @@ namespace Jambox.Tourney.Connector
             try
             {
                 var result = await _client.getLeaderBoard(authToken, LBId);
-                if (OnReceived != null)
+                if (OnReceived != null && caller != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
@@ -534,7 +534,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards> OnReceived)
+        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards> OnReceived, GameObject caller)
         {
             if (!JamboxController.Instance.CheckForNetwork())
             {
@@ -550,7 +550,7 @@ namespace Jambox.Tourney.Connector
             try
             {
                 var result = await _client.UnclaimedRewards(authToken);
-                if (OnReceived != null)
+                if (OnReceived != null && caller != null)
                     OnReceived(result);
             }
             catch (Exception Ex)

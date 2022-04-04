@@ -42,7 +42,7 @@
         private void GetLeaderBoard()
         {
             _ = CommunicationController.Instance.GetLeaderBoard("", LeaderBoardID,
-               (data) => { LeaderBoardSuccess(data); });
+               (data) => { LeaderBoardSuccess(data); }, this.gameObject);
         }
         private IEnumerator WaitAndGet()
         {
