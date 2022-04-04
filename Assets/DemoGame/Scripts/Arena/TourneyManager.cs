@@ -137,6 +137,11 @@ public class TourneyManager : MonoBehaviour
 
     private void WatchVideoClicked()
     {
+        StartCoroutine(WatchVideoSuccessWithDelay());
+    }
+
+    IEnumerator WatchVideoSuccessWithDelay() {
+        yield return new WaitForSeconds(0.5f);
         OnFinishedRewardedAd(true);
     }
 

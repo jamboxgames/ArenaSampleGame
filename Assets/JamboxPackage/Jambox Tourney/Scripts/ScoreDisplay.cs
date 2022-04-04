@@ -111,12 +111,8 @@
             {
                 if (TourneyData._tournament.PlayWithVideoAD)
                 {
-#if UNITY_EDITOR
-                    OnVideoWatched();
-#else
                     UIPanelController.Instance.OnWatchVideo(TourneyData._joinedTourneyData.Tourneyid,
                                                             Panels.TourneyPanel);
-#endif
                 }
                 else
                 {

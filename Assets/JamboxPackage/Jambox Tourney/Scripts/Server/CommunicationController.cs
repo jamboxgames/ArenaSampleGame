@@ -85,9 +85,11 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message
+                    + "  StackTrace : " +  Ex.StackTrace);
                 OnErrorFromServer("GetTourneydetail", Ex.Message);
             }
+            
         }
 
         /// <summary>
@@ -505,9 +507,11 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message +
+                    "  Stack trace " +  Ex.StackTrace);
                 OnErrorFromServer("GetCurrencyData", Ex.Message);
             }
+            
         }
 
         public async Task UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived)

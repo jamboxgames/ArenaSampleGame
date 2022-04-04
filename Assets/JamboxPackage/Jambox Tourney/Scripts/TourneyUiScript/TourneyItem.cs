@@ -305,12 +305,8 @@
                 {
                     if (tourneyDet._tournament.PlayWithVideoAD)
                     {
-#if UNITY_EDITOR
-                        OnVideoWatched();
-#else
                         UIPanelController.Instance.SetTourneyScrollActive(false);
                         UIPanelController.Instance.OnWatchVideo(tourneyDet._tournament.Tourneyid, Panels.TourneyPanel);
-#endif
                     }
                     else
                     {

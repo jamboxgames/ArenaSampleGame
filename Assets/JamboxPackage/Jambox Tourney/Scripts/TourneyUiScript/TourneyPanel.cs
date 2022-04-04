@@ -174,9 +174,10 @@
 
         public void UpdateCurrency(bool _rewardClaimed = false)
         {
-            Debug.Log("CurrencyText.text : " + (CurrencyText.text != null));
+            //Debug.Log("CurrencyText.text : " + (CurrencyText.text != null));
             Debug.Log("UserDataContainer.Instance : " + (UserDataContainer.Instance != null));
-            CurrencyText.text = UserDataContainer.Instance.GetDisplayCurrencyText();
+            if(CurrencyText != null && CurrencyText.text != null)
+                CurrencyText.text = UserDataContainer.Instance.GetDisplayCurrencyText();
 
             if (_rewardClaimed)
                 ConfettiAnimation();
