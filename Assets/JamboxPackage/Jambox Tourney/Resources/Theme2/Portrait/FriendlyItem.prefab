@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: PRIVATE BATTLES
+  m_Text: 
 --- !u!1 &1614346619984880656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,7 +1093,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 110/110
+  m_Text: 0/0
 --- !u!1 &5910216276390440408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1172,7 +1172,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1.15
-  m_Text: 'With: Friend1. Friend2, Friend3'
+  m_Text: 
 --- !u!1 &5923219673531407820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,7 +1478,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Ends in 3D
+  m_Text: Ends in 0M
 --- !u!114 &1715139395394972446
 MonoBehaviour:
   m_ObjectHideFlags: 0

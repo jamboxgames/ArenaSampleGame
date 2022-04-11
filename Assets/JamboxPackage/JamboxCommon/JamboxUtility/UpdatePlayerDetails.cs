@@ -116,17 +116,17 @@
             TabletCheck();
             if (isRewardSDK)
             {
-                if (JamboxSDKParams.Instance.rewardBG != null)
+                if (JamboxSDKParams.Instance.RewardParameters.rewardBG != null)
                 {
-                    BG.sprite = JamboxSDKParams.Instance.rewardBG;
+                    BG.sprite = JamboxSDKParams.Instance.RewardParameters.rewardBG;
                     BG.color = Color.white;
                 }
             }
             else
             {
-                if (JamboxSDKParams.Instance.bgSprite != null)
+                if (JamboxSDKParams.Instance.ArenaParameters.bgSprite != null)
                 {
-                    BG.sprite = JamboxSDKParams.Instance.bgSprite;
+                    BG.sprite = JamboxSDKParams.Instance.ArenaParameters.bgSprite;
                     BG.color = Color.white;
                 }
             }

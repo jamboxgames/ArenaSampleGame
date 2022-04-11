@@ -22,7 +22,7 @@
         private int Timeout { get; set; }
         private readonly Uri _baseUri;
         private string appVersion = Application.version;
-        private string SDKVersion = "2.0.1";
+        private string SDKVersion = ArenaSDKVersion.VersionString;
         private string _platform = UnityEngine.Application.platform.ToString();
 
         public TournamentApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
@@ -262,7 +262,7 @@
         /// <param name="authToken">The unique authToken sent by server</param>
         /// <param name="score">The score achieved by user in current game completed</param>
         /// <returns></returns>
-        public async Task<IApiSubmitScore> submitScore(string authToken, string LbID, long score, ReplayData replayData = null)
+        public async Task<IApiSubmitScore> submitScore(string authToken, string LbID, long score, string displayScore, ReplayData replayData = null)
         {
             var urlpath = "/v1/submitscore/{LbId}";
             urlpath = urlpath.Replace("{LbId}", Uri.EscapeDataString(LbID));
@@ -282,6 +282,7 @@
             headers.Add("platform", _platform);
             Dictionary<String, object> DataNew2 = new Dictionary<String, object>();
             DataNew2.Add("score", Score);
+            DataNew2.Add("displayscore", displayScore);
             DataNew2.Add("replay_data", replayData);
             byte[] content = null;
             var jsonNew = DataNew2.ToJson();
@@ -297,7 +298,7 @@
         /// <param name="score">The score achieved by user in current game completed</param>
         /// <param name="matchID">The score achieved by user in current game completed</param>
         /// <returns></returns>
-        public async Task<IApiSubmitDuelScore> submitDuelScore(string authToken, string matchID, long score, ReplayData replayData = null)
+        public async Task<IApiSubmitDuelScore> submitDuelScore(string authToken, string matchID, long score, string displayScore, ReplayData replayData = null)
         {
             var urlpath = "/v1/submitduelscore/{matchID}";
             urlpath = urlpath.Replace("{matchID}", Uri.EscapeDataString(matchID));
@@ -318,6 +319,7 @@
 
             Dictionary<String, object> DataNew2 = new Dictionary<String, object>();
             DataNew2.Add("score", Score);
+            DataNew2.Add("displayscore", displayScore);
             DataNew2.Add("replay_data", replayData);
 
             byte[] content = null;

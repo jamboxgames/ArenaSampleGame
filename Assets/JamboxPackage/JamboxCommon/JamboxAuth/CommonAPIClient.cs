@@ -14,7 +14,7 @@
         public int Timeout { get; set; }
         public Uri _baseUri;
         private string appVersion = UnityEngine.Application.version;
-        private string SDKVersion = "2.0.1";
+        private string SDKVersion = ArenaSDKVersion.VersionString;
         private string _platform = UnityEngine.Application.platform.ToString();
         public CommonAPIClient ()
         {

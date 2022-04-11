@@ -205,7 +205,7 @@
             float totalAmount = DuelData.RewardList.RewardsDistribution[0].WinAmount;
 
             TotalReward.gameObject.SetActive(true);
-            RewardTImage.sprite = JamboxSDKParams.Instance.CoinBG;
+            RewardTImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             SetCurrencyPreferredSize(totalAmount.ToString());
             yield return new WaitForSeconds(_waitTime / 3.0f);
 
@@ -289,6 +289,10 @@
             float _width = findingOpponentRollingAnimation.GetChild(0).GetComponent<RectTransform>().rect.width;
             float _yPos = _width;
             float intialRollSpeed = rollSpeed;
+            for(int i = 0; i < findingOpponentRollingAnimation.childCount; i++)
+            {
+                findingOpponentRollingAnimation.GetChild(i).GetComponent<Image>().sprite = randomProfilePictures[Random.Range(0, randomProfilePictures.Length)];
+            }
             while (true)
             {
                 findingOpponentRollingAnimation.localPosition += new Vector3(0f, rollSpeed * Time.deltaTime, 0f);

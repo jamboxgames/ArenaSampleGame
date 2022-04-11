@@ -236,7 +236,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: End Of July Apple Bonanza
+  m_Text: 
 --- !u!1 &2367343223353502632
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,7 +488,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5000 Coins
+  m_Text: 0
 --- !u!1 &2884772921203275996
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,7 +831,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 50 Coins
+  m_Text: 0
 --- !u!1 &6133826191585089487
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,7 +985,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Go Big or Go Home. Random Map
+  m_Text: 
 --- !u!1 &6642758870537249074
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,6 +19,7 @@
         public string PlayerId;
         public int Rank;
         public int Score;
+        public String DisplayScore;
         public string Username;
         public string PlayerImageURL;
 
@@ -28,6 +29,7 @@
             PlayerId = dataNew.PlayerId;
             Rank = dataNew.Rank;
             Score = dataNew.Score;
+            DisplayScore = dataNew.DisplayScore;
             Username = dataNew.Username;
             PlayerImageURL = dataNew.AvatarUrl;
         }
@@ -50,6 +52,7 @@
         public Text EndTimeText;
         public Button SubmitButton;
         private long _Score;
+        private string _displayScore;
         private string TourneyId;
         private string LeaderBoardID;
         //public GameObject mainPanel;
@@ -57,6 +60,8 @@
         public RewarDetail rewardDetail;
         public LeaderBoardListView theList;
         public GameObject LbLoadingPanel;
+        public LeaderboardHeaders LBHeader;
+        public Button LBrefreshButton;
         public Rotate TopLoadingPanel;
         public GameObject FullLoadingPanel;
         private List<leaderBoardData> leaderBoardList;
@@ -116,6 +121,7 @@
                 LeaderBoardID = tourneyDet._joinedTourneyData.LeaderBoardID;
             }
             _Score = UIPanelController.Instance.tempScore.Score;
+            _displayScore = UIPanelController.Instance.tempScore.displayScore;
             UIPanelController.Instance.tempScore = null;
             //rewardDetail.UpdateUi(TourneyId);
             TimeSpan elapsed = DateTime.Parse(tourneyDet._tournament.EndTime).ToUniversalTime().Subtract(DateTime.UtcNow);
@@ -167,13 +173,14 @@
         public void UpdateCurrency()
         {
             currencyText.text = UserDataContainer.Instance.GetDisplayCurrencyText();
-            CurrencyIcon.sprite = JamboxSDKParams.Instance.CoinBG;
+            CurrencyIcon.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
         }
 
         public void SubmitButtonClick(Panels prevPanel)
         {
             RealtimeLeaderboard.Instance.DisableRealtimeLbGameobject();
-            _ = CommunicationController.Instance.SubmitScore("", LeaderBoardID, _Score, (data) => { ScoreSubmitted(data, prevPanel); });
+            LeaderboardRefreshing(true);
+            _ = CommunicationController.Instance.SubmitScore("", LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); });
         }
 
         public void OnBackbuttonClick()
@@ -217,6 +224,7 @@
         {
             theList.RowCount = 0;
             LbLoadingPanel.gameObject.SetActive(true);
+            LeaderboardRefreshing(true);
             _ = CommunicationController.Instance.GetLeaderBoard("", LeaderBoardID, (dataN) => {
                 OnLeaderBoardRcvd(dataN);
             }, this.gameObject);
@@ -225,14 +233,15 @@
         {
             if(LbLoadingPanel != null && LbLoadingPanel.activeInHierarchy)
                 LbLoadingPanel.gameObject.SetActive(false);
+            LeaderboardRefreshing(false);
             leaderBoardList = new List<leaderBoardData>();
             List<leaderBoardData> templist = new List<leaderBoardData>();
 
             leaderBoardData _myPlayerData = null;
-
+            LBHeader.SetLeaderBoardHeader(data.LeaderBoardHeaders.ScoreText,
+                data.LeaderBoardHeaders.NameText, data.LeaderBoardHeaders.RankText);
             foreach (var item in data.LeaderRecords)
             {
-
                 if (item.PlayerId == JamboxController.Instance.getMyuserId())
                     _myPlayerData = new leaderBoardData(item);
 
@@ -248,6 +257,13 @@
 
             ShowLeaderBoard();
             CheckForCelebration(leaderBoardList);
+        }
+
+        void LeaderboardRefreshing(bool value)
+        {
+            LBrefreshButton.interactable = (!value);
+            LBrefreshButton.GetComponent<Image>().enabled = (!value);
+            LBrefreshButton.transform.GetChild(0).gameObject.SetActive(value);
         }
 
         void CheckForCelebration(List<leaderBoardData> lbList)

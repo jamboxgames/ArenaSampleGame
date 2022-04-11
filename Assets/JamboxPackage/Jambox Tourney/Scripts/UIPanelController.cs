@@ -34,13 +34,15 @@
         public string TourneyId;
         public long Score;
         public long subScore;
+        public string displayScore;
         public ReplayData replayData;
 
-        public ScoreData(string _tourneyId, long _score,long _subScore = 0,ReplayData _replayData = null)
+        public ScoreData(string _tourneyId, long _score, string _displayScore, long _subScore = 0, ReplayData _replayData = null)
         {
             TourneyId = _tourneyId;
             Score = _score;
             subScore = _subScore;
+            displayScore = _displayScore;
             replayData = _replayData;
         }
     }
@@ -84,7 +86,7 @@
             IHttpAdapterUtil.OnErrorRcvd += ErrorFromServerRcvd;
             EditableMessageData = new Dictionary<string, string>();
             LoadMessageAsset();
-            bgSprite = JamboxSDKParams.Instance.bgSprite;
+            bgSprite = JamboxSDKParams.Instance.ArenaParameters.bgSprite;
         }
 
         private void LoadMessageAsset ()
@@ -221,17 +223,17 @@
             ShowPanel(Panels.LeaderBoardPanel, CurrPanel, metadata);
         }
 
-        public void SubmitScore (string tourneyId, long Score, int subScore, Panels Previous)
+        public void SubmitScore (string tourneyId, long Score, int subScore, string displayScore, Panels Previous)
         {
-            tempScore = new ScoreData(tourneyId, Score);
+            tempScore = new ScoreData(tourneyId, Score, displayScore);
             Panels prevPanel = Previous;
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             ShowPanel(Panels.ResultPanel, prevPanel, metadata);
         }
 
-        public void SubmitDuelScore(string tourneyId, long Score, int subScore,ReplayData replayData)
+        public void SubmitDuelScore(string tourneyId, long Score, int subScore, string displayScore, ReplayData replayData)
         {
-            tempScore = new ScoreData(tourneyId, Score, subScore, replayData);
+            tempScore = new ScoreData(tourneyId, Score, displayScore, subScore, replayData);
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             metadata.Add("tourneyid", tourneyId);
             ShowPanel(Panels.DuelResultPanel, Panels.TourneyPanel, metadata);

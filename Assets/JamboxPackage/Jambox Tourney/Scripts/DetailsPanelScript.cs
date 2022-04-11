@@ -43,6 +43,7 @@
         public GameObject rewardParent;
         public GameObject InvitePanel;
         public LeaderBoardListView theList;
+        public LeaderboardHeaders LBHeader;
         public GameObject LbLoadingPanel;
         public Rotate TopLoadingPanel;
         public GameObject FullLoadingPanel;
@@ -145,7 +146,7 @@
         public void UpdateMoneyOnUI(bool _rewardClaimed = false)
         {
             UserMoney.text = UserDataContainer.Instance.GetDisplayCurrencyText();
-            UserMoneyIcon.sprite = JamboxSDKParams.Instance.CoinBG;
+            UserMoneyIcon.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             if (_rewardClaimed)
                 ConfettiAnimation();
         }
@@ -346,6 +347,8 @@
 
             leaderBoardData _myPlayerData = null;
 
+            LBHeader.SetLeaderBoardHeader(data.LeaderBoardHeaders.ScoreText,
+                data.LeaderBoardHeaders.NameText, data.LeaderBoardHeaders.RankText);
             foreach (var item in data.LeaderRecords)
             {
 
@@ -401,6 +404,15 @@
                 LbLoadingPanel.gameObject.SetActive(true);
                 _ = CommunicationController.Instance.GetLeaderBoard("", CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject);
                 LeaderboardRefreshing(true);
+            }
+            if (prevPanel == Panels.FriendlyPanel)
+            {
+                TourneyDetail tourneyDetNew = null;
+                UserDataContainer.Instance.UpdatedFriendlyData.TryGetValue(TourneyId, out tourneyDetNew);
+                theList.RowCount = 0;
+                LbLoadingPanel.gameObject.SetActive(true);
+                LeaderboardRefreshing(true);
+                _ = CommunicationController.Instance.GetLeaderBoard("", tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, this.gameObject);
             }
         }
 

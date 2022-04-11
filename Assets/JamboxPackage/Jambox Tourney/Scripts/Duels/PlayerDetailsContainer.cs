@@ -92,7 +92,7 @@
                 {
                     EntryFeeCotainer.gameObject.SetActive(true);
                     EntryFeeText.text = entryFee.ToString();
-                    EntryFeeImage.sprite = JamboxSDKParams.Instance.CoinBG;
+                    EntryFeeImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
 
                     SetCurrencyPreferredSize();
                 }
@@ -133,7 +133,7 @@
                 {
                     EntryFeeCotainer.gameObject.SetActive(true);
                     EntryFeeText.text = entryFee.ToString();
-                    EntryFeeImage.sprite = JamboxSDKParams.Instance.CoinBG;
+                    EntryFeeImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
 
                     SetCurrencyPreferredSize();
                 }
@@ -147,7 +147,7 @@
 
         IEnumerator IncreaseReward(long _reward)
         {
-            RewardAmtImage.sprite = JamboxSDKParams.Instance.CoinBG;
+            RewardAmtImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             if (_reward > 0)
             {
                 while (!informationFilled)
@@ -201,7 +201,7 @@
 
         IEnumerator HideMoneyProperly()
         {
-            coinsPS.GetComponent<UIParticleSystem>().Particle = JamboxSDKParams.Instance.CoinBG;
+            coinsPS.GetComponent<UIParticleSystem>().Particle = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             coinsPS.Play();
             int TotalMoney = Convert.ToInt32(EntryFeeText.text);
             UpdateTextAnimation _textAnim = UIAnimations.Instance.ChangeTextOverTime(EntryFeeText, TotalMoney, 0, entryFeeDecreaseDuration, false);

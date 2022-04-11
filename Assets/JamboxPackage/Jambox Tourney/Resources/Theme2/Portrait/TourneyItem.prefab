@@ -752,7 +752,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5000 Coins
+  m_Text: 0
 --- !u!1 &1754204065448319499
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1063,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Attempts : 4/5'
+  m_Text: 'Attempts : 0/0'
 --- !u!1 &2348282782427988180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1221,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: End Of July Apple Bonanza
+  m_Text: 
 --- !u!1 &2888189470040839265
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,7 +1300,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Best : 30002'
+  m_Text: 'Best : 0'
 --- !u!1 &2908248331666923169
 GameObject:
   m_ObjectHideFlags: 0
@@ -1379,7 +1379,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5000 Coins
+  m_Text: 0
 --- !u!1 &2985607797576256738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,7 +1842,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 0
 --- !u!1 &4962247134251131787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1923,7 +1923,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Ends in 23 Hours
+  m_Text: Ends in 0M
 --- !u!114 &2805414354816330809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2373,7 +2373,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 1/10
+  m_Text: 0/0
 --- !u!1 &6552811369690822313
 GameObject:
   m_ObjectHideFlags: 0
@@ -2760,7 +2760,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: It is that time of the month where you 10x your coins if you win
+  m_Text: 
 --- !u!1 &7966290474987764013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3155,7 +3155,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 50 Coins
+  m_Text: 0
 --- !u!1 &8703346706913975195
 GameObject:
   m_ObjectHideFlags: 0
@@ -3309,4 +3309,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 3/10
+  m_Text: 0/0

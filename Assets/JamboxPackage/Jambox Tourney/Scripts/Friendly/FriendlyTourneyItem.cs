@@ -56,6 +56,10 @@
             //2021-07-19T07:54:36.738535Z
             EndTimeText.text = "ENDS IN : " + EndTimeInFormat(elapsed);
             //JoinBtnText.text = "Join";
+            if (friendlyTourneyDet._joinedTourneyData.CurrentAttempt >= friendlyTourneyDet._tournament.MaxEntry)
+                PlayBtn.interactable = false;
+            else
+                PlayBtn.interactable = true;
         }
 
         string EndTimeInFormat(TimeSpan _elasped)

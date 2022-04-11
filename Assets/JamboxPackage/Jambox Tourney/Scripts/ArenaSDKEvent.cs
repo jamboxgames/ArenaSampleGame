@@ -54,7 +54,7 @@
             }
         }
 
-        public void SubmitScore(int score, int subScore)
+        public void SubmitScore(int score, int subScore, string displayScore = "")
         {
             //check for tourney ID, if there is no tourney id set then developer might have called the API
             //for no tournament gameplay
@@ -67,7 +67,7 @@
                 Debug.LogError("SubmitScore is called for non Tournament Gameplay");
                 return;
             }
-            StartCoroutine(WaitndSubmit(score, subScore));
+            StartCoroutine(WaitndSubmit(score, subScore, displayScore));
         }
 
         public void OpenArenaUI(Dictionary<string, long> currencyMap = null, Panels _targetpanel = Panels.TourneyPanel)
@@ -193,7 +193,7 @@
             replayTestData = _replayString.FromJson<APIReplayData>();
         }
 
-        private IEnumerator WaitndSubmit(int Score, int subScore)
+        private IEnumerator WaitndSubmit(int Score, int subScore, string displayScore)
         {
             yield return new WaitForSeconds(0.2f);
 
@@ -201,7 +201,7 @@
 
             if (PrevPanel == Panels.DuelPanel)
             {
-                UIPanelController.Instance.SubmitDuelScore(tourneyID, Score, subScore, data);
+                UIPanelController.Instance.SubmitDuelScore(tourneyID, Score, subScore, displayScore, data);
                 if (useConsecutiveReplayData)
                 {
                     string _replayString = data.ToJson();
@@ -210,7 +210,7 @@
                 }
             }
             else
-                UIPanelController.Instance.SubmitScore(tourneyID, Score, subScore, PrevPanel);
+                UIPanelController.Instance.SubmitScore(tourneyID, Score, subScore, displayScore, PrevPanel);
             isTourney = false;
             tourneyID = String.Empty;
         }

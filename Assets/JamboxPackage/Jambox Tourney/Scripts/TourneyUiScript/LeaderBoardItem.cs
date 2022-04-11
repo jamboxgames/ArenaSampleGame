@@ -20,14 +20,16 @@
         {
             Rank.text =  ""+ data_.Rank ;
             Name.text =  data_.Username;
-            Score.text = "" + data_.Score;
-            //Attempt.text = " Attempt : " + data_.AttemptCount + " / " + _totalAttempt;
+            Debug.Log("DisplayScore : " + data_.DisplayScore);
+            if(!string.IsNullOrEmpty(data_.DisplayScore))
+                Score.text = data_.DisplayScore;
+            else
+                Score.text = "" + data_.Score;
             if (JamboxController.Instance.getMyuserId().Equals(data_.PlayerId))
             {
                 Name.text = "You";
                 this.gameObject.GetComponent<Image>().enabled = true;
-                //this.gameObject.GetComponent<Image>().sprite = myBG;
-                //img.color = UnityEngine.Color.magenta;
+
             }
             else
             {

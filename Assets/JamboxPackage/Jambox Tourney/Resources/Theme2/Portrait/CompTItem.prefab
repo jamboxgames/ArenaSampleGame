@@ -157,7 +157,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5000 Coins
+  m_Text: 0
 --- !u!1 &455593281264178428
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Attempts : 4/5'
+  m_Text: 'Attempts : 0/0'
 --- !u!1 &897032140254608704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1316,7 +1316,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 110/100
+  m_Text: 0/0
 --- !u!1 &2855236540428414127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,7 +1607,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: End Of July Apple Bonanza
+  m_Text: 
 --- !u!1 &3799925416402446239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1803,7 +1803,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Best : XXXXX'
+  m_Text: 'Best : 0'
 --- !u!1 &5834338331488486592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1883,7 +1883,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'ENDED: 60D 24H 60M ago'
+  m_Text: 'ENDED: 0M ago'
 --- !u!1 &6416304256021593637
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,7 +2037,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: XXXXXXXX Coins
+  m_Text: 0
 --- !u!1 &7457711850702893811
 GameObject:
   m_ObjectHideFlags: 0
@@ -2270,7 +2270,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 3/10
+  m_Text: 0/0
 --- !u!1 &8132953206340955735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2349,7 +2349,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: It is that time of the month where you 10x your coins if you win
+  m_Text: 
 --- !u!1 &8135967488133930563
 GameObject:
   m_ObjectHideFlags: 0

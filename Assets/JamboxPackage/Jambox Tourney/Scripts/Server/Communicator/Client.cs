@@ -46,15 +46,15 @@ namespace Jambox.Tourney.Server
         }
 
         /// <inheritdoc cref="SubmitScore"/>
-        public async Task<IApiSubmitScore> SubmitScore(string authToken, string tourneyID, long Score, ReplayData replayData = null)
+        public async Task<IApiSubmitScore> SubmitScore(string authToken, string tourneyID, long Score, string displayScore, ReplayData replayData = null)
         {
-            return await _apiClient.submitScore(authToken, tourneyID, Score, replayData);
+            return await _apiClient.submitScore(authToken, tourneyID, Score, displayScore, replayData);
         }
 
         /// <inheritdoc cref="SubmitDuelScore"/>
-        public async Task<IApiSubmitDuelScore> SubmitDuelScore(string authToken, string matchID, long Score, ReplayData replayData = null)
+        public async Task<IApiSubmitDuelScore> SubmitDuelScore(string authToken, string matchID, long Score, string displayScore, ReplayData replayData = null)
         {
-            return await _apiClient.submitDuelScore(authToken, matchID, Score, replayData);
+            return await _apiClient.submitDuelScore(authToken, matchID, Score, displayScore, replayData);
         }
 
         /// <inheritdoc cref="getLeaderBoard"/>

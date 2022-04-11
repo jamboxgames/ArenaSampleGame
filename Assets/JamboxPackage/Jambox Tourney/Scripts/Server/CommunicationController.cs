@@ -201,7 +201,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore(string authToken, string LbID, long score, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitScore(string authToken, string LbID, long score, string displayScore, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
         {
             if (!JamboxController.Instance.CheckForNetwork())
             {
@@ -216,7 +216,7 @@ namespace Jambox.Tourney.Connector
             authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.SubmitScore(authToken, LbID, score, replayData);
+                var result = await _client.SubmitScore(authToken, LbID, score, displayScore, replayData);
                 if (OnReceived != null)
                     OnReceived(result);
             }
@@ -234,7 +234,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitDuelScore(string authToken, string matchID, long score, Action<IApiSubmitDuelScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitDuelScore(string authToken, string matchID, long score, string displayScore, Action<IApiSubmitDuelScore> OnReceived, ReplayData replayData = null)
         {
             if (!JamboxController.Instance.CheckForNetwork())
             {
@@ -249,7 +249,7 @@ namespace Jambox.Tourney.Connector
             authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.SubmitDuelScore(authToken, matchID, score, replayData);
+                var result = await _client.SubmitDuelScore(authToken, matchID, score, displayScore, replayData);
                 if (OnReceived != null)
                     OnReceived(result);
             }
@@ -260,38 +260,38 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        /// <summary>
-        /// The UI will call this method when they complete the game and submit their score.
-        /// </summary>
-        /// <param name="authToken">The unique token which will be held for Communication</param>
-        /// <param name="score"></param>
-        /// <param name="OnReceived">The Action on completion of this particular task</param>
-        /// <returns></returns>
-        public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
-        {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+        ///// <summary>
+        ///// The UI will call this method when they complete the game and submit their score.
+        ///// </summary>
+        ///// <param name="authToken">The unique token which will be held for Communication</param>
+        ///// <param name="score"></param>
+        ///// <param name="OnReceived">The Action on completion of this particular task</param>
+        ///// <returns></returns>
+        //public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
+        //{
+        //    if (!JamboxController.Instance.CheckForNetwork())
+        //    {
+        //        ShowNoNetworkDialogue();
+        //        return;
+        //    }
 
-            if (!JamboxController.Instance.ChechkForSession())
-            {
-                await JamboxController.Instance.RefreshSession();
-            }
-            authToken = JamboxController.Instance.CurrentSession.Token;
-            try
-            {
-                var result = await _client.SubmitScore(authToken, LbID, score, replayData);
-                if (OnReceived != null)
-                    OnReceived(result);
-            }
-            catch (Exception Ex)
-            {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("SubmitDuelScore", Ex.Message);
-            }
-        }
+        //    if (!JamboxController.Instance.ChechkForSession())
+        //    {
+        //        await JamboxController.Instance.RefreshSession();
+        //    }
+        //    authToken = JamboxController.Instance.CurrentSession.Token;
+        //    try
+        //    {
+        //        var result = await _client.SubmitScore(authToken, LbID, score, replayData);
+        //        if (OnReceived != null)
+        //            OnReceived(result);
+        //    }
+        //    catch (Exception Ex)
+        //    {
+        //        Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+        //        OnErrorFromServer("SubmitDuelScore", Ex.Message);
+        //    }
+        //}
 
         /// <summary>
         /// The UI will call this to fetch Leader board of Any particular tournament.

@@ -64,7 +64,9 @@ namespace Jambox.Tourney.Connector
             //-1 because the last interval is dummy
             while (playedIntervalCount < totalIntervalCount - 1)
             {
-                if (playingTimer >= float.Parse(_interval.i))
+                string strInterval = _interval.i.Replace(',', '.');
+                strInterval = strInterval.Replace('/', '.');
+                if (playingTimer >= float.Parse(strInterval))
                 {
                     ExecuteDataString(_interval.d);
                     playedIntervalCount++;
@@ -75,8 +77,9 @@ namespace Jambox.Tourney.Connector
             }
 
             //Check for the end of replay
-           
-            while (_interval != null && playingTimer <= float.Parse(_interval.i))
+            string strIntervalLast = _interval.i.Replace(',', '.');
+            strIntervalLast = strIntervalLast.Replace('/', '.');
+            while (_interval != null && playingTimer <= float.Parse(strIntervalLast))
             {
                 yield return null;
             }

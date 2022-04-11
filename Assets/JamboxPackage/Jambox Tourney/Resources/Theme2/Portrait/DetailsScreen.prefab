@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1.25
-  m_Text: END OF JULY APPLE BONANZA
+  m_Text: 
 --- !u!1 &98071738471639679
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: mycode31234
+  m_Text: 
 --- !u!1 &217438157464728985
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,7 +861,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8376104756199250902}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.9999999
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2081,7 +2081,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'BEST : 3433333433'
+  m_Text: 'BEST : 0'
 --- !u!1 &2770867109441518616
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,7 +2373,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ends in 3D
+  m_Text: Ends in 0M
 --- !u!114 &2658266512598558377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2468,7 +2468,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 100
+  m_Text: 0
 --- !u!114 &5997424184965224117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2549,7 +2549,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: f151a3507c9329f42a04fb20feb55c3f, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2902,7 +2902,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 56/10
+  m_Text: 0/0
 --- !u!1 &3333090121418178869
 GameObject:
   m_ObjectHideFlags: 0
@@ -3136,7 +3136,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: -100
+  m_Text: 0
 --- !u!95 &7537969702778468467
 Animator:
   serializedVersion: 3
@@ -3567,7 +3567,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3453351756363250717}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3857,7 +3857,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3453351756889770382}
   m_HandleRect: {fileID: 3453351756889770381}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4019,6 +4019,7 @@ MonoBehaviour:
   rewardParent: {fileID: 4173408122638618280}
   InvitePanel: {fileID: 2421989575748870673}
   theList: {fileID: 2949435113810090909}
+  LBHeader: {fileID: 4423640970727098124}
   LbLoadingPanel: {fileID: 1582274442164464184}
   TopLoadingPanel: {fileID: 3487558310082298950}
   FullLoadingPanel: {fileID: 346476856465461981}
@@ -4354,7 +4355,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: DESCRIPTION
+  m_Text: 0
 --- !u!1 &3487558310082298948
 GameObject:
   m_ObjectHideFlags: 0
@@ -4659,7 +4660,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1864731100438498383
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5069,7 +5070,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8493521605022956204}
   m_HandleRect: {fileID: 8619364026346887859}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5308,7 +5309,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'CURRENT : 3433333433'
+  m_Text: 'CURRENT : 0'
 --- !u!1 &4430707224933464599
 GameObject:
   m_ObjectHideFlags: 0
@@ -5577,7 +5578,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: It is that time of the month where you 10x your coins if you win
+  m_Text: 
 --- !u!1 &4793698771707531865
 GameObject:
   m_ObjectHideFlags: 0
@@ -6096,6 +6097,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4207197739582064487}
   - component: {fileID: 2949435113786935122}
+  - component: {fileID: 4423640970727098124}
   m_Layer: 5
   m_Name: LeaderaBoard
   m_TagString: Untagged
@@ -6140,6 +6142,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5332207226469283452}
   m_CullTransparentMesh: 1
+--- !u!114 &4423640970727098124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5332207226469283452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19536a95012d94d9f88bdd8068f001d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RankHeader: {fileID: 5809453612525767501}
+  ScoreHeader: {fileID: 4497097939948707998}
+  NameHeader: {fileID: 1558416914199460235}
+  LBItemHeader: {fileID: 3644673190171612959}
 --- !u!1 &5596437211488076318
 GameObject:
   m_ObjectHideFlags: 0
@@ -7229,8 +7247,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1.25
-  m_Text: OUR DEVELOPERS ARE WORKING HARD TO BRING THIS FEATURE. THE FEATURE WILL
-    BE LIVE SOON....
+  m_Text: 
 --- !u!1 &6657046104012547703
 GameObject:
   m_ObjectHideFlags: 0
@@ -7347,7 +7364,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 100/9000
+  m_Text: 0/0
 --- !u!1 &6855639189151923569
 GameObject:
   m_ObjectHideFlags: 0
@@ -8083,7 +8100,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 1000 Coins
+  m_Text: 0
 --- !u!1 &7748527615391345629
 GameObject:
   m_ObjectHideFlags: 0
@@ -8162,7 +8179,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5000
+  m_Text: 0
 --- !u!1 &7752341147031850065
 GameObject:
   m_ObjectHideFlags: 0
@@ -8565,7 +8582,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 10000
+  m_Text: 0
 --- !u!1 &7998412074019404434
 GameObject:
   m_ObjectHideFlags: 0
@@ -8845,7 +8862,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2dad731be90df47d0b1547bb77d1da0b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

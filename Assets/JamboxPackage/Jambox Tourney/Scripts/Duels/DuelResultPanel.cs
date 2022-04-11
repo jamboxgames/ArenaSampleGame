@@ -101,11 +101,12 @@
             title.text = DuelData.TourneyName;
             string LeaderBoardID = DuelData.LeaderBoardID;
             long _Score = UIPanelController.Instance.tempScore.Score;
+            string DisplayScore = UIPanelController.Instance.tempScore.displayScore;
             ReplayData _replayData = UIPanelController.Instance.tempScore.replayData;
             UIPanelController.Instance.tempScore = null;
             SetMyPlayerDetails(CommonUserData.Instance.userName, CommonUserData.Instance.avatarSprite, _Score, false);
 
-            _ = CommunicationController.Instance.SubmitDuelScore("", LeaderBoardID, _Score, (data) => { ScoreSubmitted(data); }, _replayData);
+            _ = CommunicationController.Instance.SubmitDuelScore("", LeaderBoardID, _Score, DisplayScore,(data) => { ScoreSubmitted(data); }, _replayData);
         }
 
         public void UpdateWaitingDialogue(bool status, string DisplayText)
@@ -182,13 +183,19 @@
                 {
                     bool _wonFrame = true;
                     if (!won && lose) _wonFrame = false;
-                    SetMyPlayerDetails(playerData.Username, CommonUserData.Instance.avatarSprite, playerData.Score, _wonFrame);
+                    string scoreToDisplay = playerData.Score + "";
+                    if (!string.IsNullOrEmpty(playerData.DisplayScore))
+                        scoreToDisplay = playerData.DisplayScore;
+                    SetMyPlayerDetails(playerData.Username, CommonUserData.Instance.avatarSprite, playerData.Score, _wonFrame, scoreToDisplay);
                 }
                 else
                 {
                     bool _wonFrame = false;
                     if (!won && lose) _wonFrame = true;
-                    SetOpponentPlayerDetails(playerData.Username, UserDataContainer.Instance.tempDuelOpponentSprite, playerData.Score, _wonFrame);
+                    string scoreToDisplay = playerData.Score + "";
+                    if (!string.IsNullOrEmpty(playerData.DisplayScore))
+                        scoreToDisplay = playerData.DisplayScore;
+                    SetOpponentPlayerDetails(playerData.Username, UserDataContainer.Instance.tempDuelOpponentSprite, playerData.Score, _wonFrame, scoreToDisplay);
                     UserDataContainer.Instance.tempDuelOpponentSprite = null;
                 }
             }
@@ -206,8 +213,9 @@
             }
 
             int TotalMoney = 0;
-            CoinsWon.Particle = JamboxSDKParams.Instance.CoinBG;
-            CoinsWonOpponent.Particle = JamboxSDKParams.Instance.CoinBG;
+            CoinsWon.Particle = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
+            CoinsWonOpponent.Particle = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
+            RewardImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             if (won)
             {
                 TotalMoney = data.result.rewardList.Virtual.Value;
@@ -248,7 +256,6 @@
             }
 
             float rewardMoney = TotalMoney;
-            RewardImage.sprite = JamboxSDKParams.Instance.CoinBG;
             SetCurrencyPreferredSize(rewardMoney.ToString());
             UpdateTextAnimation _textAnim = UIAnimations.Instance.ChangeTextOverTime(RewardText, (int)rewardMoney, 0, rewardChangeDuration, false);
             while (!_textAnim.done)
@@ -290,12 +297,12 @@
             }
         }
 
-        public void SetMyPlayerDetails(string _name, Sprite avatarSprite, long score, bool won)
+        public void SetMyPlayerDetails(string _name, Sprite avatarSprite, long score, bool won, string _displayScore = "")
         {
             myPlayer.SetPlayerDetails(_name, avatarSprite, -1, score, won);
         }
 
-        public void SetOpponentPlayerDetails(string _name, Sprite avatarSprite, long score, bool won)
+        public void SetOpponentPlayerDetails(string _name, Sprite avatarSprite, long score, bool won, string _displayScore = "")
         {
             opponentPlayer.SetPlayerDetails(_name, avatarSprite, -1, score, won);
         }

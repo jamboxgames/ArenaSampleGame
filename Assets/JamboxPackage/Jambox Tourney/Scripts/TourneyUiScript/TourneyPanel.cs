@@ -90,9 +90,9 @@
         {
             BGimage.sprite = UIPanelController.Instance.bgSprite;
             SetToDefaultView();
-            if(JamboxSDKParams.Instance.CoinBG != null)
+            if(JamboxSDKParams.Instance.ArenaParameters.CoinBG != null)
             {
-                CoinImage.sprite = JamboxSDKParams.Instance.CoinBG;
+                CoinImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             }
         }
 
@@ -106,6 +106,7 @@
             LoadingDialog(true, false);
             FriendlyPanel.SetActive(false);
             TourneyDetail.SetActive(true);
+            profilePicture.gameObject.SetActive(false);
             updateUser = StartCoroutine(UpdateUserBasicData());
             CheckForUnclaimedRewardsExclamation();
             JamboxController.Instance.UserProfileUpdated += OnProfileUpdate;

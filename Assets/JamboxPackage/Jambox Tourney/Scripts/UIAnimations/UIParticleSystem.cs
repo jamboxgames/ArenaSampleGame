@@ -119,7 +119,7 @@ public class UIParticleSystem : MonoBehaviour {
 
     void Awake()
     {
-        Particle = JamboxSDKParams.Instance.CoinBG;
+        Particle = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
         if (ParticlePool == null)
             Init();
         if (PlayOnAwake)

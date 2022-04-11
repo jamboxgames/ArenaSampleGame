@@ -1544,6 +1544,11 @@ namespace Jambox.Tourney.Data
         int Score { get; }
 
         /// <summary>
+        /// The score which will be displayed in leaderboard.
+        /// </summary>
+        string DisplayScore { get; }
+
+        /// <summary>
         /// The username of the score owner, if the owner is a user.
         /// </summary>
         string Username { get; }
@@ -1577,6 +1582,10 @@ namespace Jambox.Tourney.Data
         public int Score { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name = "display_score"), Preserve]
+        public string DisplayScore { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name = "player_name"), Preserve]
         public string Username { get; set; }
 
@@ -1603,6 +1612,39 @@ namespace Jambox.Tourney.Data
         }
     }
 
+    public interface IAPILeaderBoardheaders
+    {
+        /// <summary>
+        /// The Score header text
+        /// </summary>
+        string ScoreText { get; }
+
+        /// <summary>
+        /// The Rank header text
+        /// </summary>
+        string RankText { get; }
+
+        /// <summary>
+        /// The name header Text
+        /// </summary>
+        string NameText { get; }
+    }
+
+    internal class APILeaderBoardheaders : IAPILeaderBoardheaders
+    {
+        /// <inheritdoc />
+        [DataMember(Name = "score"), Preserve]
+        public string ScoreText { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name = "rank"), Preserve]
+        public string RankText { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name = "name"), Preserve]
+        public string NameText { get; set; }
+    }
+
     /// <summary>
     /// A set of leaderboard records, may be part of a leaderboard records page or a batch of individual records.
     /// </summary>
@@ -1612,6 +1654,11 @@ namespace Jambox.Tourney.Data
         /// The UNIX time when the leaderboard record Refresh.
         /// </summary>
         string refreshTime { get; }
+
+        /// <summary>
+        /// Headers for leaderboard columns.
+        /// </summary>
+        IAPILeaderBoardheaders LeaderBoardHeaders { get; }
 
         /// <summary>
         /// The unique Id which is associated with every leaderboard.
@@ -1636,10 +1683,15 @@ namespace Jambox.Tourney.Data
         public string leaderboardId { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name = "headers"), Preserve]
+        public APILeaderBoardheaders LBHeaders { get; set; }
+
+        public IAPILeaderBoardheaders LeaderBoardHeaders => LBHeaders ?? new APILeaderBoardheaders();
+
+        /// <inheritdoc />
         public IEnumerable<IApiLeaderRecord> LeaderRecords => _leaderboardRecords ?? new List<ApiLeaderRecord>(0);
         [DataMember(Name = "leaderboard"), Preserve]
         public List<ApiLeaderRecord> _leaderboardRecords { get; set; }
-
 
         public override string ToString()
         {

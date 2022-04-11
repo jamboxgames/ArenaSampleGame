@@ -53,8 +53,8 @@
 
         private void Start()
         {
-            if(JamboxSDKParams.Instance.cardBG != null)
-                this.gameObject.GetComponent<Image>().sprite = JamboxSDKParams.Instance.cardBG;
+            if(JamboxSDKParams.Instance.ArenaParameters.cardBG != null)
+                this.gameObject.GetComponent<Image>().sprite = JamboxSDKParams.Instance.ArenaParameters.cardBG;
         }
         public String UniqueTID
         {
@@ -94,7 +94,9 @@
             TourneyDesc.text = tourneyDet._tournament.Description;
             PlayerCountDetail.text = tourneyDet._tournament.MaxPlayers + "";
             Entry.SetActive(true);
+            playerCountGameobejct.SetActive(true);
             Positions.SetActive(false);
+            attemptsObj.SetActive(false);
             string Currency = tourneyDet._tournament.Currency;
             UserDataContainer.Instance.currencyList.TryGetValue(tourneyDet._tournament.Currency, out Currency);
             EntryFee.text = tourneyDet._tournament.EntryFee + " " + Currency;
@@ -106,6 +108,7 @@
             TimeSpan elapsed = DateTime.Parse(tourneyDet._tournament.EndTime).ToUniversalTime().Subtract(DateTime.UtcNow);
             //2021-07-19T07:54:36.738535Z
             EndTimeText.text = "ENDS IN : " + EndTimeInFormat(elapsed);
+            PlayJoinBtn.interactable = true;
             JoinBtnText.text = "Join";
             watchAdText.SetActive(false);
             UpdateJoinedStatus(tourneyDet);
@@ -179,7 +182,7 @@
                 if(tourneyDet._tournament.PlayWithVideoAD)
                 {
                     JoinBtnText.text = "";
-                    JoinBtnText.gameObject.SetActive(false);
+                    //JoinBtnText.gameObject.SetActive(false);
                     watchAdText.SetActive(true);
                 }
                 else

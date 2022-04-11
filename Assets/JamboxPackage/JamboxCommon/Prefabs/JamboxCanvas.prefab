@@ -83,6 +83,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1091796667723392558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 1
-  auto: 1
+  auto: 0
 --- !u!114 &6492491078929894529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,17 +130,19 @@ MonoBehaviour:
   gameID: 
   AppSecret: 
   IsProduction: 0
-  bgSprite: {fileID: 21300000, guid: 19d215b05ab0d402194e74780fc80507, type: 3}
   LogEnabled: 0
   ActiveTheme: 0
-  cardBG: {fileID: 0}
-  CoinBG: {fileID: 21300000, guid: b0d08facd5bad4672b14ea270b8167ce, type: 3}
-  rewardBG: {fileID: 21300000, guid: 754545415bd6fbb43b659a641ccea134, type: 3}
-  rewardRealMoneyImage: {fileID: 21300000, guid: e6eaf9bfc9e419048bde7afb48dff9be,
-    type: 3}
-  rewardJBXMoneyImage: {fileID: 21300000, guid: 6bd3c1135718f4d1490e1cb9321d02f5,
-    type: 3}
-  SpinWheelWithAD: 1
+  ArenaParameters:
+    bgSprite: {fileID: 21300000, guid: 19d215b05ab0d402194e74780fc80507, type: 3}
+    cardBG: {fileID: 0}
+    CoinBG: {fileID: 21300000, guid: b0d08facd5bad4672b14ea270b8167ce, type: 3}
+  RewardParameters:
+    rewardBG: {fileID: 21300000, guid: b0ca248835155d6428b117e47ae659c4, type: 3}
+    rewardRealMoneyImage: {fileID: 21300000, guid: e6eaf9bfc9e419048bde7afb48dff9be,
+      type: 3}
+    rewardJBXMoneyImage: {fileID: 21300000, guid: 047ea888332108e419348df603eae03a,
+      type: 3}
+    SpinWheelWithAD: 1
 --- !u!1001 &1161985848593728507
 PrefabInstance:
   m_ObjectHideFlags: 0

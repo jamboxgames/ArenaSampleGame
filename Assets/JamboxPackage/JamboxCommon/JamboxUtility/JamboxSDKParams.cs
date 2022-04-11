@@ -1,38 +1,37 @@
 namespace Jambox.Common.Utility
-{ 
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
+{
+    using UnityEditor;
     using UnityEngine;
-    using UnityEngine.UI;
+    using UnityEngine.UIElements;
 
     public enum ThemeType
     {
         //Theme1,
         Theme2
     }
+    //[System.Serializable]
     public class JamboxSDKParams : MonoBehaviour
     {
-        public string gameID;
-        public string AppSecret;
-        public bool IsProduction;
-        public Sprite bgSprite;
-        public bool LogEnabled = false;
+        [SerializeField]
+        private string gameID;
+        [SerializeField]
+        private string AppSecret;
+        [SerializeField]
+        private bool IsProduction;
+        [SerializeField]
+        private bool LogEnabled = false;
+
         [HideInInspector]
         public ThemeType ActiveTheme = ThemeType.Theme2;
+        //static string sb = "<b>Arena ~ Use this if your using Arena SDK</b>";
+        [Header("Arena ~ Use this if your using Arena SDK")]
+        [Tooltip("All the arena related custom assets can be referenced inside this.")]
+        public JamboxArenaSDKParams ArenaParameters;
 
-        public Sprite cardBG;
-        public Sprite CoinBG;
-
-        [Header("Rewards")]
-        [HideInInspector]
-        public Sprite rewardBG;
-        [HideInInspector]
-        public Sprite rewardRealMoneyImage;
-        [HideInInspector]
-        public Sprite rewardJBXMoneyImage;
-        [HideInInspector]
-        public bool SpinWheelWithAD;
+        
+        [Header("Rewards ~ Use this if your using Reward SDK")]
+        [Tooltip("All the reward related custom assets can be referenced inside this.")]
+        public JamboxRewardSDKParams RewardParameters;
 
         private void Awake()
         {
@@ -57,5 +56,21 @@ namespace Jambox.Common.Utility
                 return m_Instance;
             }
         }
+    }
+    [System.Serializable]
+    public class JamboxArenaSDKParams
+    {
+        public Sprite bgSprite;
+        public Sprite cardBG;
+        public Sprite CoinBG;
+    }
+
+    [System.Serializable]
+    public class JamboxRewardSDKParams
+    {
+        public Sprite rewardBG;
+        public Sprite rewardRealMoneyImage;
+        public Sprite rewardJBXMoneyImage;
+        public bool SpinWheelWithAD;
     }
 }
