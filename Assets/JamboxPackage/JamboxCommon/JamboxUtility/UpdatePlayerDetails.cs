@@ -73,7 +73,7 @@
 
         async Task UpdatePlayerDetailsTask()
         {
-            await JamboxController.Instance.UpdateUserOnServer("", nameInput.text, selectedAvatarId, currentAvatarGroup.ToString());
+            await JamboxController.Instance.UpdateUserOnServer(nameInput.text, selectedAvatarId, currentAvatarGroup.ToString());
             Destroy(this.gameObject);
         }
 

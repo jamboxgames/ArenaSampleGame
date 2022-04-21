@@ -127,16 +127,16 @@ namespace Jambox.Common
             CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
             Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
         }
-        public async Task UpdateUserOnServer (String authToken, String name, int avatarId, string avatarGroup)
+        public async Task UpdateUserOnServer (String name, int avatarId, string avatarGroup)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
-            authToken = CurrentSession.Token;
+            String authToken = CurrentSession.Token;
             try
             {
-                var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+                var result = await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup);
                 if (UserProfileUpdated != null)
                 {
                     UserProfileUpdated();
@@ -152,17 +152,29 @@ namespace Jambox.Common
             }
         }
 
-        public async Task<IAPIUpdateUserData> UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup)
+        public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
-            authToken = CurrentSession.Token;
+            String authToken = CurrentSession.Token;
             var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
             CommonUserData.Instance.userName = name;
             return result;
         }
+
+        public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, string avatarUrl)
+        {
+            if (!ChechkForSession())
+            {
+                await RefreshSession();
+            }
+            String authToken = CurrentSession.Token;
+            var result = await _client.UpdateUserDetails(authToken, name, avatarUrl);
+            return result;
+        }
+
 
         public CommonClient BaseClient() {
             return (CommonClient)_client;

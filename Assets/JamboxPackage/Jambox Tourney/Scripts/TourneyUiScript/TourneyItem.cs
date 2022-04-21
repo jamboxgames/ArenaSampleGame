@@ -211,7 +211,7 @@
                 Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
         #endif
                 UIPanelController.Instance.LoadingDialogue(true, false);
-                _ = CommunicationController.Instance.JoinTourney("", tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.JoinTourney( tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }
         }
         public void OnVideoWatched ()
@@ -227,7 +227,7 @@
 
             TourneyDetail tourneyDet = null;
             UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(UniqueTID, out tourneyDet);
-            _ = CommunicationController.Instance.PlayTourney("", UniqueTID, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });    
+            _ = CommunicationController.Instance.PlayTourney(UniqueTID, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });    
         }
 
         public void OnPlayDuelClicked(bool isPostPurchase = false)
@@ -387,7 +387,7 @@
                     Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
                 #endif
                     UIPanelController.Instance.LoadingDialogue(true, false);
-                    _ = CommunicationController.Instance.JoinTourney("", tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                    _ = CommunicationController.Instance.JoinTourney(tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
                 }
             }
         }
@@ -401,7 +401,7 @@
 #endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
-                _ = CommunicationController.Instance.PlayTourney("", UniqueTID, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(UniqueTID, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }));
         }
 

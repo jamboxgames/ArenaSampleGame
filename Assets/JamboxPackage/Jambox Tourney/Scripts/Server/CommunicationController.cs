@@ -1,14 +1,10 @@
 namespace Jambox.Tourney.Connector
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using Jambox.Server;
     using Jambox.Tourney.Data;
     using System.Threading.Tasks;
-    using Jambox.Common.TinyJson;
     using UnityEngine.Assertions;
     using System;
-    using Jambox.Tourney.UI;
     using UnityEngine;
     using Jambox.Tourney.Server;
     using Jambox.Common;
@@ -52,13 +48,13 @@ namespace Jambox.Tourney.Connector
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication.</param>
         /// <returns></returns>
-        public async Task GetTourneydetail(string authToken, Action<IApiTourneyList>OnReceived,Action<string> OnError)
+        public async Task GetTourneydetail( Action<IApiTourneyList>OnReceived,Action<string> OnError)
         {
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetTourneyList(authToken);
@@ -80,7 +76,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="tourneyId">The Unique Id of tournament held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinTourney(string authToken, String tourneyId, Action<IAPIJoinTourney>OnReceived,Action<string> OnError)
+        public async Task JoinTourney( String tourneyId, Action<IAPIJoinTourney>OnReceived,Action<string> OnError)
         {
 
 
@@ -89,7 +85,7 @@ namespace Jambox.Tourney.Connector
                 await JamboxController.Instance.RefreshSession();
             }
 
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinTournament(authToken, tourneyId);
@@ -110,7 +106,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="duelId">The Unique Id of Duel held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError, GameObject caller)
+        public async Task JoinDuel( String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError, GameObject caller)
         {
 
 
@@ -118,7 +114,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinDuel(authToken, tourneyId);
@@ -141,7 +137,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="attemptType"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task PlayTourney(string authToken, string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
+        public async Task PlayTourney( string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
         {
 
 
@@ -149,7 +145,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.PlayTourney(authToken, tourneyId, attemptType);
@@ -170,7 +166,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore(string authToken, string LbID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
+        public async Task SubmitScore( string LbID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
 
 
@@ -178,7 +174,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.SubmitScore(authToken, LbID, score, displayScore, replayData);
@@ -199,7 +195,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitDuelScore(string authToken, string matchID, long score, string displayScore, Action<IApiSubmitDuelScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
+        public async Task SubmitDuelScore(string matchID, long score, string displayScore, Action<IApiSubmitDuelScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
 
 
@@ -207,7 +203,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.SubmitDuelScore(authToken, matchID, score, displayScore, replayData);
@@ -221,39 +217,6 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        ///// <summary>
-        ///// The UI will call this method when they complete the game and submit their score.
-        ///// </summary>
-        ///// <param name="authToken">The unique token which will be held for Communication</param>
-        ///// <param name="score"></param>
-        ///// <param name="OnReceived">The Action on completion of this particular task</param>
-        ///// <returns></returns>
-        //public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
-        //{
-        //    if (!JamboxController.Instance.CheckForNetwork())
-        //    {
-        //        ShowNoNetworkDialogue();
-        //        return;
-        //    }
-
-        //    if (!JamboxController.Instance.ChechkForSession())
-        //    {
-        //        await JamboxController.Instance.RefreshSession();
-        //    }
-        //    authToken = JamboxController.Instance.CurrentSession.Token;
-        //    try
-        //    {
-        //        var result = await _client.SubmitScore(authToken, LbID, score, replayData);
-        //        if (OnReceived != null)
-        //            OnReceived(result);
-        //    }
-        //    catch (Exception Ex)
-        //    {
-        //        Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-        //        OnErrorFromServer("SubmitDuelScore", Ex.Message);
-        //    }
-        //}
-
         /// <summary>
         /// The UI will call this to fetch Leader board of Any particular tournament.
         /// </summary>
@@ -261,7 +224,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError, GameObject caller)
+        public async Task GetLeaderBoard(String LBId, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError, GameObject caller)
         {
 
 
@@ -269,7 +232,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.getLeaderBoard(authToken, LBId);
@@ -284,15 +247,13 @@ namespace Jambox.Tourney.Connector
         }
 
 
-        public async Task GetCompletedTourneyData(string authToken, string Cate, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
+        public async Task GetCompletedTourneyData( string Cate, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.getCompletedTourneyData(authToken, Cate);
@@ -307,7 +268,7 @@ namespace Jambox.Tourney.Connector
         }
 
 
-        public async Task GetClaim(string authToken, String LBId, Action<IAPIClaimData>OnReceived,Action<string> OnError)
+        public async Task GetClaim( String LBId, Action<IAPIClaimData>OnReceived,Action<string> OnError)
         {
 
 
@@ -315,7 +276,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetClaimData(authToken, LBId);
@@ -329,7 +290,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task CreateFriendly(string authToken, String tourneyName, int attempts, int duration, Action<IAPICreateFriendly>OnReceived,Action<string> OnError)
+        public async Task CreateFriendly( String tourneyName, int attempts, int duration, Action<IAPICreateFriendly>OnReceived,Action<string> OnError)
         {
 
 
@@ -337,7 +298,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.CreateFriendly(authToken, tourneyName, attempts, duration);
@@ -351,7 +312,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task JoinFriendly(string authToken, String code, Action<IAPIJoinFriendly>OnReceived,Action<string> OnError)
+        public async Task JoinFriendly( String code, Action<IAPIJoinFriendly>OnReceived,Action<string> OnError)
         {
 
 
@@ -359,7 +320,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinFriendly(authToken, code);
@@ -373,7 +334,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task GetFriendlyDetails(string authToken, Action<IAPIFriendlyTourneyList>OnReceived,Action<string> OnError)
+        public async Task GetFriendlyDetails( Action<IAPIFriendlyTourneyList>OnReceived,Action<string> OnError)
         {
 
 
@@ -381,7 +342,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetFriendlyDetails(authToken);
@@ -397,7 +358,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task PlayFriendlyTourney(string authToken, string tourneyId, Action<IApiPlayFriendlyTourney>OnReceived,Action<string> OnError)
+        public async Task PlayFriendlyTourney( string tourneyId, Action<IApiPlayFriendlyTourney>OnReceived,Action<string> OnError)
         {
 
 
@@ -405,7 +366,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.PlayFriendlyTourney(authToken, tourneyId);
@@ -419,7 +380,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task GetCurrencyData(string authToken, Action<IAPICurrencyList>OnReceived,Action<string> OnError)
+        public async Task GetCurrencyData( Action<IAPICurrencyList>OnReceived,Action<string> OnError)
         {
 
 
@@ -427,7 +388,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetCurrencyData(authToken);
@@ -443,12 +404,12 @@ namespace Jambox.Tourney.Connector
             
         }
 
-        public async Task UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived,Action<string> OnError)
+        public async Task UpdateUserDetails(String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived,Action<string> OnError)
         {
 
             try
             {
-                var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+                var result = await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup);
                 if (OnReceived != null)
                     OnReceived(result);
             }
@@ -459,7 +420,7 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError, GameObject caller)
+        public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError, GameObject caller)
         {
 
 
@@ -467,7 +428,7 @@ namespace Jambox.Tourney.Connector
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.UnclaimedRewards(authToken);
