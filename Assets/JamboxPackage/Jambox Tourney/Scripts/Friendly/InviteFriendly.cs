@@ -10,6 +10,8 @@
     {
 
         public Text codeText;
+        public GameObject mainContent;
+        public GameObject endedContent;
 
         private string ShareCode;
 
@@ -42,6 +44,17 @@
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             UIPanelController.Instance.ShowPanel(Panels.FriendlyPanel, Panels.None, metadata);
             gameObject.SetActive(false);
+        }
+
+        public void TournamentEnded()
+        {
+            if (mainContent == null || endedContent == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            mainContent.SetActive(false);
+            endedContent.SetActive(true);
         }
     }
 }

@@ -175,6 +175,8 @@
             if (CompTourneyDet.RewardList.RewardsDistribution.Count == 0)
             {
                 rewardParent.SetActive(false);
+                InvitePanel.SetActive(true);
+                InvitePanel.GetComponent<InviteFriendly>().TournamentEnded();
             }
             else
             {
