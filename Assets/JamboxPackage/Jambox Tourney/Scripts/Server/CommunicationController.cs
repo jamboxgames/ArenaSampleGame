@@ -41,7 +41,7 @@ namespace Jambox.Tourney.Connector
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication.</param>
         /// <returns></returns>
-        public async Task GetTourneydetail( Action<IApiTourneyList>OnReceived,Action<string> OnError)
+        public async Task GetEventList( Action<IApiTourneyList>OnReceived,Action<string> OnError)
         {
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -159,7 +159,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore( string LeaderboardID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
+        public async Task SubmitTournamentScore( string LeaderboardID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
 
 

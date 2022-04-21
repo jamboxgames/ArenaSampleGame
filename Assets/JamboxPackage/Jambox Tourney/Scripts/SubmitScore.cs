@@ -180,7 +180,7 @@
         {
             RealtimeLeaderboard.Instance.DisableRealtimeLbGameobject();
             LeaderboardRefreshing(true);
-            _ = CommunicationController.Instance.SubmitScore(LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.SubmitTournamentScore(LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         public void OnBackbuttonClick()

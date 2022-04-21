@@ -557,7 +557,7 @@
                 theList.UpdateItem(false);
             }
             _ = CommunicationController.Instance.GetCurrencyData((data) => { OnCurrencyDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
-            _ = CommunicationController.Instance.GetTourneydetail((data) => { TourneyDataRcvd(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetEventList((data) => { TourneyDataRcvd(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void PopulateItem()
