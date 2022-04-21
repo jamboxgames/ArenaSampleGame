@@ -40,7 +40,7 @@
 
         public void OnPlayBtnClicked()
         {
-            _ = CommunicationController.Instance.PlayFriendlyTourney("", tourneyId, (data) => { OnPlayTourneySuccess(data); });
+            _ = CommunicationController.Instance.PlayFriendlyTourney("", tourneyId, (data) => { OnPlayTourneySuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnPlayTourneySuccess(IApiPlayFriendlyTourney data)

@@ -113,7 +113,7 @@
             {
                 //UIPanelController.Instance.SetTourneyScrollActive(false);
                 //_ = CommunicationController.Instance.PlayFriendlyTourney("", friendlyTourneyDet._tournament.Tourneyid, (data) => { PlayedSuccess(data); });
-                _ = CommunicationController.Instance.PlayTourney("", friendlyTourneyDet._tournament.Tourneyid, "free", (data) => { PlayedSuccess(data); });
+                _ = CommunicationController.Instance.PlayTourney("", friendlyTourneyDet._tournament.Tourneyid, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
 
                 UIPanelController.Instance.LoadingDialogue(true, false);
             }

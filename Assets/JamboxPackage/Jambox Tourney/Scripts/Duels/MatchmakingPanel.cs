@@ -110,7 +110,7 @@
             _ = CommunicationController.Instance.JoinDuel("", UniqueTID, (data) =>
             {
                 OpponentFound(data);
-            }, this.gameObject);
+            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
 
         }
         GameObject _loading;

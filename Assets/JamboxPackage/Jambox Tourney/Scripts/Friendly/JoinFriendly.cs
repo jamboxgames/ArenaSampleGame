@@ -22,7 +22,7 @@
             }
             string authToken = "";
             UIPanelController.Instance.LoadingDialogue(true, false);
-            _ = CommunicationController.Instance.JoinFriendly(authToken, codeInput.text, (data) => { OnJoinFriendlySuccess(data); });
+            _ = CommunicationController.Instance.JoinFriendly(authToken, codeInput.text, (data) => { OnJoinFriendlySuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
 
         }
 

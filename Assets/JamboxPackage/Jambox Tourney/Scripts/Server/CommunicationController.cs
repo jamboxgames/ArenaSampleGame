@@ -261,7 +261,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList>OnReceived,Action<string> OnError, GameObject caller)
+        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError, GameObject caller)
         {
 
 

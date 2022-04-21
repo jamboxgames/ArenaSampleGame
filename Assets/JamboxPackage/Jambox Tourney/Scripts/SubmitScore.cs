@@ -180,7 +180,7 @@
         {
             RealtimeLeaderboard.Instance.DisableRealtimeLbGameobject();
             LeaderboardRefreshing(true);
-            _ = CommunicationController.Instance.SubmitScore("", LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); });
+            _ = CommunicationController.Instance.SubmitScore("", LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         public void OnBackbuttonClick()
@@ -217,7 +217,7 @@
             {
                 showConfetti = dataNew;
             }));
-            _ = CommunicationController.Instance.GetLeaderBoard("", data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, this.gameObject);
+            _ = CommunicationController.Instance.GetLeaderBoard("", data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
         }
 
         public void RefreshLeaderBoard ()
@@ -227,7 +227,7 @@
             LeaderboardRefreshing(true);
             _ = CommunicationController.Instance.GetLeaderBoard("", LeaderBoardID, (dataN) => {
                 OnLeaderBoardRcvd(dataN);
-            }, this.gameObject);
+            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
         }
         private void OnLeaderBoardRcvd (IApiLeaderRecordList data)
         {

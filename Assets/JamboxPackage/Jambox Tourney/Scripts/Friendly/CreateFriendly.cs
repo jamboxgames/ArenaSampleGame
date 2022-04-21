@@ -42,7 +42,7 @@
             int _duration = durationInHrs[(int)durationInput.value - 1];
 
             UnityDebug.Debug.Log("Friendly Tournament Created!\nName : " + _name + "  Attempts : " + _attempts + " Duration : " + _duration);
-            _ = CommunicationController.Instance.CreateFriendly(_authToken, _name, _attempts, _duration, (data) => { OnCreateTournamentSuccesful(data); });
+            _ = CommunicationController.Instance.CreateFriendly(_authToken, _name, _attempts, _duration, (data) => { OnCreateTournamentSuccesful(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             UIPanelController.Instance.LoadingDialogue(true, false);
         }
 

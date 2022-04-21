@@ -311,7 +311,7 @@
 
         public void CheckForUnclaimedRewards()
         {
-            _ = CommunicationController.Instance.UnclaimedRewards("", (data) => { OnUnclaimedRewardsRcvd(data); }, this.gameObject);
+            _ = CommunicationController.Instance.UnclaimedRewards("", (data) => { OnUnclaimedRewardsRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
         }
 
         void OnUnclaimedRewardsRcvd(IAPIUnclaimedRewards data)
@@ -476,7 +476,7 @@
         void ClaimAllUnclaimedRewards()
         {
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.GetClaim("", "all", (data) => { OnUnclaimedRewardsClaimed(data); });
+            _ = CommunicationController.Instance.GetClaim("", "all", (data) => { OnUnclaimedRewardsClaimed(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnUnclaimedRewardsClaimed(IAPIClaimData data)
@@ -529,7 +529,7 @@
             playerNameText.gameObject.SetActive(true);
 
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.UpdateUserDetails("", name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); });
+            _ = CommunicationController.Instance.UpdateUserDetails("", name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void OnNameUpdateSuccess(IAPIUpdateUserData Data, Panels Currentpanel, Dictionary<string, string> metaData)
@@ -558,8 +558,8 @@
                 
             string authToken = "";
             //_ = JamboxController.Instance.StartSession(null, null);
-            _ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); });
-            _ = CommunicationController.Instance.GetTourneydetail(authToken, (data) => { TourneyDataRcvd(data, Currentpanel, metaData); });
+            _ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetTourneydetail(authToken, (data) => { TourneyDataRcvd(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void PopulateItem()
@@ -949,7 +949,7 @@
                 FriendlySelected.SetActive(true);
             }
 
-            _ = CommunicationController.Instance.GetCompletedTourneyData(authToken, Category, (data) => { CompletedTDataRcvd(data); });
+            _ = CommunicationController.Instance.GetCompletedTourneyData(authToken, Category, (data) => { CompletedTDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void CompletedTDataRcvd(IAPICompTourneyList data)
