@@ -25,17 +25,7 @@ namespace Jambox.Tourney.Connector
         {            
                 _client = new TournamentClient(baseClient);        
         }
-
-        private void OnErrorFromServer(String ErrorKey, String ErrorMsg)
-        {
-            UnityDebug.Debug.Log("Error From Server Method Hit >>>" + ErrorMsg);
-            Dictionary<String, String> Errordata = new Dictionary<string, string>();
-            Errordata.Add(ErrorKey, ErrorMsg);
-            ArenaSDKEvent.Instance.OnErrorFromServer(Errordata);
-            //UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
-        }
         
-
         /// <summary>
         /// This method will be called from UI to get the tourney detail.
         /// </summary>
@@ -56,9 +46,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message
-                    + "  StackTrace : " +  Ex.StackTrace);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }            
         }
 
@@ -71,13 +61,10 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task JoinTourney( String tourneyId, Action<IAPIJoinTourney>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-
             String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
@@ -87,8 +74,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -101,8 +89,6 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task JoinDuel( String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -117,8 +103,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -132,8 +119,6 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task PlayTourney( string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -147,8 +132,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -161,8 +147,6 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task SubmitTournamentScore( string LeaderboardID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -176,8 +160,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -190,8 +175,6 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task SubmitDuelScore(string matchID, long score, string displayScore, Action<IApiSubmitDuelScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -205,8 +188,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -219,7 +203,6 @@ namespace Jambox.Tourney.Connector
         /// <returns></returns>
         public async Task GetLeaderBoard(String LeaderboardID, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError)
         {
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -233,8 +216,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -254,16 +238,15 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
 
         public async Task ClaimReward( String LeaderboardID, Action<IAPIClaimData>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -277,15 +260,14 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
         public async Task CreateFriendly( String tourneyName, int attempts, int duration, Action<IAPICreateFriendly>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -299,15 +281,14 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
         public async Task JoinFriendly( String code, Action<IAPIJoinFriendly>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -321,15 +302,14 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
         public async Task GetFriendlyDetails( Action<IAPIFriendlyTourneyList>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -345,15 +325,14 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
         public async Task PlayFriendlyTourney( string tourneyId, Action<IApiPlayFriendlyTourney>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -367,15 +346,14 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
         public async Task GetCurrencyData( Action<IAPICurrencyList>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -389,33 +367,20 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message +
-                    "  Stack trace " +  Ex.StackTrace);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
             
         }
 
-        public async Task UpdateUserDetails(String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived,Action<string> OnError)
+        public async Task UpdateUserDetails(String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived, Action<string> OnError)
         {
-
-            try
-            {
-                var result = await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup);
-                if (OnReceived != null)
-                    OnReceived(result);
-            }
-            catch (Exception Ex)
-            {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
-            }
+            await JamboxController.Instance.UpdateUserOnServer(name, avatarId, avatarGroup, OnReceived, OnError);
         }
 
         public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError)
         {
-
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -429,8 +394,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnError(Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
     }

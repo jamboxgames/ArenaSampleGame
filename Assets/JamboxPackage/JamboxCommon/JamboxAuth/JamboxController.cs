@@ -1,11 +1,8 @@
 namespace Jambox.Common
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Jambox.Common.Utility;
-    using Jambox.Server;
     using UnityEngine;
 
     public class JamboxController : MonoSingleton<JamboxController>
@@ -13,9 +10,7 @@ namespace Jambox.Common
         private CommonIClient _client;
         public IApiSession CurrentSession;
         private String _gameID, _userName, _appSecret, _userID;
-        
         private string _productionServerIP = "api.jambox.games";
-
         public event Action UserProfileUpdated;
         public event Action<String> ErrorFromServer;
 
@@ -123,7 +118,7 @@ namespace Jambox.Common
             CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
             Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
         }
-        public async Task UpdateUserOnServer (String name, int avatarId, string avatarGroup)
+        public async Task UpdateUserOnServer (String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
         {
             if (!ChechkForSession())
             {
@@ -137,6 +132,8 @@ namespace Jambox.Common
                 {
                     UserProfileUpdated();
                 }
+                if (OnReceived != null)
+                    OnReceived(result);
             }
             catch (Exception Ex)
             {
@@ -148,13 +145,14 @@ namespace Jambox.Common
             }
         }
 
-        public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
+        private async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
             String authToken = CurrentSession.Token;
+
             var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
             CommonUserData.Instance.userName = name;
             return result;
