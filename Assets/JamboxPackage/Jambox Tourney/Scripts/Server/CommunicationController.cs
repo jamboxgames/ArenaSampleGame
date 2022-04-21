@@ -37,26 +37,13 @@ namespace Jambox.Tourney.Connector
                 _client = new TournamentClient(baseClient);        
         }
 
-        public void ShowNoNetworkDialogue()
-        {
-            Dictionary<string, string> metadata = new Dictionary<string, string>();
-            //metadata.Add("Header", "No Internet");
-            metadata.Add("Header", "Server Error");
-
-            string errorString = "You don't have active internet connection. Please check your internet connection and try again.";
-            metadata.Add("DialogBody", errorString);
-            //metadata.Add("Btn1Name", "Retry");
-            //metadata.Add("Btn2Name", "Home");
-            metadata.Add("Btn1Name", "Home");
-            UIPanelController.Instance.ShowPanel(Panels.DialoguePanel, Panels.None, metadata);
-        }
         private void OnErrorFromServer(String ErrorKey, String ErrorMsg)
         {
             UnityDebug.Debug.Log("Error From Server Method Hit >>>" + ErrorMsg);
             Dictionary<String, String> Errordata = new Dictionary<string, string>();
             Errordata.Add(ErrorKey, ErrorMsg);
             ArenaSDKEvent.Instance.OnErrorFromServer(Errordata);
-            UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
+            //UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
         }
         
 
@@ -65,13 +52,8 @@ namespace Jambox.Tourney.Connector
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication.</param>
         /// <returns></returns>
-        public async Task GetTourneydetail(string authToken, Action<IApiTourneyList> OnReceived)
+        public async Task GetTourneydetail(string authToken, Action<IApiTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
@@ -88,8 +70,7 @@ namespace Jambox.Tourney.Connector
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message
                     + "  StackTrace : " +  Ex.StackTrace);
                 OnErrorFromServer("GetTourneydetail", Ex.Message);
-            }
-            
+            }            
         }
 
         /// <summary>
@@ -99,13 +80,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="tourneyId">The Unique Id of tournament held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinTourney(string authToken, String tourneyId, Action<IAPIJoinTourney> OnReceived)
+        public async Task JoinTourney(string authToken, String tourneyId, Action<IAPIJoinTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -133,13 +110,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="duelId">The Unique Id of Duel held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel> OnReceived, GameObject caller)
+        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError, GameObject caller)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -168,13 +141,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="attemptType"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task PlayTourney(string authToken, string tourneyId, string attemptType, Action<IApiPlayTourney> OnReceived)
+        public async Task PlayTourney(string authToken, string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -201,13 +170,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore(string authToken, string LbID, long score, string displayScore, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitScore(string authToken, string LbID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -234,13 +199,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitDuelScore(string authToken, string matchID, long score, string displayScore, Action<IApiSubmitDuelScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitDuelScore(string authToken, string matchID, long score, string displayScore, Action<IApiSubmitDuelScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -267,7 +228,7 @@ namespace Jambox.Tourney.Connector
         ///// <param name="score"></param>
         ///// <param name="OnReceived">The Action on completion of this particular task</param>
         ///// <returns></returns>
-        //public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
+        //public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         //{
         //    if (!JamboxController.Instance.CheckForNetwork())
         //    {
@@ -300,13 +261,9 @@ namespace Jambox.Tourney.Connector
         /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList> OnReceived, GameObject caller)
+        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList>OnReceived,Action<string> OnError, GameObject caller)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -327,13 +284,9 @@ namespace Jambox.Tourney.Connector
         }
 
 
-        public async Task GetCompletedTourneyData(string authToken, string Cate, Action<IAPICompTourneyList> OnReceived)
+        public async Task GetCompletedTourneyData(string authToken, string Cate, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -354,13 +307,9 @@ namespace Jambox.Tourney.Connector
         }
 
 
-        public async Task GetClaim(string authToken, String LBId, Action<IAPIClaimData> OnReceived)
+        public async Task GetClaim(string authToken, String LBId, Action<IAPIClaimData>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -380,13 +329,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task CreateFriendly(string authToken, String tourneyName, int attempts, int duration, Action<IAPICreateFriendly> OnReceived)
+        public async Task CreateFriendly(string authToken, String tourneyName, int attempts, int duration, Action<IAPICreateFriendly>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -406,13 +351,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task JoinFriendly(string authToken, String code, Action<IAPIJoinFriendly> OnReceived)
+        public async Task JoinFriendly(string authToken, String code, Action<IAPIJoinFriendly>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -432,13 +373,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task GetFriendlyDetails(string authToken, Action<IAPIFriendlyTourneyList> OnReceived)
+        public async Task GetFriendlyDetails(string authToken, Action<IAPIFriendlyTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -460,13 +397,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task PlayFriendlyTourney(string authToken, string tourneyId, Action<IApiPlayFriendlyTourney> OnReceived)
+        public async Task PlayFriendlyTourney(string authToken, string tourneyId, Action<IApiPlayFriendlyTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -486,13 +419,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task GetCurrencyData(string authToken, Action<IAPICurrencyList> OnReceived)
+        public async Task GetCurrencyData(string authToken, Action<IAPICurrencyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -514,13 +443,9 @@ namespace Jambox.Tourney.Connector
             
         }
 
-        public async Task UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived)
+        public async Task UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
             try
             {
                 var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
@@ -534,13 +459,9 @@ namespace Jambox.Tourney.Connector
             }
         }
 
-        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards> OnReceived, GameObject caller)
+        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError, GameObject caller)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
+
 
             if (!JamboxController.Instance.ChechkForSession())
             {

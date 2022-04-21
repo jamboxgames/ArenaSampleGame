@@ -38,15 +38,15 @@
             {
                 CommunicationController.Instance.Init(JamboxController.Instance.BaseClient());
                 _ = JamboxController.Instance.StartSession(userName, userID);
-                if (UIPanelController.Instance != null)
-                {
-                    UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
-                    UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
-                }
-                else
-                {
-                    Debug.LogError("Error in SDK setup");
-                }
+                //if (UIPanelController.Instance != null)
+                //{
+                //    UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
+                //    UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
+                //}
+                //else
+                //{
+                //    Debug.LogError("Error in SDK setup");
+                //}
             }
             else
             {
