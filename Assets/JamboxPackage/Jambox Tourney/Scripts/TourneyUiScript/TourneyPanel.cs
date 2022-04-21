@@ -311,7 +311,8 @@
 
         public void CheckForUnclaimedRewards()
         {
-            _ = CommunicationController.Instance.UnclaimedRewards((data) => { OnUnclaimedRewardsRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+            if(this.gameObject != null)
+                _ = CommunicationController.Instance.UnclaimedRewards((data) => { OnUnclaimedRewardsRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnUnclaimedRewardsRcvd(IAPIUnclaimedRewards data)
@@ -476,7 +477,7 @@
         void ClaimAllUnclaimedRewards()
         {
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.GetClaim("all", (data) => { OnUnclaimedRewardsClaimed(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.ClaimReward("all", (data) => { OnUnclaimedRewardsClaimed(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnUnclaimedRewardsClaimed(IAPIClaimData data)

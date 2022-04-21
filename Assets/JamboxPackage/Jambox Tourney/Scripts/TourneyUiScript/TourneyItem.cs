@@ -401,7 +401,7 @@
 #endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
-                _ = CommunicationController.Instance.PlayTourney(UniqueTID, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(UniqueTID, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }));
         }
 

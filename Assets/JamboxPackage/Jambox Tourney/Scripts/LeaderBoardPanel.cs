@@ -42,7 +42,7 @@
         private void GetLeaderBoard()
         {
             _ = CommunicationController.Instance.GetLeaderBoard(LeaderBoardID, (data) => { LeaderBoardSuccess(data); },
-                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
         private IEnumerator WaitAndGet()
         {

@@ -200,7 +200,7 @@
             EndTimeText.text = "ENDED : " + EndTimeInFormat(elapsed) + "  AGO";
             LbLoadingPanel.gameObject.SetActive(true);
             _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
-                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             LeaderboardRefreshing(true);
         }
 
@@ -311,7 +311,7 @@
                 BestScore.gameObject.SetActive(true);
                 BestScore.text = "BEST: " + tourneyDet._joinedTourneyData.Score;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard(tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+                _ = CommunicationController.Instance.GetLeaderBoard(tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
                 LeaderboardRefreshing(true);
                 updatePlayableStatus(tourneyDet);
             }
@@ -388,7 +388,7 @@
                     theList.RowCount = 0;
                     LbLoadingPanel.gameObject.SetActive(true);
                     LeaderboardRefreshing(true);
-                    _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject); 
+                    _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }); 
                 }
             }
             if (prevPanel == Panels.CompletedPanel)
@@ -403,7 +403,7 @@
                 }
                 theList.RowCount = 0;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+                _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
                 LeaderboardRefreshing(true);
             }
             if (prevPanel == Panels.FriendlyPanel)
@@ -414,7 +414,7 @@
                 LbLoadingPanel.gameObject.SetActive(true);
                 LeaderboardRefreshing(true);
                 _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
-                    (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+                    (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }
         }
 
@@ -565,7 +565,7 @@
 #endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
-                _ = CommunicationController.Instance.PlayTourney(TourneyId, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(TourneyId, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }));
         }
 
@@ -604,7 +604,7 @@
             Debug.LogError("OnClaimBtnClick 111111 >>>" + (CompTourneyDet == null));
             Debug.LogError("OnClaimBtnClick 222222 >>>" + (CompTourneyDet.LeaderBoardID));
             FullLoadingPanel.SetActive(true);
-            _ = CommunicationController.Instance.GetClaim(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.ClaimReward(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void OnClaimSuccess(IAPIClaimData dataRcvd)

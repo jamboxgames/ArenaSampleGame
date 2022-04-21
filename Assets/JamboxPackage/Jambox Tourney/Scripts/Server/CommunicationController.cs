@@ -21,13 +21,6 @@ namespace Jambox.Tourney.Connector
             return JamboxController.Instance.CurrentSession.MyID;
         }
 
-        public string getAuthToken()
-        {
-            if (JamboxController.Instance.CurrentSession == null)
-                return string.Empty;
-            return JamboxController.Instance.CurrentSession.Token;
-        }
-
         public void Init(CommonClient baseClient)
         {            
                 _client = new TournamentClient(baseClient);        
@@ -65,7 +58,7 @@ namespace Jambox.Tourney.Connector
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message
                     + "  StackTrace : " +  Ex.StackTrace);
-                OnErrorFromServer("GetTourneydetail", Ex.Message);
+                OnError(Ex.Message);
             }            
         }
 
@@ -95,7 +88,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinTourney", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -106,7 +99,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="duelId">The Unique Id of Duel held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinDuel( String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError, GameObject caller)
+        public async Task JoinDuel( String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError)
         {
 
 
@@ -119,13 +112,13 @@ namespace Jambox.Tourney.Connector
             {
                 var result = await _client.JoinDuel(authToken, tourneyId);
 
-                if (OnReceived != null && caller != null)
+                if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinDuel", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -134,7 +127,7 @@ namespace Jambox.Tourney.Connector
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication</param>
         /// <param name="tourneyId">The Unique Id of tournament held responsible for getting detail of any tournament</param>
-        /// <param name="attemptType"></param>
+        /// <param name="attemptType - "></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
         public async Task PlayTourney( string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
@@ -155,7 +148,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("PlayTourney", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -166,7 +159,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore( string LbID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
+        public async Task SubmitScore( string LeaderboardID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
 
 
@@ -177,14 +170,14 @@ namespace Jambox.Tourney.Connector
             String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.SubmitScore(authToken, LbID, score, displayScore, replayData);
+                var result = await _client.SubmitScore(authToken, LeaderboardID, score, displayScore, replayData);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("SubmitScore", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -213,7 +206,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("SubmitDuelScore", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -221,12 +214,11 @@ namespace Jambox.Tourney.Connector
         /// The UI will call this to fetch Leader board of Any particular tournament.
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication</param>
-        /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
+        /// <param name="LeaderboardID"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(String LBId, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError, GameObject caller)
+        public async Task GetLeaderBoard(String LeaderboardID, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError)
         {
-
 
             if (!JamboxController.Instance.ChechkForSession())
             {
@@ -235,40 +227,40 @@ namespace Jambox.Tourney.Connector
             String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.getLeaderBoard(authToken, LBId);
-                if (OnReceived != null && caller != null)
-                    OnReceived(result);
-            }
-            catch (Exception Ex)
-            {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetLeaderBoard", Ex.Message);
-            }
-        }
-
-
-        public async Task GetCompletedTourneyData( string Cate, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
-        {
-            if (!JamboxController.Instance.ChechkForSession())
-            {
-                await JamboxController.Instance.RefreshSession();
-            }
-            String authToken = JamboxController.Instance.CurrentSession.Token;
-            try
-            {
-                var result = await _client.getCompletedTourneyData(authToken, Cate);
+                var result = await _client.getLeaderBoard(authToken, LeaderboardID);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetCompletedTourneyData", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
 
-        public async Task GetClaim( String LBId, Action<IAPIClaimData>OnReceived,Action<string> OnError)
+        public async Task GetCompletedTourneyData( string Category, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
+        {
+            if (!JamboxController.Instance.ChechkForSession())
+            {
+                await JamboxController.Instance.RefreshSession();
+            }
+            String authToken = JamboxController.Instance.CurrentSession.Token;
+            try
+            {
+                var result = await _client.getCompletedTourneyData(authToken, Category);
+                if (OnReceived != null)
+                    OnReceived(result);
+            }
+            catch (Exception Ex)
+            {
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                OnError(Ex.Message);
+            }
+        }
+
+
+        public async Task ClaimReward( String LeaderboardID, Action<IAPIClaimData>OnReceived,Action<string> OnError)
         {
 
 
@@ -279,14 +271,14 @@ namespace Jambox.Tourney.Connector
             String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.GetClaimData(authToken, LBId);
+                var result = await _client.GetClaimData(authToken, LeaderboardID);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetClaim", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -308,7 +300,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("CreateFriendly", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -330,7 +322,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinFriendly", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -354,7 +346,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetFriendlyDetails", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -376,7 +368,7 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("PlayFriendlyTourney", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
@@ -399,7 +391,7 @@ namespace Jambox.Tourney.Connector
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message +
                     "  Stack trace " +  Ex.StackTrace);
-                OnErrorFromServer("GetCurrencyData", Ex.Message);
+                OnError(Ex.Message);
             }
             
         }
@@ -416,11 +408,11 @@ namespace Jambox.Tourney.Connector
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("UpdateUserDetails", Ex.Message);
+                OnError(Ex.Message);
             }
         }
 
-        public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError, GameObject caller)
+        public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError)
         {
 
 
@@ -432,13 +424,13 @@ namespace Jambox.Tourney.Connector
             try
             {
                 var result = await _client.UnclaimedRewards(authToken);
-                if (OnReceived != null && caller != null)
+                if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
                 Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("UnclaimedRewards", Ex.Message);
+                OnError(Ex.Message);
             }
         }
     }

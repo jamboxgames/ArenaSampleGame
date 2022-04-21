@@ -217,7 +217,7 @@
             {
                 showConfetti = dataNew;
             }));
-            _ = CommunicationController.Instance.GetLeaderBoard(data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+            _ = CommunicationController.Instance.GetLeaderBoard(data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         public void RefreshLeaderBoard ()
@@ -227,7 +227,7 @@
             LeaderboardRefreshing(true);
             _ = CommunicationController.Instance.GetLeaderBoard(LeaderBoardID, (dataN) => {
                 OnLeaderBoardRcvd(dataN);
-            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, this.gameObject);
+            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
         private void OnLeaderBoardRcvd (IApiLeaderRecordList data)
         {
