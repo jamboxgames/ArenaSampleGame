@@ -376,7 +376,7 @@ namespace Jambox.Tourney.Connector
 
         public async Task UpdateUserDetails(String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived, Action<string> OnError)
         {
-            await JamboxController.Instance.UpdateUserOnServer(name, avatarId, avatarGroup, OnReceived, OnError);
+            await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, OnReceived, OnError);
         }
 
         public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError)

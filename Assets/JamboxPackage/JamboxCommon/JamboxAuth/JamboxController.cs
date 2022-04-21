@@ -118,7 +118,7 @@ namespace Jambox.Common
             CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
             Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
         }
-        public async Task UpdateUserOnServer (String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
+        public async Task UpdateUserDetails (String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
         {
             if (!ChechkForSession())
             {
@@ -127,7 +127,7 @@ namespace Jambox.Common
             String authToken = CurrentSession.Token;
             try
             {
-                var result = await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup);
+                var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
                 if (UserProfileUpdated != null)
                 {
                     UserProfileUpdated();
@@ -145,29 +145,55 @@ namespace Jambox.Common
             }
         }
 
-        private async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
+        public async Task UpdateUserDetails(String name, string avatar, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
             String authToken = CurrentSession.Token;
-
-            var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
-            CommonUserData.Instance.userName = name;
-            return result;
-        }
-
-        public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, string avatarUrl)
-        {
-            if (!ChechkForSession())
+            try
             {
-                await RefreshSession();
+                var result = await _client.UpdateUserDetails(authToken, name, avatar);
+                if (UserProfileUpdated != null)
+                {
+                    UserProfileUpdated();
+                }
+                if (OnReceived != null)
+                    OnReceived(result);
             }
-            String authToken = CurrentSession.Token;
-            var result = await _client.UpdateUserDetails(authToken, name, avatarUrl);
-            return result;
+            catch (Exception Ex)
+            {
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                if (ErrorFromServer != null)
+                {
+                    ErrorFromServer(Ex.Message);
+                }
+            }
         }
+        //private async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
+        //{
+        //    if (!ChechkForSession())
+        //    {
+        //        await RefreshSession();
+        //    }
+        //    String authToken = CurrentSession.Token;
+
+        //    var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+        //    CommonUserData.Instance.userName = name;
+        //    return result;
+        //}
+
+        //public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, string avatarUrl)
+        //{
+        //    if (!ChechkForSession())
+        //    {
+        //        await RefreshSession();
+        //    }
+        //    String authToken = CurrentSession.Token;
+        //    var result = await _client.UpdateUserDetails(authToken, name, avatarUrl);
+        //    return result;
+        //}
 
 
         public CommonClient BaseClient() {

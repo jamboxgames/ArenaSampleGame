@@ -530,7 +530,7 @@
             playerNameText.gameObject.SetActive(true);
 
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void OnNameUpdateSuccess(IAPIUpdateUserData Data, Panels Currentpanel, Dictionary<string, string> metaData)
