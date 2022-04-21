@@ -13,22 +13,20 @@ namespace Jambox.Common
         private CommonIClient _client;
         public IApiSession CurrentSession;
         private String _gameID, _userName, _appSecret, _userID;
-        private bool _isProduction;
-
-        private string _normalServerIP = "staging.jambox.games";
+        
         private string _productionServerIP = "api.jambox.games";
 
         public event Action UserProfileUpdated;
         public event Action<String> ErrorFromServer;
 
-        public void SetupSDKVariable(string _gameID, string _AppSecret, bool _isProduction = false)
+        public void SetupSDKVariable(string _gameID, string _AppSecret)
         {
             if (String.IsNullOrEmpty(_gameID) || String.IsNullOrEmpty(_AppSecret))
             {
                 Debug.LogError("Game initialization parameters empty");
                 return;
             }
-            Init(_gameID, _AppSecret, _isProduction);
+            Init(_gameID, _AppSecret);
         }
 
         public string getMyuserId()
@@ -59,15 +57,13 @@ namespace Jambox.Common
             return true;
         }
 
-        public void Init(string gameID, String AppSecret, bool IsProduction)
+        public void Init(string gameID, String AppSecret)
         {
             _gameID = gameID;
             _appSecret = AppSecret;
-            _isProduction = IsProduction;
-            if (IsProduction)
-                _client = new CommonClient("https", _productionServerIP, 0000, _appSecret);
-            else
-                _client = new CommonClient("http", _normalServerIP, 0000, _appSecret);
+            
+            _client = new CommonClient("https", _productionServerIP, 0000, _appSecret);
+            
         }
 
         private bool WaitForSession = false;
