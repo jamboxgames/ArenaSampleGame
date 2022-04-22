@@ -35,8 +35,7 @@
         {
             LoadingDialog(true);
             UpdateCurrency();
-            string authToken = string.Empty;
-            _ = CommunicationController.Instance.GetCompletedTourneyData(authToken, "1", (data) => { CompletedTDataRcvd(data); });
+            _ = CommunicationController.Instance.GetCompletedTourneyData("1", (data) => { CompletedTDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         public void UpdateCurrency()

@@ -1,14 +1,10 @@
 namespace Jambox.Tourney.Connector
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using Jambox.Server;
     using Jambox.Tourney.Data;
     using System.Threading.Tasks;
-    using Jambox.Common.TinyJson;
     using UnityEngine.Assertions;
     using System;
-    using Jambox.Tourney.UI;
     using UnityEngine;
     using Jambox.Tourney.Server;
     using Jambox.Common;
@@ -25,58 +21,23 @@ namespace Jambox.Tourney.Connector
             return JamboxController.Instance.CurrentSession.MyID;
         }
 
-        public string getAuthToken()
-        {
-            if (JamboxController.Instance.CurrentSession == null)
-                return string.Empty;
-            return JamboxController.Instance.CurrentSession.Token;
-        }
-
         public void Init(CommonClient baseClient)
         {            
                 _client = new TournamentClient(baseClient);        
         }
-
-        public void ShowNoNetworkDialogue()
-        {
-            Dictionary<string, string> metadata = new Dictionary<string, string>();
-            //metadata.Add("Header", "No Internet");
-            metadata.Add("Header", "Server Error");
-
-            string errorString = "You don't have active internet connection. Please check your internet connection and try again.";
-            metadata.Add("DialogBody", errorString);
-            //metadata.Add("Btn1Name", "Retry");
-            //metadata.Add("Btn2Name", "Home");
-            metadata.Add("Btn1Name", "Home");
-            UIPanelController.Instance.ShowPanel(Panels.DialoguePanel, Panels.None, metadata);
-        }
-        private void OnErrorFromServer(String ErrorKey, String ErrorMsg)
-        {
-            UnityDebug.Debug.Log("Error From Server Method Hit >>>" + ErrorMsg);
-            Dictionary<String, String> Errordata = new Dictionary<string, string>();
-            Errordata.Add(ErrorKey, ErrorMsg);
-            ArenaSDKEvent.Instance.OnErrorFromServer(Errordata);
-            UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
-        }
         
-
         /// <summary>
         /// This method will be called from UI to get the tourney detail.
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication.</param>
         /// <returns></returns>
-        public async Task GetTourneydetail(string authToken, Action<IApiTourneyList> OnReceived)
+        public async Task GetEventList( Action<IApiTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetTourneyList(authToken);
@@ -85,11 +46,10 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message
-                    + "  StackTrace : " +  Ex.StackTrace);
-                OnErrorFromServer("GetTourneydetail", Ex.Message);
-            }
-            
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
+            }            
         }
 
         /// <summary>
@@ -99,20 +59,13 @@ namespace Jambox.Tourney.Connector
         /// <param name="tourneyId">The Unique Id of tournament held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinTourney(string authToken, String tourneyId, Action<IAPIJoinTourney> OnReceived)
+        public async Task JoinTourney( String tourneyId, Action<IAPIJoinTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinTournament(authToken, tourneyId);
@@ -121,8 +74,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinTourney", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -133,30 +87,25 @@ namespace Jambox.Tourney.Connector
         /// <param name="duelId">The Unique Id of Duel held responsible for getting detail of any tournament.</param>
         /// <param name="OnReceived">The Action on completion of this particular task.</param>
         /// <returns></returns>
-        public async Task JoinDuel(string authToken, String tourneyId, Action<IAPIJoinDuel> OnReceived, GameObject caller)
+        public async Task JoinDuel( String tourneyId, Action<IAPIJoinDuel>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinDuel(authToken, tourneyId);
 
-                if (OnReceived != null && caller != null)
+                if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinDuel", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -165,22 +114,16 @@ namespace Jambox.Tourney.Connector
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication</param>
         /// <param name="tourneyId">The Unique Id of tournament held responsible for getting detail of any tournament</param>
-        /// <param name="attemptType"></param>
+        /// <param name="attemptType - "></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task PlayTourney(string authToken, string tourneyId, string attemptType, Action<IApiPlayTourney> OnReceived)
+        public async Task PlayTourney( string tourneyId, string attemptType, Action<IApiPlayTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.PlayTourney(authToken, tourneyId, attemptType);
@@ -189,8 +132,9 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("PlayTourney", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -201,29 +145,24 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitScore(string authToken, string LbID, long score, string displayScore, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitTournamentScore( string LeaderboardID, long score, string displayScore, Action<IApiSubmitScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.SubmitScore(authToken, LbID, score, displayScore, replayData);
+                var result = await _client.SubmitScore(authToken, LeaderboardID, score, displayScore, replayData);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("SubmitScore", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
@@ -234,19 +173,13 @@ namespace Jambox.Tourney.Connector
         /// <param name="score"></param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task SubmitDuelScore(string authToken, string matchID, long score, string displayScore, Action<IApiSubmitDuelScore> OnReceived, ReplayData replayData = null)
+        public async Task SubmitDuelScore(string matchID, long score, string displayScore, Action<IApiSubmitDuelScore>OnReceived,Action<string> OnError, ReplayData replayData = null)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.SubmitDuelScore(authToken, matchID, score, displayScore, replayData);
@@ -255,144 +188,91 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("SubmitDuelScore", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
-
-        ///// <summary>
-        ///// The UI will call this method when they complete the game and submit their score.
-        ///// </summary>
-        ///// <param name="authToken">The unique token which will be held for Communication</param>
-        ///// <param name="score"></param>
-        ///// <param name="OnReceived">The Action on completion of this particular task</param>
-        ///// <returns></returns>
-        //public async Task SubmitDuelScore(string authToken, string LbID, long score, Action<IApiSubmitScore> OnReceived, ReplayData replayData = null)
-        //{
-        //    if (!JamboxController.Instance.CheckForNetwork())
-        //    {
-        //        ShowNoNetworkDialogue();
-        //        return;
-        //    }
-
-        //    if (!JamboxController.Instance.ChechkForSession())
-        //    {
-        //        await JamboxController.Instance.RefreshSession();
-        //    }
-        //    authToken = JamboxController.Instance.CurrentSession.Token;
-        //    try
-        //    {
-        //        var result = await _client.SubmitScore(authToken, LbID, score, replayData);
-        //        if (OnReceived != null)
-        //            OnReceived(result);
-        //    }
-        //    catch (Exception Ex)
-        //    {
-        //        Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-        //        OnErrorFromServer("SubmitDuelScore", Ex.Message);
-        //    }
-        //}
 
         /// <summary>
         /// The UI will call this to fetch Leader board of Any particular tournament.
         /// </summary>
         /// <param name="authToken">The unique token which will be held for Communication</param>
-        /// <param name="LBId"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
+        /// <param name="LeaderboardID"><The Unique LeaderboardId sent by server to get the leaderboard from server/param>
         /// <param name="OnReceived">The Action on completion of this particular task</param>
         /// <returns></returns>
-        public async Task GetLeaderBoard(string authToken, String LBId, Action<IApiLeaderRecordList> OnReceived, GameObject caller)
+        public async Task GetLeaderBoard(String LeaderboardID, Action<IApiLeaderRecordList>OnReceived, Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.getLeaderBoard(authToken, LBId);
-                if (OnReceived != null && caller != null)
-                    OnReceived(result);
-            }
-            catch (Exception Ex)
-            {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetLeaderBoard", Ex.Message);
-            }
-        }
-
-
-        public async Task GetCompletedTourneyData(string authToken, string Cate, Action<IAPICompTourneyList> OnReceived)
-        {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
-            if (!JamboxController.Instance.ChechkForSession())
-            {
-                await JamboxController.Instance.RefreshSession();
-            }
-            authToken = JamboxController.Instance.CurrentSession.Token;
-            try
-            {
-                var result = await _client.getCompletedTourneyData(authToken, Cate);
+                var result = await _client.getLeaderBoard(authToken, LeaderboardID);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetCompletedTourneyData", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
 
-        public async Task GetClaim(string authToken, String LBId, Action<IAPIClaimData> OnReceived)
+        public async Task GetCompletedTourneyData( string Category, Action<IAPICompTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await _client.GetClaimData(authToken, LBId);
+                var result = await _client.getCompletedTourneyData(authToken, Category);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetClaim", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
-        public async Task CreateFriendly(string authToken, String tourneyName, int attempts, int duration, Action<IAPICreateFriendly> OnReceived)
-        {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
 
+        public async Task ClaimReward( String LeaderboardID, Action<IAPIClaimData>OnReceived,Action<string> OnError)
+        {
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
+            try
+            {
+                var result = await _client.GetClaimData(authToken, LeaderboardID);
+                if (OnReceived != null)
+                    OnReceived(result);
+            }
+            catch (Exception Ex)
+            {
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
+            }
+        }
+
+        public async Task CreateFriendly( String tourneyName, int attempts, int duration, Action<IAPICreateFriendly>OnReceived,Action<string> OnError)
+        {
+            if (!JamboxController.Instance.ChechkForSession())
+            {
+                await JamboxController.Instance.RefreshSession();
+            }
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.CreateFriendly(authToken, tourneyName, attempts, duration);
@@ -401,24 +281,19 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("CreateFriendly", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
-        public async Task JoinFriendly(string authToken, String code, Action<IAPIJoinFriendly> OnReceived)
+        public async Task JoinFriendly( String code, Action<IAPIJoinFriendly>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.JoinFriendly(authToken, code);
@@ -427,24 +302,19 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("JoinFriendly", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
-        public async Task GetFriendlyDetails(string authToken, Action<IAPIFriendlyTourneyList> OnReceived)
+        public async Task GetFriendlyDetails( Action<IAPIFriendlyTourneyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetFriendlyDetails(authToken);
@@ -455,24 +325,19 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("GetFriendlyDetails", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
-        public async Task PlayFriendlyTourney(string authToken, string tourneyId, Action<IApiPlayFriendlyTourney> OnReceived)
+        public async Task PlayFriendlyTourney( string tourneyId, Action<IApiPlayFriendlyTourney>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.PlayFriendlyTourney(authToken, tourneyId);
@@ -481,24 +346,19 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("PlayFriendlyTourney", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
 
-        public async Task GetCurrencyData(string authToken, Action<IAPICurrencyList> OnReceived)
+        public async Task GetCurrencyData( Action<IAPICurrencyList>OnReceived,Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
             if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
             }
-            authToken = JamboxController.Instance.CurrentSession.Token;
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
                 var result = await _client.GetCurrencyData(authToken);
@@ -507,56 +367,36 @@ namespace Jambox.Tourney.Connector
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message +
-                    "  Stack trace " +  Ex.StackTrace);
-                OnErrorFromServer("GetCurrencyData", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
             
         }
 
-        public async Task UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived)
+        public async Task UpdateUserDetails(String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData>OnReceived, Action<string> OnError)
         {
-            if (!JamboxController.Instance.CheckForNetwork())
+            await JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, OnReceived, OnError);
+        }
+
+        public async Task UnclaimedRewards( Action<IAPIUnclaimedRewards>OnReceived,Action<string> OnError)
+        {
+            if (!JamboxController.Instance.ChechkForSession())
             {
-                ShowNoNetworkDialogue();
-                return;
+                await JamboxController.Instance.RefreshSession();
             }
+            String authToken = JamboxController.Instance.CurrentSession.Token;
             try
             {
-                var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+                var result = await _client.UnclaimedRewards(authToken);
                 if (OnReceived != null)
                     OnReceived(result);
             }
             catch (Exception Ex)
             {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("UpdateUserDetails", Ex.Message);
-            }
-        }
-
-        public async Task UnclaimedRewards(string authToken, Action<IAPIUnclaimedRewards> OnReceived, GameObject caller)
-        {
-            if (!JamboxController.Instance.CheckForNetwork())
-            {
-                ShowNoNetworkDialogue();
-                return;
-            }
-
-            if (!JamboxController.Instance.ChechkForSession())
-            {
-                await JamboxController.Instance.RefreshSession();
-            }
-            authToken = JamboxController.Instance.CurrentSession.Token;
-            try
-            {
-                var result = await _client.UnclaimedRewards(authToken);
-                if (OnReceived != null && caller != null)
-                    OnReceived(result);
-            }
-            catch (Exception Ex)
-            {
-                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
-                OnErrorFromServer("UnclaimedRewards", Ex.Message);
+                UnityDebug.Debug.LogError("Exception caught Hit >>>> Message : " + Ex.Message);
+                if(OnError != null)
+                    OnError(Ex.Message);
             }
         }
     }

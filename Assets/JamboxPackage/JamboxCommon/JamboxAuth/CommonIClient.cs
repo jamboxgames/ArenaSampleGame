@@ -56,5 +56,15 @@ namespace Jambox.Common
         /// <param name="avatarGroup"></param>
         /// <returns></returns>
         Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, int avatarId, string avatarGroup);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="authToken"></param>
+        /// <param name="name"></param>
+        /// <param name="avatarUrl"></param>
+        /// <returns></returns>
+        Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, string avatar);
     }
 }

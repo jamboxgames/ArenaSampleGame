@@ -118,5 +118,10 @@ namespace Jambox.Common
         {
             return await _comApiClient.updateUserDetailsOnServer(authToken, name, avatarId, avatarGroup);
         }
+
+        public async Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, string avatarUrl)
+        {
+            return await _comApiClient.updateUserDetailsOnServer(authToken, name, avatarUrl);
+        }
     }
 }

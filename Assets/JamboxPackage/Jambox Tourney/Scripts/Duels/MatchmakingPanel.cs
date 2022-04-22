@@ -107,10 +107,10 @@
             RewardAmt.text = DuelData.RewardList.RewardsDistribution[0].WinAmount.ToString();
             findingOpponentTime = 5.0f;
             StartCoroutine(FindOpponent());
-            _ = CommunicationController.Instance.JoinDuel("", UniqueTID, (data) =>
+            _ = CommunicationController.Instance.JoinDuel(UniqueTID, (data) =>
             {
                 OpponentFound(data);
-            }, this.gameObject);
+            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
 
         }
         GameObject _loading;

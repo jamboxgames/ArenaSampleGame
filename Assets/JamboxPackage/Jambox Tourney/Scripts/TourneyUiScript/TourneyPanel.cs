@@ -311,7 +311,8 @@
 
         public void CheckForUnclaimedRewards()
         {
-            _ = CommunicationController.Instance.UnclaimedRewards("", (data) => { OnUnclaimedRewardsRcvd(data); }, this.gameObject);
+            if(this.gameObject != null)
+                _ = CommunicationController.Instance.UnclaimedRewards((data) => { OnUnclaimedRewardsRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnUnclaimedRewardsRcvd(IAPIUnclaimedRewards data)
@@ -476,7 +477,7 @@
         void ClaimAllUnclaimedRewards()
         {
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.GetClaim("", "all", (data) => { OnUnclaimedRewardsClaimed(data); });
+            _ = CommunicationController.Instance.ClaimReward("all", (data) => { OnUnclaimedRewardsClaimed(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         void OnUnclaimedRewardsClaimed(IAPIClaimData data)
@@ -529,7 +530,7 @@
             playerNameText.gameObject.SetActive(true);
 
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.UpdateUserDetails("", name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); });
+            _ = JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void OnNameUpdateSuccess(IAPIUpdateUserData Data, Panels Currentpanel, Dictionary<string, string> metaData)
@@ -555,11 +556,8 @@
                     CurrentPanelEnable = Panels.TourneyPanel;
                 theList.UpdateItem(false);
             }
-                
-            string authToken = "";
-            //_ = JamboxController.Instance.StartSession(null, null);
-            _ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); });
-            _ = CommunicationController.Instance.GetTourneydetail(authToken, (data) => { TourneyDataRcvd(data, Currentpanel, metaData); });
+            _ = CommunicationController.Instance.GetCurrencyData((data) => { OnCurrencyDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetEventList((data) => { TourneyDataRcvd(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void PopulateItem()
@@ -902,10 +900,7 @@
 
                 topText.text = "Past";
             }
-
             theList.RowCount = 0;
-            //nameText.text = "Past";
-            string authToken = string.Empty;
             String Category = "1";
             string screenName = "";
             if (CurrentPanelEnable == Panels.TourneyPanel)
@@ -949,7 +944,7 @@
                 FriendlySelected.SetActive(true);
             }
 
-            _ = CommunicationController.Instance.GetCompletedTourneyData(authToken, Category, (data) => { CompletedTDataRcvd(data); });
+            _ = CommunicationController.Instance.GetCompletedTourneyData(   Category, (data) => { CompletedTDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
         }
 
         private void CompletedTDataRcvd(IAPICompTourneyList data)

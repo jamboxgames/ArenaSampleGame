@@ -93,7 +93,7 @@
 #endif
             StartCoroutine(AttemptAnimation(() =>
             {
-                _ = CommunicationController.Instance.PlayTourney("", TourneyData._tournament.Tourneyid, "adv", (data) => { PlayedSuccess(data); });
+                _ = CommunicationController.Instance.PlayTourney(TourneyData._tournament.Tourneyid, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }));
         }
 
@@ -135,9 +135,9 @@
 #endif
             StartCoroutine(AttemptAnimation(() =>
             {
-                _ = CommunicationController.Instance.PlayTourney("", TourneyData._tournament.Tourneyid, "free", (data) => {
+                _ = CommunicationController.Instance.PlayTourney(TourneyData._tournament.Tourneyid, "free", (data) => {
                     PlayedSuccess(data);
-                });
+                }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
             }));
         }
 

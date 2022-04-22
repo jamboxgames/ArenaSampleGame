@@ -15,9 +15,7 @@ namespace Jambox.Common.Utility
         [SerializeField]
         private string gameID;
         [SerializeField]
-        private string AppSecret;
-        [SerializeField]
-        private bool IsProduction;
+        private string AppSecret;        
         [SerializeField]
         private bool LogEnabled = false;
 
@@ -40,7 +38,7 @@ namespace Jambox.Common.Utility
             {
                 m_Instance = this;
             }
-            JamboxController.Instance.SetupSDKVariable(gameID, AppSecret, IsProduction);
+            JamboxController.Instance.SetupSDKVariable(gameID, AppSecret);
         }
 
         private static JamboxSDKParams m_Instance = null;

@@ -119,5 +119,34 @@
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<APIUpdateUserData>();
         }
+
+        public async Task<IAPIUpdateUserData> updateUserDetailsOnServer(string authToken, string Name, string avatarURL)
+        {
+            var urlpath = "/v1/updateuserinfo";
+            var queryParams = "";
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", authToken);
+            headers.Add("Authorization", header);
+            headers.Add("userid", authToken);
+            headers.Add("version", appVersion);
+            headers.Add("platform", _platform);
+
+            Dictionary<String, object> DataNew2 = new Dictionary<String, object>();
+            DataNew2.Add("username", Name);
+            DataNew2.Add("avatar_url", avatarURL);
+
+            byte[] content = null;
+            var jsonNew = DataNew2.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonNew);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            return contents.FromJson<APIUpdateUserData>();
+        }
     }
 }

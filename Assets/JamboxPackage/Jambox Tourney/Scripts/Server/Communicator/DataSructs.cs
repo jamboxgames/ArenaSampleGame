@@ -1310,9 +1310,7 @@ namespace Jambox.Tourney.Data
 
         IApiRewardObject rewardList { get; }
 
-        int Rank { get; }
-
-        IAPIIntervalData replayData { get; }
+        int Rank { get; }      
     }
 
     internal class APIDuelResult : IAPIDuelResult
@@ -1327,12 +1325,7 @@ namespace Jambox.Tourney.Data
 
         [DataMember(Name = "rank"), Preserve]
         public int Rank { get; set; }
-
-        // <inheritdoc />
-        [DataMember(Name = "replay_data"), Preserve]
-        public APIIntervalData _replayData { get; set; }
-        public IAPIIntervalData replayData => _replayData ?? new APIIntervalData();
-
+        
         /*
         public override string ToString()
         {

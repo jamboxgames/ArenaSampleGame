@@ -1,11 +1,8 @@
 namespace Jambox.Common
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Jambox.Common.Utility;
-    using Jambox.Server;
     using UnityEngine;
 
     public class JamboxController : MonoSingleton<JamboxController>
@@ -13,22 +10,18 @@ namespace Jambox.Common
         private CommonIClient _client;
         public IApiSession CurrentSession;
         private String _gameID, _userName, _appSecret, _userID;
-        private bool _isProduction;
-
-        private string _normalServerIP = "staging.jambox.games";
         private string _productionServerIP = "api.jambox.games";
-
         public event Action UserProfileUpdated;
         public event Action<String> ErrorFromServer;
 
-        public void SetupSDKVariable(string _gameID, string _AppSecret, bool _isProduction = false)
+        public void SetupSDKVariable(string _gameID, string _AppSecret)
         {
             if (String.IsNullOrEmpty(_gameID) || String.IsNullOrEmpty(_AppSecret))
             {
                 Debug.LogError("Game initialization parameters empty");
                 return;
             }
-            Init(_gameID, _AppSecret, _isProduction);
+            Init(_gameID, _AppSecret);
         }
 
         public string getMyuserId()
@@ -59,15 +52,13 @@ namespace Jambox.Common
             return true;
         }
 
-        public void Init(string gameID, String AppSecret, bool IsProduction)
+        public void Init(string gameID, String AppSecret)
         {
             _gameID = gameID;
             _appSecret = AppSecret;
-            _isProduction = IsProduction;
-            if (IsProduction)
-                _client = new CommonClient("https", _productionServerIP, 0000, _appSecret);
-            else
-                _client = new CommonClient("http", _normalServerIP, 0000, _appSecret);
+            
+            _client = new CommonClient("https", _productionServerIP, 0000, _appSecret);
+            
         }
 
         private bool WaitForSession = false;
@@ -127,20 +118,22 @@ namespace Jambox.Common
             CommonUserData.Instance.AvatarIndex = CurrentSession.AvatarIndex;
             Enum.TryParse(CurrentSession.AvatarType, out CommonUserData.Instance.AvatarGroup);
         }
-        public async Task UpdateUserOnServer (String authToken, String name, int avatarId, string avatarGroup)
+        public async Task UpdateUserDetails (String name, int avatarId, string avatarGroup, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
-            authToken = CurrentSession.Token;
+            String authToken = CurrentSession.Token;
             try
             {
-                var result = await JamboxController.Instance.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+                var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
                 if (UserProfileUpdated != null)
                 {
                     UserProfileUpdated();
                 }
+                if (OnReceived != null)
+                    OnReceived(result);
             }
             catch (Exception Ex)
             {
@@ -152,17 +145,56 @@ namespace Jambox.Common
             }
         }
 
-        public async Task<IAPIUpdateUserData> UpdateUserDetails(String authToken, String name, int avatarId, string avatarGroup)
+        public async Task UpdateUserDetails(String name, string avatar, Action<IAPIUpdateUserData> OnReceived, Action<string> OnError)
         {
             if (!ChechkForSession())
             {
                 await RefreshSession();
             }
-            authToken = CurrentSession.Token;
-            var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
-            CommonUserData.Instance.userName = name;
-            return result;
+            String authToken = CurrentSession.Token;
+            try
+            {
+                var result = await _client.UpdateUserDetails(authToken, name, avatar);
+                if (UserProfileUpdated != null)
+                {
+                    UserProfileUpdated();
+                }
+                if (OnReceived != null)
+                    OnReceived(result);
+            }
+            catch (Exception Ex)
+            {
+                Debug.Log("Exception caught Hit >>>> Message : " + Ex.Message);
+                if (ErrorFromServer != null)
+                {
+                    ErrorFromServer(Ex.Message);
+                }
+            }
         }
+        //private async Task<IAPIUpdateUserData> UpdateUserDetails(String name, int avatarId, string avatarGroup)
+        //{
+        //    if (!ChechkForSession())
+        //    {
+        //        await RefreshSession();
+        //    }
+        //    String authToken = CurrentSession.Token;
+
+        //    var result = await _client.UpdateUserDetails(authToken, name, avatarId, avatarGroup);
+        //    CommonUserData.Instance.userName = name;
+        //    return result;
+        //}
+
+        //public async Task<IAPIUpdateUserData> UpdateUserDetails(String name, string avatarUrl)
+        //{
+        //    if (!ChechkForSession())
+        //    {
+        //        await RefreshSession();
+        //    }
+        //    String authToken = CurrentSession.Token;
+        //    var result = await _client.UpdateUserDetails(authToken, name, avatarUrl);
+        //    return result;
+        //}
+
 
         public CommonClient BaseClient() {
             return (CommonClient)_client;

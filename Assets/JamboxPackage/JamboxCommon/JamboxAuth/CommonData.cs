@@ -103,6 +103,11 @@ namespace Jambox.Common
         string Name { get; }
 
         /// <summary>
+        /// The updated URL of the user.
+        /// </summary>
+        string URL { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         string Status { get; }
@@ -113,6 +118,10 @@ namespace Jambox.Common
         /// <inheritdoc />
         [DataMember(Name = "name"), Preserve]
         public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name = "url"), Preserve]
+        public string URL { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name = "status"), Preserve]

@@ -106,7 +106,8 @@
             UIPanelController.Instance.tempScore = null;
             SetMyPlayerDetails(CommonUserData.Instance.userName, CommonUserData.Instance.avatarSprite, _Score, false);
 
-            _ = CommunicationController.Instance.SubmitDuelScore("", LeaderBoardID, _Score, DisplayScore,(data) => { ScoreSubmitted(data); }, _replayData);
+            _ = CommunicationController.Instance.SubmitDuelScore(LeaderBoardID, _Score, DisplayScore,(data) => { ScoreSubmitted(data); },
+                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, _replayData);
         }
 
         public void UpdateWaitingDialogue(bool status, string DisplayText)
