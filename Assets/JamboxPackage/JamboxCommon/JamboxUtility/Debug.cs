@@ -27,21 +27,69 @@ namespace UnityDebug
     /// 
     public static class Debug
     {
-        public static bool isDebugBuild = true;
+        public static LogLevel LogLevel = LogLevel.None;
+        
+        //LogLevel.Debug
+        public static void Log(object message)
+        {
+            if (LogLevel == LogLevel.Debug || LogLevel == LogLevel.All)
+                UnityEngine.Debug.Log(message);
+        }
 
+        public static void Log(object message, UnityEngine.Object context)
+        {
+            if (LogLevel == LogLevel.Debug || LogLevel == LogLevel.All)
+                UnityEngine.Debug.Log(message, context);
+        }
 
+        //LogLevel.Info
+        public static void LogInfo(object message)
+        {
+            if (LogLevel == LogLevel.Info || LogLevel == LogLevel.All)
+                UnityEngine.Debug.Log(message);
+        }
+
+        //LogLevel.Error
+        public static void LogWarning(object message)
+        {
+            if (LogLevel == LogLevel.Warning || LogLevel == LogLevel.All)
+                UnityEngine.Debug.LogWarning(message);
+        }
+
+        public static void LogWarning(object message, UnityEngine.Object context)
+        {
+            if (LogLevel == LogLevel.Warning || LogLevel == LogLevel.All)
+                UnityEngine.Debug.Log(message, context);
+        }
+
+        //LogLevel.Error
+        public static void LogError(object message)
+        {
+            if (LogLevel == LogLevel.Error || LogLevel == LogLevel.All)
+                UnityEngine.Debug.LogError(message);
+        }
+
+        public static void LogMessage(string message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
+
+        public static void LogFormat(String message, string _msg)
+        {
+            UnityEngine.Debug.LogFormat(message, _msg);
+        }
+
+        /*
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Log(object message)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.Log(message);
+            UnityEngine.Debug.Log(message);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Log(object message, UnityEngine.Object context)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.Log(message, context);
+            UnityEngine.Debug.Log(message, context);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
@@ -59,60 +107,54 @@ namespace UnityDebug
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void LogWarning(object message)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.LogWarning(message.ToString());
-        }
-
-        public static void LogFormat(String message)
-        {
-            UnityEngine.Debug.LogFormat(message);
-        }
-
-        public static void LogFormat(String message, string _msg)
-        {
-            UnityEngine.Debug.LogFormat(message, _msg);
+            UnityEngine.Debug.LogWarning(message.ToString());
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void LogException(Exception ex)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.LogException(ex);
+            UnityEngine.Debug.LogException(ex);
         }
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void LogException(Exception ex, UnityEngine.Object context)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.LogException(ex, context);
+            UnityEngine.Debug.LogException(ex, context);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")] 
         public static void LogWarning(object message, UnityEngine.Object context)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.LogWarning(message.ToString(), context);
+            UnityEngine.Debug.LogWarning(message.ToString(), context);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")] 
         public static void DrawLine(Vector3 start, Vector3 end, Color color = default(Color), float duration = 0.0f, bool depthTest = true)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.DrawLine(start, end, color, duration, depthTest);
+            UnityEngine.Debug.DrawLine(start, end, color, duration, depthTest);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void DrawRay(Vector3 start, Vector3 dir, Color color = default(Color), float duration = 0.0f, bool depthTest = true)
         {
-            if (isDebugBuild)
-                UnityEngine.Debug.DrawRay(start, dir, color, duration, depthTest);
+            UnityEngine.Debug.DrawRay(start, dir, color, duration, depthTest);
         }
 
         //[System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Assert(bool condition)
         {
             if (!condition) throw new Exception();
-        }
+        }*/
+        
+    }
 
+    public enum LogLevel
+    {
+        Debug,
+        Info,
+        Warning,
+        Error,
+        All,
+        None
     }
 }
 //#endif

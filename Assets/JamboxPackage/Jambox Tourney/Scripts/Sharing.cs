@@ -8,8 +8,13 @@ public class Sharing : MonoSingleton <Sharing>
 {
 
     public string subject = "Jambox Friendly Invite";
-    public string body = "Your friend has invited you to a Friendly Tournament. \n Use Code: ";
+    public string body = "";
     public string link = "";
+
+    private void Awake()
+    {
+        body = string.Format("Your friend has invited you to a Friendly Tournament in {0}. \n Use Code: ", Application.productName);
+    }
 
     public void ShareCode(string code)
     {
@@ -28,7 +33,7 @@ public class Sharing : MonoSingleton <Sharing>
 #endif
         }
         new NativeShare().SetSubject(subject).SetText(body + code).SetUrl(link)
-        .SetCallback((result, shareTarget) => UnityDebug.Debug.Log("Share result: " + result + ", selected app: " + shareTarget))
+        .SetCallback((result, shareTarget) => UnityDebug.Debug.LogInfo("Share result: " + result + ", selected app: " + shareTarget))
         .Share();
     }
 

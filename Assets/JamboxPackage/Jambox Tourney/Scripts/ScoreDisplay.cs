@@ -44,12 +44,25 @@
             Desc.text = TourneyData._tournament.Description;
             Rank.text = ScoreData.MyRank + "/" + ScoreData.CurrentPlayer;
             CurrentScore.text = "Current Score :    " + ScoreData.CurrentScore;
-            BestScore.text =    "Best Score :       " + ScoreData.BestScore;
+            if (ScoreData.Operator == 2)
+            {
+                BestScore.text = "Total Score :      " + ScoreData.BestScore;
+            }
+            else
+            {
+                BestScore.text = "Best Score :       " + ScoreData.BestScore;
+            }
             Attempts.text = TourneyData._joinedTourneyData.CurrentAttempt + " / " + TourneyData._tournament.MaxEntry;
 
             PlayText.SetActive(true);
             watchAdText.SetActive(false);
             PlayAgainBtn.gameObject.SetActive(true);
+
+            if (TourneyData._tournament.JoinWithVideoAD && TourneyData._tournament.PlayWithVideoAD)
+            {
+                PlayText.SetActive(false);
+                watchAdText.SetActive(true);
+            }
 
             if (TourneyData._joinedTourneyData.CurrentAttempt >= TourneyData._tournament.MaxEntry)
             {
@@ -88,12 +101,13 @@
             {
                 UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(TourneyData._tournament.Tourneyid, out tourneyDet);
             }
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && GAME_FIREBASE_ENABLED
             Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
 #endif
             StartCoroutine(AttemptAnimation(() =>
             {
-                _ = CommunicationController.Instance.PlayTourney(TourneyData._tournament.Tourneyid, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(TourneyData._tournament.Tourneyid, "adv", (data) => { PlayedSuccess(data); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             }));
         }
 
@@ -106,38 +120,45 @@
         {
             PlayAgainBtn.interactable = false;
             submitScorePanel.LoadingDialog(true, false);
-
-            if (TourneyData._joinedTourneyData.CurrentAttempt >= TourneyData._tournament.MaxEntry)
+            if (TourneyData._tournament.JoinWithVideoAD && TourneyData._tournament.PlayWithVideoAD)
             {
-                if (TourneyData._tournament.PlayWithVideoAD)
-                {
-                    UIPanelController.Instance.OnWatchVideo(TourneyData._joinedTourneyData.Tourneyid,
-                                                            Panels.TourneyPanel);
-                }
-                else
-                {
-                    String msg = "YOU HAVE EXHAUSTED THE ATTEMPTS. PLEASE PLAY ANOTHER TOURNAMENT";
-                    UIPanelController.Instance.SetTourneyScrollActive(false);
-                    UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, "OKAY", true, false, null, 0, "", "",
-                                                            Panels.None, "OUT OF ATTEMPTS");
-                }
+                UIPanelController.Instance.OnWatchVideo(TourneyData._joinedTourneyData.Tourneyid,
+                                                        Panels.TourneyPanel, ActionRequiredFromUser.AD_PLAY_TOURNEY);
             }
             else
             {
-                PlayAfterAttemptAnimation();
+                if (TourneyData._joinedTourneyData.CurrentAttempt >= TourneyData._tournament.MaxEntry)
+                {
+                    if (TourneyData._tournament.PlayWithVideoAD)
+                    {
+                        UIPanelController.Instance.OnWatchVideo(TourneyData._joinedTourneyData.Tourneyid,
+                                                                Panels.TourneyPanel, ActionRequiredFromUser.AD_PLAY_TOURNEY);
+                    }
+                    else
+                    {
+                        String msg = "YOU HAVE EXHAUSTED THE ATTEMPTS. PLEASE PLAY ANOTHER TOURNAMENT";
+                        UIPanelController.Instance.SetTourneyScrollActive(false);
+                        UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, "OKAY", true, false, null, 0, "", "",
+                                                                Panels.TourneyPanel, "OUT OF ATTEMPTS", false, true);
+                    }
+                }
+                else
+                {
+                    PlayAfterAttemptAnimation();
+                }
             }
         }
 
         void PlayAfterAttemptAnimation()
         {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && GAME_FIREBASE_ENABLED
             Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
 #endif
             StartCoroutine(AttemptAnimation(() =>
             {
                 _ = CommunicationController.Instance.PlayTourney(TourneyData._tournament.Tourneyid, "free", (data) => {
                     PlayedSuccess(data);
-                }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                }, (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             }));
         }
 
@@ -186,7 +207,8 @@
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             UIPanelController.Instance.ShowPanel(Panels.None, Panels.None, metadata);
             Match _matchData = new Match(TourneyData._tournament.Tourneyid, data.LeaderBoardID, TourneyData._tournament.metadata,
-                TourneyData._tournament.Category, null, newleaderBoardList, CommonUserData.Instance.MyAvatarURL,
+                TourneyData._tournament.Category, TourneyData._tournament.SortOrder, TourneyData._tournament.ScoringMode, null,
+                newleaderBoardList, CommonUserData.Instance.MyAvatarURL,
                 CommonUserData.Instance.userName, userAvatarSprite: CommonUserData.Instance.avatarSprite);
             ArenaSDKEvent.Instance.FireOnPlayClick(PreviousPanel, _matchData);
         }

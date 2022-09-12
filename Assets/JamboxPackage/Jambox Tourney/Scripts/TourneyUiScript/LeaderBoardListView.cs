@@ -9,12 +9,14 @@
     public class LeaderBoardListView : MonoBehaviour
     {
         [Tooltip("Prefab for all the child view objects in the list")]
-        public LeaderBoardListViewItem leaderBoardPrefab;
+        private LeaderBoardListViewItem leaderBoardPrefab;
         [Tooltip("The amount of vertical padding to add between items")]
         public float RowPadding = 15f;
         [Tooltip("Minimum height to pre-allocate list items for. Use to prevent allocations on resizing.")]
         public float PreAllocHeight = 0;
         [SerializeField] private GameObject scrollBlock;
+
+        private float itemHeight;
 
         /// <summary>
         /// Set the vertical normalized scroll position. 0 is bottom, 1 is top (as with ScrollRect) 
@@ -198,6 +200,9 @@
         protected virtual void Awake()
         {
             scrollRect = GetComponent<ScrollRect>();
+            string lbPath = UIPanelController.Instance.ThemePath("LBItem");
+            itemHeight = (Resources.Load(lbPath) as GameObject).GetComponent<RectTransform>().sizeDelta.y;
+            //leaderBoardPrefab = Instantiate(Resources.Load(lbPath) as GameObject).GetComponent<LeaderBoardItem>();
         }
 
         protected virtual bool CheckChildItems()
@@ -221,7 +226,9 @@
                 {
                     if (childItems[i] == null)
                     {
-                        childItems[i] = Instantiate(leaderBoardPrefab);
+                        string lbPath = UIPanelController.Instance.ThemePath("LBItem");
+                        childItems[i] = Instantiate(Resources.Load(lbPath) as GameObject).GetComponent<LeaderBoardItem>();
+                        //childItems[i] = Instantiate(leaderBoardPrefab);
                     }
                     childItems[i].RectTransform.SetParent(scrollRect.content, false);
                     childItems[i].gameObject.SetActive(false);
@@ -340,7 +347,7 @@
 
         private float RowHeight()
         {
-            float yHit = leaderBoardPrefab.RectTransform.rect.height;
+            float yHit = itemHeight;
             return RowPadding + yHit;
         }
 
@@ -360,16 +367,16 @@
             {
                 if (ItemCallback == null)
                 {
-                    UnityDebug.Debug.Log("ItemCallback is null");
-                    UnityDebug.Debug.Log("LeaderBoardListView is missing an ItemCallback, cannot function", this);
+                    UnityDebug.Debug.LogWarning("ItemCallback is null");
+                    UnityDebug.Debug.LogWarning("LeaderBoardListView is missing an ItemCallback, cannot function", this);
                     return;
                 }
                 // Move to correct location
-                var childRect = leaderBoardPrefab.RectTransform.rect;
-                Vector2 pivot = leaderBoardPrefab.RectTransform.pivot;
+                //var childRect = leaderBoardPrefab.RectTransform.rect;
+                //Vector2 pivot = leaderBoardPrefab.RectTransform.pivot;
                 float ytoppos = RowHeight() * rowIdx;
-                float ypos = ytoppos + (1f - pivot.y) * childRect.height;
-                float xpos = 0 + pivot.x * childRect.width;
+                float ypos = ytoppos + (1f - 1f) * itemHeight;
+                float xpos = 0f;
                 child.RectTransform.anchoredPosition = new Vector2(xpos, -ypos);
                 child.NotifyCurrentAssignment(this, rowIdx);
 
@@ -381,7 +388,7 @@
 
         protected virtual void UpdateContentHeight()
         {
-            float height = leaderBoardPrefab.RectTransform.rect.height * (rowCount) + (rowCount - 1) * RowPadding;
+            float height = itemHeight * (rowCount) + (rowCount - 1) * RowPadding;
             // apparently 'sizeDelta' is the way to set w / h 
             var sz = scrollRect.content.sizeDelta;
             scrollRect.content.sizeDelta = new Vector2(sz.x, height);

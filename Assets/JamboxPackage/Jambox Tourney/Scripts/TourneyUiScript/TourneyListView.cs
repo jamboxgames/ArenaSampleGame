@@ -20,16 +20,20 @@
     public class TourneyListView : MonoBehaviour
     {
         public bool IsLandscape = false;
-        [Tooltip("Prefab for all the child view objects in the list")]
-        public TourneyListViewItem TourneyPrefab;
-        public TourneyListViewItem duelTourneyPrefab;
-        public TourneyListViewItem CompletedPrefab;
+        //[Tooltip("Prefab for all the child view objects in the list")]
+        //public TourneyListViewItem TourneyPrefab;
+        //public TourneyListViewItem duelTourneyPrefab;
+        //public TourneyListViewItem CompletedPrefab;
         [Tooltip("The amount of vertical padding to add between items")]
         public float RowPadding = 15f;
         [Tooltip("Minimum height to pre-allocate list items for. Use to prevent allocations on resizing.")]
         public float PreAllocHeight = 0;
 
-        public TourneyListViewItem loadedItem;
+        //public TourneyListViewItem loadedItem;
+
+        public string itemLoaderPath;
+        public float itemHeight = 650;
+        public float itemWidth = 505;
 
         /// <summary>
         /// Set the vertical normalized scroll position. 0 is bottom, 1 is top (as with ScrollRect) 
@@ -53,12 +57,26 @@
         {
             DestroyAll();
             if (isTourneyPrefab)
-                loadedItem = TourneyPrefab;
+            {
+                itemHeight = 650.0f;
+                itemLoaderPath = UIPanelController.Instance.ThemePath("TourneyItem");
+                //loadedItem = Instantiate(Resources.Load(itemLoaderPath) as GameObject).GetComponent<TourneyListViewItem>();
+                //loadedItem = TourneyPrefab;
+            }
             else if (isDuelPrefab)
-                loadedItem = duelTourneyPrefab;
+            {
+                itemHeight = 475.0f;
+                itemLoaderPath = UIPanelController.Instance.ThemePath("DuelTourneyItem");
+                //loadedItem = Instantiate(Resources.Load(itemLoaderPath) as GameObject).GetComponent<TourneyListViewItem>();
+                //loadedItem = duelTourneyPrefab;
+            }
             else
-                loadedItem = CompletedPrefab;
-            //Refresh();  
+            {
+                itemHeight = 650.0f;
+                itemLoaderPath = UIPanelController.Instance.ThemePath("CompTItem");
+                //loadedItem = Instantiate(Resources.Load(itemLoaderPath) as GameObject).GetComponent<TourneyListViewItem>();
+                //loadedItem = CompletedPrefab;
+            }
         }
         private void DestroyAll ()
         {
@@ -236,8 +254,7 @@
             if (childItems != null &&
                 row >= sourceDataRowStart && row < sourceDataRowStart + childItems.Length && // within window 
                 row < rowCount)
-            { // within overall range
-
+            {
                 return childItems[WrapChildIndex(childBufferStart + row - sourceDataRowStart)];
             }
 
@@ -247,7 +264,10 @@
         protected virtual void Awake()
         {
             scrollRect = GetComponent<ScrollRect>();
-            loadedItem = TourneyPrefab;
+            itemHeight = 650.0f;
+            itemLoaderPath = UIPanelController.Instance.ThemePath("TourneyItem");
+            //loadedItem = Instantiate(Resources.Load(itemLoaderPath) as GameObject).GetComponent<TourneyListViewItem>();
+            //loadedItem = TourneyPrefab;
         }
 
         protected virtual bool CheckChildItems()
@@ -271,7 +291,7 @@
                 {
                     if (childItems[i] == null)
                     {
-                        childItems[i] = Instantiate(loadedItem);
+                        childItems[i] = Instantiate(Resources.Load(itemLoaderPath) as GameObject).GetComponent<TourneyListViewItem>();
                     }
                     childItems[i].RectTransform.SetParent(scrollRect.content, false);
                     childItems[i].gameObject.SetActive(false);
@@ -397,9 +417,9 @@
         {
             float yHit;
             if (IsLandscape)
-                yHit = loadedItem.RectTransform.rect.width;
+                yHit = itemWidth;
             else
-                yHit = loadedItem.RectTransform.rect.height;
+                yHit = itemHeight;
             return RowPadding + yHit;
             //return RowPadding + loadedItem.RectTransform.rect.height;
         }
@@ -423,25 +443,25 @@
             {
                 if (ItemCallback == null)
                 {
-                    UnityDebug.Debug.Log("TourneyListView is missing an ItemCallback, cannot function", this);
+                    UnityDebug.Debug.LogWarning("TourneyListView is missing an ItemCallback, cannot function", this);
                     return;
                 }
 
                 // Move to correct location
-                var childRect = loadedItem.RectTransform.rect;
-                Vector2 pivot = loadedItem.RectTransform.pivot;
+                var childRect = childItems[0].RectTransform.rect;
+                Vector2 pivot = childItems[0].RectTransform.pivot;
                 float ytoppos = RowHeight() * rowIdx;
                 float ypos;
                 float xpos;
                 if (IsLandscape)
                 {
-                    xpos = ytoppos + (1f - pivot.y) * childRect.height;
-                    ypos = 0 + pivot.x * childRect.width;
+                    xpos = ytoppos + (1f - 1f) * 0;
+                    ypos = 0f;
                 }
                 else
                 {
-                    ypos = ytoppos + (1f - pivot.y) * childRect.height;
-                    xpos = 0 + pivot.x * childRect.width;
+                    ypos = ytoppos + (1f - 1f) * itemHeight;
+                    xpos = 0f;
                 }
                 child.RectTransform.anchoredPosition = new Vector2(xpos, -ypos);
                 child.NotifyCurrentAssignment(this, rowIdx);
@@ -456,14 +476,14 @@
         {
             if (IsLandscape)
             {
-                float width = loadedItem.RectTransform.rect.width * rowCount + (rowCount - 1) * RowPadding;
+                float width = itemWidth * rowCount + (rowCount - 1) * RowPadding;
                 // apparently 'sizeDelta' is the way to set w / h 
                 var sz = scrollRect.content.sizeDelta;
                 scrollRect.content.sizeDelta = new Vector2(width, sz.y);
             }
             else
             {
-                float height = loadedItem.RectTransform.rect.height * rowCount + (rowCount - 1) * RowPadding;
+                float height = itemHeight * rowCount + (rowCount - 1) * RowPadding;
                 // apparently 'sizeDelta' is the way to set w / h 
                 var sz = scrollRect.content.sizeDelta;
                 scrollRect.content.sizeDelta = new Vector2(sz.x, height);

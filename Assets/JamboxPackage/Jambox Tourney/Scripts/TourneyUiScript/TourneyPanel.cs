@@ -12,7 +12,6 @@
     using Jambox.Common.Utility;
     using Random = UnityEngine.Random;
     using System.Threading.Tasks;
-    using UnityEngine;
 
     /// <summary>
     /// UI Panel script responsible to populate the data on UI.
@@ -42,7 +41,6 @@
         public Image CoinImage;
 
         //Bottom Menu Texts
-
         public GameObject TourneySelected;
         public GameObject DuelSelected;
         public GameObject FriendlySelected;
@@ -89,16 +87,23 @@
         private void Start()
         {
             BGimage.sprite = UIPanelController.Instance.bgSprite;
-            SetToDefaultView();
+            TabletCheck();
             if(JamboxSDKParams.Instance.ArenaParameters.CoinBG != null)
             {
                 CoinImage.sprite = JamboxSDKParams.Instance.ArenaParameters.CoinBG;
             }
         }
 
-        public void SetToDefaultView()
+        void TabletCheck()
         {
-            GetComponentInParent<CanvasScaleChange>().SetToDefault();
+            if (TabletDetect.IsTablet() && UIPanelController.Instance.IsLandScape())
+            {
+                GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+            }
+            else
+            {
+                GetComponentInParent<CanvasScaleChange>().SetToDefault();
+            }
         }
 
         public void OnEnable()
@@ -113,10 +118,10 @@
             JamboxController.Instance.ErrorFromServer += OnErrorFromServer;
         }
 
-        private void OnErrorFromServer(string ErrorMsg = "")
+        private void OnErrorFromServer(string ErrorMsg = "", int ErrorCode = -1)
         {
-            Debug.Log("OnErrorFromServer Inside Tpourneypanel Hit >>>>"  + ErrorMsg);
-            UIPanelController.Instance.ErrorFromServerRcvd(ErrorMsg);
+            UnityDebug.Debug.LogError("OnErrorFromServer Inside Tpourneypanel Hit >>>>" + ErrorMsg);
+            UIPanelController.Instance.ErrorFromServerRcvd(ErrorCode, ErrorMsg);
         }
 
         private void OnProfileUpdate()
@@ -244,12 +249,12 @@
         }
 
         public void SetNoMoneyDialogue(bool Status, string msg, string BtnTxt, bool isBuyBtn,bool isClosebtn,
-                Action OnBtnClick, int StoreAmt, String CurrKey, string _tID, Panels prev, string headerMsg)
+                Action OnBtnClick, int StoreAmt, String CurrKey, string _tID, Panels prev, string headerMsg, bool outOfAttempts)
         {
             NoMoneyDialogue.gameObject.SetActive(Status);
             if (Status)
             {
-                NoMoneyDialogue.SetUIData(msg, BtnTxt, isBuyBtn, isClosebtn, OnBtnClick, StoreAmt, CurrKey, _tID, prev, headerMsg);
+                NoMoneyDialogue.SetUIData(msg, BtnTxt, isBuyBtn, isClosebtn, OnBtnClick, StoreAmt, CurrKey, _tID, prev, headerMsg, outOfAttempts);
             }
         }
 
@@ -277,7 +282,6 @@
         public async Task ShowTourneyItem(Panels prevPanelDet, Panels Currentpanel,
                         Dictionary<string, string> metaData, bool ShowDialogue = false, bool ShowFriendlyCompleted = false)
         {
-            //UserDataContainer.Instance.userName = String.Empty;
             if (ShowDialogue)
             {
                 ShowDialogueOnUI(metaData);
@@ -289,30 +293,24 @@
             else if (!JamboxController.Instance.ChechkForSession())
             {
                 await JamboxController.Instance.RefreshSession();
-                //_ = JamboxController.Instance.CreateSession(() => {
-                    ShowTourneyItem(prevPanelDet, Currentpanel, metaData, ShowDialogue);
-                //});
+                _ = ShowTourneyItem(prevPanelDet, Currentpanel, metaData, ShowDialogue);
             }
             else if (String.IsNullOrEmpty(CommonUserData.Instance.userName))
             {
-                //ChangeName.gameObject.SetActive(true);
-                //ChangeName.SetMetaData(prevPanelDet, Currentpanel, metaData, "", profilePicture.sprite.texture);
                 LoadingDialog(false);
                 CurrentPanelEnable = Currentpanel;
-                StartCoroutine(ShowChangeNamePanel(prevPanelDet, Currentpanel, metaData));
+                StartCoroutine(ShowChangeNamePanel());
             }
             else
             {
-                //_ = CommunicationController.Instance.GetCurrencyData("", (data) => { OnCurrencyDataRcvd(data); });
-
                 ShowTourneyItemNew( Currentpanel, metaData, ShowFriendlyCompleted);                
             }
         }
 
         public void CheckForUnclaimedRewards()
         {
-            if(this.gameObject != null)
-                _ = CommunicationController.Instance.UnclaimedRewards((data) => { OnUnclaimedRewardsRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.UnclaimedRewards((data) => { OnUnclaimedRewardsRcvd(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         void OnUnclaimedRewardsRcvd(IAPIUnclaimedRewards data)
@@ -323,13 +321,10 @@
                 _dict.Add("Unclaimed", "");
                 _dict.Add("Header", "Unclaimed Rewards");
                 _dict.Add("DialogBody", "There are rewards pending for your previous Tournament Entry. Claim your rewards!");
-                //_dict.Add("Btn1Name", "Cancel");
-                //_dict.Add("Btn2Name", "Claim");
                 _dict.Add("Btn1Name", "Claim");
                 _dict.Add("Btn2Name", "Collect All");
                 ShowDialogueOnUI(_dict);
             }
-
             UserDataContainer.Instance.UnclaimedRewardsCount = data.UnclaimedRewards.Count();
             CheckForUnclaimedRewardsExclamation();
         }
@@ -346,7 +341,7 @@
             }
         }
 
-        IEnumerator ShowChangeNamePanel(Panels prevPanel, Panels currentPanel, Dictionary<string,string> metadata)
+        IEnumerator ShowChangeNamePanel()
         {
             if (UIPanelController.Instance.IsLandScape())
                 ChangeName = Instantiate(Resources.Load("UpdatePlayer_Landscape") as GameObject).GetComponent<UpdatePlayerDetails>();
@@ -356,12 +351,12 @@
             RectTransform m_Viewport = ChangeName.GetComponent<RectTransform>();
             UIPanelController.Instance.SetPanelUI(m_Viewport);
             ChangeName.gameObject.SetActive(true);
-            if (!String.IsNullOrEmpty(CommonUserData.Instance.MyAvatarURL))
-            {
-                WWW www = new WWW(CommonUserData.Instance.MyAvatarURL);
-                yield return www;
-                ChangeName.SetMetaData( "", www.texture);
-            }
+            ChangeName.UpdateBG();
+
+            while (profilePicture.sprite == null)
+                yield return null;
+
+            ChangeName.SetMetaData(CommonUserData.Instance.userName, profilePicture.sprite.texture);
         }
 
         private void ShowDialogueOnUI(Dictionary<string, string> metaData)
@@ -372,8 +367,6 @@
                 UpdateCurrency();
                 UIPanelController.Instance.SetTourneyScrollActive(false);
                 String msg = "YOU DO NOT HAVE SUFFICIENT CHIPS TO PLAY THIS TOURNAMENT.PURCHASE SOME FROM OUR STORE AND ENJOY THE GAME";
-                //if (!String.IsNullOrEmpty(JamboxSDKParams.Instance.PurchaseText.ToString()))
-                //    msg = JamboxSDKParams.Instance.PurchaseText.ToString();
                 String BtnTxt = "PURCHASE";
                 string Header = "OUT OF CHIPS";
                 if (UIPanelController.Instance.EditableMessageData != null)
@@ -406,7 +399,7 @@
                         }
                     }
                 }
-                UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, BtnTxt, true, true, null,0, "","", Panels.None, Header);
+                UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, BtnTxt, true, true, null,0, "","", Panels.TourneyPanel, Header);
             }
             else if (metaData.ContainsKey("Unclaimed"))
             {
@@ -415,8 +408,8 @@
                 String Header = "ALERT";
                 String Btn1Name = "Retry";
                 String Btn2Name = "Home";
-                UnityDebug.Debug.Log("Does metadata Contains : " + metaData.Keys.Contains("DialogBody"));
-                UnityDebug.Debug.Log("Is data Corrupt >>>> " + !String.IsNullOrEmpty(metaData["DialogBody"]));
+                UnityDebug.Debug.LogInfo("Does metadata Contains : " + metaData.Keys.Contains("DialogBody"));
+                UnityDebug.Debug.LogInfo("Is data Corrupt >>>> " + !String.IsNullOrEmpty(metaData["DialogBody"]));
                 if (metaData.Keys.Contains("DialogBody") && !String.IsNullOrEmpty(metaData["DialogBody"]))
                 {
                     DialogBody = metaData["DialogBody"];
@@ -433,10 +426,6 @@
                 {
                     Btn2Name = metaData["Btn2Name"];
                 }
-                //DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, () => { RetryBtnClick(); },
-                //                           () => { HomeBtnCLick(); });OnRightArrowClicked
-
-                //DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, OnBtn1Click: () => { CloseDialogueUI(); }, OnBtn2Click: () => { OnRightArrowClicked(); });
                 DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, OnBtn1Click: () => { OnRightArrowClicked(); }, OnBtn2Click: () => { ClaimAllUnclaimedRewards(); }, true);
             }
             else
@@ -462,9 +451,6 @@
                 {
                     Btn2Name = metaData["Btn2Name"];
                 }
-                //DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, Btn2Name, () => { RetryBtnClick(); },
-                //                           () => { HomeBtnCLick(); });
-
                 DialogueUI.ShowDialogue(Header, DialogBody, Btn1Name, null, OnBtn1Click: () => { HomeBtnCLick(); });
             }
         }
@@ -477,7 +463,8 @@
         void ClaimAllUnclaimedRewards()
         {
             LoadingDialog(true, false);
-            _ = CommunicationController.Instance.ClaimReward("all", (data) => { OnUnclaimedRewardsClaimed(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetClaim("all", (data) => { OnUnclaimedRewardsClaimed(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         void OnUnclaimedRewardsClaimed(IAPIClaimData data)
@@ -488,28 +475,18 @@
             UserDataContainer.Instance.UpdateUserMoney(data.RewardInfo.Virtual.Value,
                                                     data.RewardInfo.Virtual.Key, true);
             UIPanelController.Instance.UpdateMoneyOnUI(false);
-
             Dictionary<string, string> _metadata = new Dictionary<string, string>();
             _metadata.Add("AllRewardsClaimed", " ");
             _metadata.Add("RewardAmount", data.RewardInfo.Virtual.Value.ToString());
             _metadata.Add("RewardKey", UpdatedCurrencyKey);
             ShowTourneyItemNew(Panels.TourneyPanel, _metadata);
-
             UserDataContainer.Instance.UnclaimedRewardsCount = 0;
             CheckForUnclaimedRewardsExclamation();
         }
 
         public void ShowUpdateDetailsPanel()
         {
-            if (UIPanelController.Instance.IsLandScape())
-                ChangeName = Instantiate(Resources.Load("UpdatePlayer_Landscape") as GameObject).GetComponent<UpdatePlayerDetails>();
-            else
-                ChangeName = Instantiate(Resources.Load("UpdatePlayer") as GameObject).GetComponent<UpdatePlayerDetails>();
-            ChangeName.RectTransform.SetParent(JamboxSDKParams.Instance.gameObject.GetComponent<RectTransform>(), false);
-            RectTransform m_Viewport = ChangeName.GetComponent<RectTransform>();
-            UIPanelController.Instance.SetPanelUI(m_Viewport);
-            ChangeName.gameObject.SetActive(true);
-            ChangeName.SetMetaData(CommonUserData.Instance.userName, profilePicture.sprite.texture);
+            StartCoroutine(ShowChangeNamePanel());
         }
 
         private void RetryBtnClick()
@@ -528,9 +505,9 @@
             profilePicture.sprite = _imageSprite;
             playerNameText.text = name;
             playerNameText.gameObject.SetActive(true);
-
             LoadingDialog(true, false);
-            _ = JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, (data) => { OnNameUpdateSuccess(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = JamboxController.Instance.UpdateUserDetails(name, avatarId, avatarGroup, (dataN) => { OnNameUpdateSuccess(dataN, Currentpanel, metaData); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         private void OnNameUpdateSuccess(IAPIUpdateUserData Data, Panels Currentpanel, Dictionary<string, string> metaData)
@@ -540,6 +517,8 @@
 
         public async Task GetDetailsAfterNameUpdate(Panels Currentpanel, Dictionary<string, string> metaData)
         {
+            profilePicture.sprite = null;
+            profilePicture.gameObject.SetActive(false);
             await JamboxController.Instance.RefreshSession();
             updateUser = StartCoroutine(UpdateUserBasicData());
             ShowTourneyItemNew(Currentpanel, metaData);
@@ -556,8 +535,10 @@
                     CurrentPanelEnable = Panels.TourneyPanel;
                 theList.UpdateItem(false);
             }
-            _ = CommunicationController.Instance.GetCurrencyData((data) => { OnCurrencyDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
-            _ = CommunicationController.Instance.GetEventList((data) => { TourneyDataRcvd(data, Currentpanel, metaData); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetCurrencyData((data) => { OnCurrencyDataRcvd(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
+            _ = CommunicationController.Instance.GetTourneydetail((data) => { TourneyDataRcvd(data, Currentpanel, metaData); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         private void PopulateItem()
@@ -580,14 +561,15 @@
                 tDet.UpdateUI(_tID);
                 if (_tID.Equals(tourneyId))
                 {
-                    
                     TourneyDetail _TourneyData = null;
                     UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(tourneyId, out _TourneyData);
                     tourneyId = string.Empty;
-                    if (_TourneyData != null && _TourneyData.isJoined)
+                    if (_TourneyData != null && actionRequired == ActionRequiredFromUser.AD_PLAY_TOURNEY)
                         tDet.OnVideoWatched();
-                    if (_TourneyData != null && !_TourneyData.isJoined)
-                        tDet.PlayAfterPurchase();
+                    if (_TourneyData != null && actionRequired == ActionRequiredFromUser.PURCHASE_JOIN_TOURNEY)
+                        tDet.JoinAfterPurchase();
+                    if (_TourneyData != null && actionRequired == ActionRequiredFromUser.AD_JOIN_TOURNEY)
+                        tDet.JoinAfterWatchAd();
                 }
             }
         }
@@ -613,8 +595,15 @@
                 string _tID = UserDataContainer.Instance.MyDuels.Values.ToList()[rowIndex].Tourneyid;
                 if (_tID.Equals(tourneyId))
                 {
+                    if (actionRequired == ActionRequiredFromUser.AD_PLAY_DUEL)
+                    {
+                        tDet.OnPlayDuelAfterAD(tourneyId);
+                    }
+                    else
+                    {
+                        tDet.OnPlayDuelClicked(true);
+                    }
                     tourneyId = string.Empty;
-                    tDet.OnPlayDuelClicked(true);
                 }
             }
         }
@@ -631,6 +620,7 @@
             }
             LoadingDialog(false);
         }
+
         private void PopulateItemFriendly(FriendlylistViewItem item, int rowIndex)
         {
             var tDet = item as FriendlyTourneyItem;
@@ -641,10 +631,10 @@
                 if (_tID.Equals(tourneyId))
                 {
                     tourneyId = string.Empty;
-                    //tDet.OnVideoWatched();
                 }
             }
         }
+
         public void OnBackBtnClick()
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
@@ -658,6 +648,7 @@
             RewardPanel.UpdateUi(TourneyID);
         }
         private string tourneyId = String.Empty;
+        private ActionRequiredFromUser actionRequired;
 
         public void OpenTourneyBtnClick()
         {
@@ -676,6 +667,10 @@
             {
                 if (metaData != null)
                 {
+                    string _action = null;
+                    metaData.TryGetValue("action", out _action);
+                    System.Enum.TryParse<ActionRequiredFromUser>(_action, out actionRequired);
+
                     metaData.TryGetValue("tourneyid", out tourneyId);
                 }
                 DisableAllSelector();
@@ -683,7 +678,6 @@
                 SetScrollViewStatus(true);
                 theList.UpdateItem(true);
                 theList.RowCount = 0;
-
                 if (topText == null)
                 {
                     SetDoubleTabTexts("Live", "Past");
@@ -695,8 +689,6 @@
                     rightArrow.SetActive(true);
                     topText.text = "Live";
                 }
-                //nameText.text = "Live";
-
                 LoadingDialog(false);
                 PopulateItem();
                 if (UserDataContainer.Instance.UpdatedTourneyData.Values.Count == 0)
@@ -704,7 +696,6 @@
                     ComingSoon.SetActive(true);
                     ComingSoonBody.text = "Tournaments are not Available Currently. Please Try Duels.";
                 }
-
                 //Updating Bottom Menu
                 if(TourneySelected != null)
                     TourneySelected.SetActive(true);
@@ -713,7 +704,7 @@
             }
             catch (Exception e)
             {
-                UnityDebug.Debug.Log("Processing TourneyBtnProcess has exception >>>> " + e.ToString());
+                UnityDebug.Debug.LogInfo("Processing TourneyBtnProcess has exception >>>> " + e.ToString());
             }
 
         }
@@ -734,7 +725,14 @@
 #endif
 
             if (metaData != null)
+            {
+                string _action = null;
+                metaData.TryGetValue("action", out _action);
+                System.Enum.TryParse<ActionRequiredFromUser>(_action, out actionRequired);
+
                 metaData.TryGetValue("tourneyid", out tourneyId);
+            }
+            
             DisableAllSelector();
             CurrentPanelEnable = Panels.DuelPanel;
             theList.UpdateItem(false, true);
@@ -778,7 +776,14 @@
         {
 
             if (metaData != null)
+            {
+                string _action = null;
+                metaData.TryGetValue("action", out _action);
+                System.Enum.TryParse<ActionRequiredFromUser>(_action, out actionRequired);
+
                 metaData.TryGetValue("tourneyid", out tourneyId);
+            }
+
             DisableAllSelector();
             CurrentPanelEnable = Panels.FriendlyPanel;
             FriendlyPanel.SetActive(true);
@@ -900,6 +905,7 @@
 
                 topText.text = "Past";
             }
+
             theList.RowCount = 0;
             String Category = "1";
             string screenName = "";
@@ -944,7 +950,8 @@
                 FriendlySelected.SetActive(true);
             }
 
-            _ = CommunicationController.Instance.GetCompletedTourneyData(   Category, (data) => { CompletedTDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetCompletedTourneyData(Category, (data) => { CompletedTDataRcvd(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         private void CompletedTDataRcvd(IAPICompTourneyList data)

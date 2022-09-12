@@ -45,7 +45,7 @@ namespace Jambox.Common
         /// <param name="UserName"></param>
         /// <param name="AppSecret"></param>
         /// <returns></returns>
-        Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret);
+        Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret, String Ad_ID, bool isDebug);
 
         /// <summary>
         /// 
@@ -57,13 +57,12 @@ namespace Jambox.Common
         /// <returns></returns>
         Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, int avatarId, string avatarGroup);
 
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="authToken"></param>
         /// <param name="name"></param>
-        /// <param name="avatarUrl"></param>
+        /// <param name="avatar"></param>        
         /// <returns></returns>
         Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, string avatar);
     }

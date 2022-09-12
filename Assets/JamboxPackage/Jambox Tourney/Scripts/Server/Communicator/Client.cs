@@ -22,9 +22,9 @@ namespace Jambox.Tourney.Server
         }        
 
         /// <inheritdoc cref="GetTourneyList"/>
-        public async Task<IApiTourneyList> GetTourneyList(string authToken)
+        public async Task<IApiTourneyList> GetTourneyList(string authToken, string UserLevel)
         {
-            return await _apiClient.getTourneyDetail(authToken);
+            return await _apiClient.getTourneyDetail(authToken, UserLevel);
         }
 
         /// <inheritdoc cref="JoinTournament"/>

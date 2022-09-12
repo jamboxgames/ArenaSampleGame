@@ -78,7 +78,14 @@
         {
             if (TabletDetect.IsTablet())
             {
-                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                if (UIPanelController.Instance.IsLandScape())
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+                }
+                else
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                }
             }
             else
             {
@@ -110,13 +117,13 @@
             _ = CommunicationController.Instance.JoinDuel(UniqueTID, (data) =>
             {
                 OpponentFound(data);
-            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            }, (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
 
         }
         GameObject _loading;
         IEnumerator FindOpponent()
         {
-            UnityDebug.Debug.Log("Finding Opponent!");
+            UnityDebug.Debug.LogInfo("Finding Opponent!");
             opponentFindingText.text = "FINDING OPPONENT";
             cancelButton.SetActive(true);
             //_loading = Instantiate(loadingImagePrefab, opponentPlayer.GetProfileImage().gameObject.transform.position, Quaternion.identity, opponentPlayer.gameObject.transform);
@@ -132,7 +139,7 @@
         public void OpponentFound(IAPIJoinDuel data)
         {
             OpponentRcvd = true;
-            UnityDebug.Debug.Log("OpponentFound >>>>>>");
+            UnityDebug.Debug.LogInfo("OpponentFound >>>>>>");
             //cancelButton.GetComponent<Button>().interactable = false;
             StartCoroutine(ShowOppUser(data));
         }
@@ -144,10 +151,10 @@
             }
 
             //Getting Opponent Avatar Ready before showing
-            UnityDebug.Debug.Log("GetTextureRequest HIt URL : " + data.OpponenetData.PlayerURL);
+            UnityDebug.Debug.LogInfo("GetTextureRequest HIt URL : " + data.OpponenetData.PlayerURL);
             if (string.IsNullOrEmpty(data.OpponenetData.PlayerURL))
             {
-                UnityDebug.Debug.Log("url String is Empty In GetTextureRequest >>>>>>>>");
+                UnityDebug.Debug.LogWarning("url String is Empty In GetTextureRequest >>>>>>>>");
             }
             while (data.OpponenetData.PlayerURL == null)
             {
@@ -164,7 +171,10 @@
             opponentFindingText.text = "OPPONENT FOUND";
             Destroy(_loading);
             cancelButton.SetActive(false);
-            UserDataContainer.Instance.UpdateUserMoney(DuelData.EntryFee, DuelData.Currency, false);
+
+            if (!DuelData.JoinWithVideoAD)
+                UserDataContainer.Instance.UpdateUserMoney(DuelData.EntryFee, DuelData.Currency, false);
+
             DuelData.LeaderBoardID = data.LeaderBoardID;
             if (UserDataContainer.Instance.MyDuels.ContainsKey(UniqueTID))
             {
@@ -184,7 +194,7 @@
             Dictionary<string, string> tempMetaData = new Dictionary<string, string>();
             tempMetaData.Add("game_type", "timed");*/
 
-            Jambox.Match _matchData = new Jambox.Match(UniqueTID, data.LeaderBoardID, DuelData.metadata, DuelData.Category,
+            Jambox.Match _matchData = new Jambox.Match(UniqueTID, data.LeaderBoardID, DuelData.metadata, DuelData.Category, DuelData.SortOrder, DuelData.ScoringMode,
                  data.OpponenetData.ReplayData, null, CommonUserData.Instance.MyAvatarURL, CommonUserData.Instance.userName,
                  data.OpponenetData.PlayerURL, data.OpponenetData.PlayerName, CommonUserData.Instance.avatarSprite, UserDataContainer.Instance.tempDuelOpponentSprite);
 
@@ -271,7 +281,7 @@
 
         public void CancelSearchingOpponent()
         {
-            UnityDebug.Debug.Log("Cancel Search!!");
+            UnityDebug.Debug.LogInfo("Cancel Search!!");
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             UIPanelController.Instance.ShowPanel(Panels.DuelPanel, Panels.None, metadata);
             Destroy(this.gameObject);

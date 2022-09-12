@@ -11,8 +11,8 @@
     public class FriendlyListView : MonoBehaviour
     {
         public bool IsLandscape = false;
-        [Tooltip("Prefab for all the child view objects in the list")]
-        public FriendlyTourneyItem friendlyItem;
+        //[Tooltip("Prefab for all the child view objects in the list")]
+        //private FriendlyTourneyItem friendlyItem;
         [Tooltip("The amount of vertical padding to add between items")]
         public float RowPadding = 15f;
         [Tooltip("Minimum height to pre-allocate list items for. Use to prevent allocations on resizing.")]
@@ -212,6 +212,8 @@
         protected virtual void Awake()
         {
             scrollRect = GetComponent<ScrollRect>();
+            //string resourcePath = UIPanelController.Instance.ThemePath("FriendlyItem");
+            //friendlyItem = Instantiate(Resources.Load(resourcePath) as GameObject).GetComponent<FriendlyTourneyItem>();
         }
 
         protected virtual bool CheckChildItems()
@@ -235,7 +237,8 @@
                 {
                     if (childItems[i] == null)
                     {
-                        childItems[i] = Instantiate(friendlyItem);
+                        string resourcePath = UIPanelController.Instance.ThemePath("FriendlyItem");
+                        childItems[i] = Instantiate(Resources.Load(resourcePath) as GameObject).GetComponent<FriendlyTourneyItem>();
                     }
                     childItems[i].RectTransform.SetParent(scrollRect.content, false);
                     childItems[i].gameObject.SetActive(false);
@@ -356,9 +359,9 @@
         {
             float yHit;
             if (IsLandscape)
-                yHit = friendlyItem.RectTransform.rect.width;
+                yHit = 505.0f;
             else
-                yHit = friendlyItem.RectTransform.rect.height;
+                yHit = 600.0f;
             return RowPadding + yHit;
         }
 
@@ -381,25 +384,25 @@
             {
                 if (ItemCallback == null)
                 {
-                    UnityDebug.Debug.Log("ItemCallback is null");
-                    UnityDebug.Debug.Log("LeaderBoardListView is missing an ItemCallback, cannot function", this);
+                    UnityDebug.Debug.LogWarning("ItemCallback is null");
+                    UnityDebug.Debug.LogWarning("LeaderBoardListView is missing an ItemCallback, cannot function", this);
                     return;
                 }
                 // Move to correct location
-                var childRect = friendlyItem.RectTransform.rect;
-                Vector2 pivot = friendlyItem.RectTransform.pivot;
+                //var childRect = friendlyItem.RectTransform.rect;
+                //Vector2 pivot = friendlyItem.RectTransform.pivot;
                 float ytoppos = RowHeight() * rowIdx;
                 float ypos;
                 float xpos;
                 if (IsLandscape)
                 {
-                    xpos = ytoppos + (1f - pivot.y) * childRect.height;
-                    ypos = 0 + pivot.x * childRect.width;
+                    xpos = ytoppos + (1f - 0.5f) * 0;
+                    ypos = 0 + 0 * 505.0f;
                 }
                 else
                 {
-                    ypos = ytoppos + (1f - pivot.y) * childRect.height;
-                    xpos = 0 + pivot.x * childRect.width;
+                    ypos = ytoppos + (1f - 1f) * 600.0f;
+                    xpos = 0 + 0.5f * 0;
                 }
                 child.RectTransform.anchoredPosition = new Vector2(xpos, -ypos);
                 child.NotifyCurrentAssignment(this, rowIdx);
@@ -414,14 +417,14 @@
         {
             if (IsLandscape)
             {
-                float width = friendlyItem.RectTransform.rect.width * rowCount + (rowCount - 1) * RowPadding;
+                float width = 505 * rowCount + (rowCount - 1) * RowPadding;
                 // apparently 'sizeDelta' is the way to set w / h 
                 var sz = scrollRect.content.sizeDelta;
                 scrollRect.content.sizeDelta = new Vector2(width, sz.y);
             }
             else
             {
-                float height = friendlyItem.RectTransform.rect.height * rowCount + (rowCount - 1) * RowPadding;
+                float height = 600 * rowCount + (rowCount - 1) * RowPadding;
                 // apparently 'sizeDelta' is the way to set w / h 
                 var sz = scrollRect.content.sizeDelta;
                 scrollRect.content.sizeDelta = new Vector2(sz.x, height);

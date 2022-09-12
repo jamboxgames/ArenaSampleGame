@@ -17,21 +17,19 @@
         {
             if (string.IsNullOrWhiteSpace(codeInput.text))
             {
-                UnityDebug.Debug.Log("Enter Valid Code¸");
+                UnityDebug.Debug.LogError("Enter Valid Code¸");
                 return;
             }
             UIPanelController.Instance.LoadingDialogue(true, false);
-            _ = CommunicationController.Instance.JoinFriendly(codeInput.text, (data) => { OnJoinFriendlySuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.JoinFriendly(codeInput.text, (data) => { OnJoinFriendlySuccess(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
 
         }
 
         private void OnJoinFriendlySuccess(IAPIJoinFriendly data)
         {
-#if GAME_FIREBASE_ENABLED   //Todo : Change Friendly Struct to have tourney details
-            //Firebase.Analytics.Parameter[] eventarameters = {
-            //                        new Firebase.Analytics.Parameter("event_id",data.friendlyTournamentDetails.TourneyDetail.Tourneyid)
-            //                        };
-            //Firebase.Analytics.FirebaseAnalytics.LogEvent("join_friendly", eventarameters);
+#if GAME_FIREBASE_ENABLED
+            //Todo : Change Friendly Struct to have tourney details
             Firebase.Analytics.FirebaseAnalytics.LogEvent("join_friendly");
 #endif
 

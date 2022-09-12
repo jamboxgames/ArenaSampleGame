@@ -24,8 +24,24 @@ namespace Jambox.Server
     using System.Threading;
     using System.Threading.Tasks;
     using Jambox.Common.TinyJson;
-    using Jambox.Tourney.Server;
-    using UnityEngine;
+
+
+    public class JamboxException : Exception
+    {
+        private static readonly string DefaultMessage = "Our servers are not responding. Please try after sometime.";
+
+        public string ErrorMsg { get; set; }
+        public int ErrorCode { get; set; }
+
+        public JamboxException() : base(DefaultMessage) { }
+        public JamboxException(string message) : base(message) { }
+        public JamboxException(string message, System.Exception innerException) : base(message, innerException) { }
+        public JamboxException(int errorCode, string errorMsg) : base(DefaultMessage)
+        {
+            ErrorMsg = errorMsg;
+            ErrorCode = errorCode;
+        }
+    }
 
     /// <summary>
     /// HTTP Request adapter which uses the .NET HttpClient to send requests.
@@ -52,41 +68,34 @@ namespace Jambox.Server
         public async Task<String> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body,
             int timeout, bool continueOnError = false)
         {
-            //try
-            //{
-                UnityDebug.Debug.Log("SendAsync Of Httprequest Hit >>> Uri : " + uri.ToString());
-                var request = new HttpRequestMessage
+            UnityDebug.Debug.Log("SendAsync Of Httprequest Hit >>> Uri : " + uri.ToString());
+            var request = new HttpRequestMessage
+            {
+                RequestUri = uri,
+                Method = new HttpMethod(method),
+                Headers =
                 {
-                    RequestUri = uri,
-                    Method = new HttpMethod(method),
-                    Headers =
-                    {
-                        Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                    }
-                };
-
-                foreach (var kv in headers)
-                {
-                    request.Headers.Add(kv.Key, kv.Value);
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
+            };
+            foreach (var kv in headers)
+            {
+                request.Headers.Add(kv.Key, kv.Value);
+            }
+            if (body != null)
+            {
+                request.Content = new ByteArrayContent(body);
+            }
+            var timeoutToken = new CancellationTokenSource();
+            timeoutToken.CancelAfter(TimeSpan.FromSeconds(timeout));
 
-                if (body != null)
-                {
-                    request.Content = new ByteArrayContent(body);
-                }
+            UnityDebug.Debug.Log("Send: method : " + method + " uri : " + uri.ToString() + "  body :   " + body + "   timeout : " + timeout);
 
-                var timeoutToken = new CancellationTokenSource();
-                timeoutToken.CancelAfter(TimeSpan.FromSeconds(timeout));
+            var response = await _httpClient.SendAsync(request, timeoutToken.Token);
+            var contents = await response.Content.ReadAsStringAsync();
+            response.Content?.Dispose();
 
-                UnityDebug.Debug.Log("Send: method : " + method + " uri : " + uri.ToString() + "  body :   " + body  + "   timeout : " + timeout);
-            
-                var response = await _httpClient.SendAsync(request, timeoutToken.Token);
-                var contents = await response.Content.ReadAsStringAsync();
-                response.Content?.Dispose();
-
-
-                UnityDebug.Debug.Log("Received: status : " + response.StatusCode + " from : " + uri.ToString() + "\nContents : " + contents);
-
+            UnityDebug.Debug.Log("Received: status : " + response.StatusCode + " from : " + uri.ToString() + "\nContents : " + contents);
 
             if (response.IsSuccessStatusCode)
             {
@@ -94,7 +103,8 @@ namespace Jambox.Server
                 if (decodedNew.ContainsKey("error"))
                 {
                     string errorMsg = decodedNew["error"].ToString();
-                    throw new Exception(errorMsg);
+                    int errorCode = decodedNew.ContainsKey("errorcode") ? (int)decodedNew["errorcode"] : -1;
+                    throw new JamboxException(errorCode, errorMsg);
                 }
                 UnityDebug.Debug.Log("SendAsync Of Httprequest Hit >>> 222 Success hit : ");
                 return contents;
@@ -103,65 +113,23 @@ namespace Jambox.Server
             {
                 UnityDebug.Debug.Log("Else case of packet Parsing Hit >>>>>");
                 string message = "";
+                int errorCode = -1;
                 if (contents != null)
                 {
-                    //UnityDebug.Debug.Log("Else case of packet Parsing Hit 00000>>>>>");
                     var decoded = contents.FromJson<Dictionary<string, object>>();
                     //UnityDebug.Debug.Log("Else case of packet Parsing Hit 11111>>>>>");
                     if (decoded != null && decoded.Keys.Count > 0)
                     {
-                        message = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
-                        //UnityDebug.Debug.Log("Else case of packet Parsing Hit 1111-2222>>>>>");
-                        int grpcCode = decoded.ContainsKey("code") ? (int)decoded["code"] : -1;
-                        //UnityDebug.Debug.Log("Else case of packet Parsing Hit 222222>>>>>");
-                        //var exception = new ApiResponseException((int) response.StatusCode, message, grpcCode);
-
-                        if (decoded.ContainsKey("error"))
-                        {
-                            object data;
-                            decoded.TryGetValue("error", out data);
-                            //UnityDebug.Debug.LogError("SendAsync Of Httprequest Hit >>> Error : " + data.ToString());
-                            //IHttpAdapterUtil.CopyResponseError(this, decoded["error"], exception);
-                            //IHttpAdapterUtil.SendError(data.ToString(), continueOnError);
-                            message = data.ToString();
-                        }
+                        errorCode = decoded.ContainsKey("errorcode") ? (int)decoded["errorcode"] : -1;
+                        message = decoded.ContainsKey("error") ? (String)decoded["error"] : String.Empty;
                     }
                 }
                 //UnityDebug.Debug.Log("Else case of packet Parsing Hit >>>>> 33333");
                 if (String.IsNullOrEmpty(message))
                     message = "Our servers are not responding. Please try after sometime.";
                 UnityDebug.Debug.LogError("SendAsync Of Httprequest Hit >>> exception : " + message);
-                throw new Exception(message);
+                throw new JamboxException(errorCode, message);
             }
-
-            //throw exception;
-            //}
-            //catch (HttpRequestException e)
-            //{
-            //    Debug.LogError("Exception Caught! >>>>>>");
-            //    Debug.LogError("Message : " + e.Message);
-            //    var exception = new ApiResponseException(104, "unknown", 311);
-            //    IHttpAdapterUtil.SendError("We are unable to connect to our server. Please try after some time.", continueOnError);
-            //    Debug.LogError("SendAsync Of Httprequest Hit >>> exception : ");
-            //    throw exception;
-            //}
-            //catch (WebException e)
-            //{
-            //    Debug.LogError("WebException Exception Caught! >>>>>>");
-            //    Debug.LogError("Message : " + e.Message);
-            //    var exception = new ApiResponseException(104, "unknown", 311);
-            //    IHttpAdapterUtil.SendError("", continueOnError);
-            //    Debug.LogError("SendAsync Of Httprequest Hit >>> exception : ");
-            //    throw exception;
-            //}
-            //catch (Exception e)
-            //{
-            //    Debug.LogError("Exception Caught! >>>>>> " + e.Message);
-            //    Debug.LogError("Exception Caught! >>>>>> " + e.StackTrace);
-            //    var exception = new ApiResponseException(104, "unknown", 311);
-            //    IHttpAdapterUtil.SendError("We are unable to connect to our server. Please try after some time", continueOnError);
-            //    throw exception;
-            //}
         }
         /// <summary>
         /// A new HTTP adapter with configuration for gzip support in the underlying HTTP client.
@@ -181,7 +149,7 @@ namespace Jambox.Server
             }
 
             var client =
-                new HttpClient(compression ? (HttpMessageHandler) new GZipHttpClientHandler(handler) : handler);
+                new HttpClient(compression ? (HttpMessageHandler)new GZipHttpClientHandler(handler) : handler);
             return new HttpRequestAdapter(client);
         }
     }

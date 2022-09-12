@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
     using Jambox.Common.TinyJson;
-    using UnityEngine.Scripting;
     using Jambox.Tourney.Data;
     using Jambox.Tourney.Connector;
     using UnityEngine;
@@ -24,6 +22,7 @@
         private string appVersion = Application.version;
         private string SDKVersion = ArenaSDKVersion.VersionString;
         private string _platform = UnityEngine.Application.platform.ToString();
+        private string _userLevel = "";
 
         public TournamentApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
         {
@@ -139,7 +138,7 @@
         /// </summary>
         /// <param name="authtoken">This will be the unique auth token sent to server for different games</param>
         /// <returns></returns>
-        public async Task<IApiTourneyList> getTourneyDetail(string authtoken)
+        public async Task<IApiTourneyList> getTourneyDetail(string authtoken, string UserLevel)
         {
             var urlpath = "/v1/gettournamentdetails";
             var queryParams = "";
@@ -149,7 +148,7 @@
                 Path = urlpath,
                 Query = queryParams
             }.Uri;
-
+            _userLevel = UserLevel;
             var method = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", authtoken);
@@ -157,7 +156,12 @@
             headers.Add("userid", authtoken);
             headers.Add("version", appVersion);
             headers.Add("platform", _platform);
+
+            //Dictionary<String, String> DataNew2 = new Dictionary<String, String>();
+            //DataNew2.Add("user_level", _userLevel);
             byte[] content = null;
+            //var jsonBody = DataNew2.ToJson();
+            //content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<ApiTourneyList>();
         }
@@ -186,7 +190,11 @@
             headers.Add("userid", authtoken);
             headers.Add("version", appVersion);
             headers.Add("platform", _platform);
+            Dictionary<String, String> DataNew2 = new Dictionary<String, String>();
+            DataNew2.Add("user_level", _userLevel);
             byte[] content = null;
+            var jsonBody = DataNew2.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<APIJoinTourney>();
         }
@@ -215,7 +223,11 @@
             headers.Add("userid", authtoken);
             headers.Add("version", appVersion);
             headers.Add("platform", _platform);
+            Dictionary<String, String> DataNew2 = new Dictionary<String, String>();
+            DataNew2.Add("user_level", _userLevel);
             byte[] content = null;
+            var jsonBody = DataNew2.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             UnityDebug.Debug.Log("Content from JoinDuel -> " + contents);
             APIJoinDuel jsonData = contents.FromJson<APIJoinDuel>();
@@ -316,7 +328,7 @@
             headers.Add("userid", authToken);
             headers.Add("version", appVersion);
             headers.Add("platform", _platform);
-
+            UnityDebug.Debug.Log("userid : " + authToken);
             Dictionary<String, object> DataNew2 = new Dictionary<String, object>();
             DataNew2.Add("score", Score);
             DataNew2.Add("displayscore", displayScore);

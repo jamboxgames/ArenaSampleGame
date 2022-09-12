@@ -40,12 +40,13 @@
 
         public void OnPlayBtnClicked()
         {
-            _ = CommunicationController.Instance.PlayFriendlyTourney(tourneyId, (data) => { OnPlayTourneySuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.PlayFriendlyTourney(tourneyId, (data) => { OnPlayTourneySuccess(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         void OnPlayTourneySuccess(IApiPlayFriendlyTourney data)
         {
-            UnityDebug.Debug.Log("PLAY GAME RECEIVED");
+            UnityDebug.Debug.LogInfo("PLAY GAME RECEIVED");
         }
     }
 }

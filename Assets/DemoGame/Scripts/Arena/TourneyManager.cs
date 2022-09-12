@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class TourneyManager : MonoBehaviour
 {
-
+    public const string GlobalLeaderboardID = "09aca4e5-8de7-477f-9c8d-357f61171f8f";
     public bool inTourney = false;
     public EMatchType matchType;
     public bool tourneyPurchaseRequired = false;

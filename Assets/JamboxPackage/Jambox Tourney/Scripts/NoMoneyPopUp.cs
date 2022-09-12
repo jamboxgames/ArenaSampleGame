@@ -43,12 +43,22 @@ public class NoMoneyPopUp : MonoBehaviour
         CloseBtn.gameObject.SetActive(true);
     }
 
-    public void SetUIData(string msg, string BtnTxt, bool isBuyBtn, bool isClosebtn, Action OnBtnClick, int StoreAmt, String currKey, string _tID, Panels prev, String headerMsg)
+    public void SetUIData(string msg, string BtnTxt, bool isBuyBtn, bool isClosebtn, Action OnBtnClick, int StoreAmt, String currKey, string _tID, Panels prev, String headerMsg, bool outOfAttempts = false)
     {
+        BuyBtn.onClick.RemoveAllListeners();
         OnButtonClick = OnBtnClick;
+        if (outOfAttempts)
+        {
+            BuyBtn.onClick.AddListener(OnCloseBtnClick);
+        }
+        else
+        {
+            BuyBtn.onClick.AddListener(OnBuyBtnClick);
+        }
         NoMoneyText.text = msg;
         BuyBtn.gameObject.SetActive(isBuyBtn);
         BuyText.text = BtnTxt;
+        HeaderText.text = headerMsg;
         CloseBtn.gameObject.SetActive(isClosebtn);
         StoreMoney = StoreAmt;
         CurrencyKey = currKey;

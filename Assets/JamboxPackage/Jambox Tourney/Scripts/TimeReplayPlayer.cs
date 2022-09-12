@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Jambox.Tourney.Data;
 using Jambox.Common.Utility;
+using System.Globalization;
 
 namespace Jambox.Tourney.Connector
 {
@@ -43,6 +44,11 @@ namespace Jambox.Tourney.Connector
             return true;
         }
 
+        public ReplayData GetOpponentReplayData()
+        {
+            return opponentReplayData;
+        }
+
         private void OnDisable()
         {
             if (replayCoroutine != null)
@@ -51,8 +57,9 @@ namespace Jambox.Tourney.Connector
 
         IEnumerator StartReplay()
         {
+            bool _timeInMilliseconds = opponentReplayData.timeInMilliseconds;
             List<IntervalData> data = opponentReplayData.intervalData;
-            UnityDebug.Debug.Log("Starting Opponent Replay");
+            UnityDebug.Debug.LogInfo("Starting Opponent Replay");
             int totalIntervalCount = 0;
             if (data != null)
                 totalIntervalCount = data.Count;
@@ -64,9 +71,15 @@ namespace Jambox.Tourney.Connector
             //-1 because the last interval is dummy
             while (playedIntervalCount < totalIntervalCount - 1)
             {
+                //change comma to dot for converting it in to invariant style
                 string strInterval = _interval.i.Replace(',', '.');
                 strInterval = strInterval.Replace('/', '.');
-                if (playingTimer >= float.Parse(strInterval))
+
+                float _time = float.Parse(strInterval, CultureInfo.InvariantCulture);
+                if (_timeInMilliseconds)
+                    _time = _time / 1000f;
+
+                if (playingTimer >= _time)
                 {
                     ExecuteDataString(_interval.d);
                     playedIntervalCount++;
@@ -79,11 +92,15 @@ namespace Jambox.Tourney.Connector
             //Check for the end of replay
             string strIntervalLast = _interval.i.Replace(',', '.');
             strIntervalLast = strIntervalLast.Replace('/', '.');
-            while (_interval != null && playingTimer <= float.Parse(strIntervalLast))
+
+            float _timeLast = float.Parse(strIntervalLast, CultureInfo.InvariantCulture);
+            if (_timeInMilliseconds)
+                _timeLast = _timeLast / 1000f;
+
+            while (_interval != null && playingTimer <= _timeLast)
             {
                 yield return null;
             }
-          
 
             StopPlayingReplay(true);
         }
@@ -94,7 +111,7 @@ namespace Jambox.Tourney.Connector
         /// <param name="manual"> If stopped manually, the "OnReplayStopped" will not be called </param>
         public void StopPlayingReplay(bool callOnStoppedEvent = false)
         {
-            UnityDebug.Debug.Log("End Of Opponent Replay");
+            UnityDebug.Debug.LogInfo("End Of Opponent Replay");
             playingReplay = false;
             opponentReplayData = null;
             playingTimer = 0f;
@@ -108,5 +125,6 @@ namespace Jambox.Tourney.Connector
             if (playingReplay && Time.timeScale > 0f)
                 playingTimer += Time.deltaTime;
         }
+
     }
 }

@@ -17,7 +17,7 @@
         public Text DescText;
         public Text ButtonName;
         public Button PlayJoinWatch;
-        public GameObject watchAdText;
+        public GameObject watchAdIcon;
         public Text BestScore;
         public Text NoLBText;
         public Text UserMoney;
@@ -38,7 +38,6 @@
         public Text RewardAmount;
         private string TourneyId;
         public Text EndTimeText;
-        //public GameObject mainPanel;
         public RewarDetail rewardDetail;
         public GameObject rewardParent;
         public GameObject InvitePanel;
@@ -76,7 +75,14 @@
         {
             if (TabletDetect.IsTablet())
             {
-                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                if (UIPanelController.Instance.IsLandScape())
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+                }
+                else
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                }
             }
             else
             {
@@ -87,7 +93,7 @@
 
         public void SetTourneyId(string Id, Panels prevPanelDet, bool IsFriendly)
         {
-            UnityDebug.Debug.Log("Tourney ID : " +  Id);
+            UnityDebug.Debug.LogInfo("Tourney ID : " +  Id);
             TourneyId = Id;
             prevPanel = prevPanelDet;
             friendlyCompleted = IsFriendly;
@@ -202,7 +208,7 @@
             EndTimeText.text = "ENDED : " + EndTimeInFormat(elapsed) + "  AGO";
             LbLoadingPanel.gameObject.SetActive(true);
             _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
-                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             LeaderboardRefreshing(true);
         }
 
@@ -256,7 +262,10 @@
             //2021-07-19T07:54:36.738535Z
             EndTimeText.text = "ENDS IN : " + EndTimeInFormat(elapsed);
             ButtonName.text = "Join";
-            watchAdText.SetActive(false);
+            if (tourneyDet._tournament.JoinWithVideoAD)
+                watchAdIcon.SetActive(true);
+            else
+                watchAdIcon.SetActive(false);
             UpdateJoinedStatus(tourneyDet);
         }
 
@@ -302,10 +311,15 @@
         {
             if (tourneyDet.isJoined)
             {
+                watchAdIcon.SetActive(false);
                 ButtonName.text = "Play";
                 Attempts.SetActive(true);
                 Rewards.SetActive(false);
-                AttemptCount.text = tourneyDet._joinedTourneyData.CurrentAttempt + " / " + tourneyDet._tournament.MaxEntry;
+                if (tourneyDet._tournament.JoinWithVideoAD && tourneyDet._tournament.PlayWithVideoAD)
+                    AttemptCount.text = tourneyDet._joinedTourneyData.CurrentAttempt + "";
+                else
+                    AttemptCount.text = tourneyDet._joinedTourneyData.CurrentAttempt + " / " + tourneyDet._tournament.MaxEntry;
+                //AttemptCount.text = tourneyDet._joinedTourneyData.CurrentAttempt + " / " + tourneyDet._tournament.MaxEntry;
                 EntryFee.SetActive(false);
                 Position.SetActive(true);
                 RankDisplay.text = tourneyDet._joinedTourneyData.MyRank + " / " + tourneyDet._joinedTourneyData.CurrentPlayers;
@@ -313,7 +327,8 @@
                 BestScore.gameObject.SetActive(true);
                 BestScore.text = "BEST: " + tourneyDet._joinedTourneyData.Score;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard(tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.GetLeaderBoard(tourneyDet._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
                 LeaderboardRefreshing(true);
                 updatePlayableStatus(tourneyDet);
             }
@@ -326,15 +341,19 @@
 
         public void updatePlayableStatus(TourneyDetail tourneyDet)
         {
+            if (tourneyDet._tournament.JoinWithVideoAD && tourneyDet._tournament.PlayWithVideoAD)
+            {
+                watchAdIcon.SetActive(true);
+            }
             if (tourneyDet._joinedTourneyData.CurrentAttempt >= tourneyDet._tournament.MaxEntry)
             {
                 if (tourneyDet._tournament.PlayWithVideoAD)
                 {
-                    ButtonName.text = "";
-                    watchAdText.SetActive(true);
+                    watchAdIcon.SetActive(true);
                 }
                 else
                 {
+                    watchAdIcon.SetActive(false);
                     PlayJoinWatch.interactable = false;
                 }
             }
@@ -390,7 +409,8 @@
                     theList.RowCount = 0;
                     LbLoadingPanel.gameObject.SetActive(true);
                     LeaderboardRefreshing(true);
-                    _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }); 
+                    _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
+                        (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
                 }
             }
             if (prevPanel == Panels.CompletedPanel)
@@ -405,7 +425,8 @@
                 }
                 theList.RowCount = 0;
                 LbLoadingPanel.gameObject.SetActive(true);
-                _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.GetLeaderBoard(CompTourneyDet.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
                 LeaderboardRefreshing(true);
             }
             if (prevPanel == Panels.FriendlyPanel)
@@ -416,7 +437,7 @@
                 LbLoadingPanel.gameObject.SetActive(true);
                 LeaderboardRefreshing(true);
                 _ = CommunicationController.Instance.GetLeaderBoard(tourneyDetNew._joinedTourneyData.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN); },
-                    (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             }
         }
 
@@ -464,37 +485,40 @@
                 }
                 if (tourneyDet.isJoined)
                 {
-                    if (tourneyDet._joinedTourneyData.CurrentAttempt >= tourneyDet._tournament.MaxEntry)
+                    if (tourneyDet._tournament.PlayWithVideoAD)
                     {
-                        if (tourneyDet._tournament.PlayWithVideoAD)
-                        {
-                            FullLoadingPanel.SetActive(true);
-                            UIPanelController.Instance.OnWatchVideo(tourneyDet._joinedTourneyData.Tourneyid,
-                                                                    prevPanel);
-                        }
-                        else
-                        {
+                        FullLoadingPanel.SetActive(true);
+                        UIPanelController.Instance.OnWatchVideo(tourneyDet._joinedTourneyData.Tourneyid,
+                                                                prevPanel, ActionRequiredFromUser.AD_PLAY_TOURNEY);
+                    }
+                    else if(tourneyDet._joinedTourneyData.CurrentAttempt >= tourneyDet._tournament.MaxEntry)
+                    {
                             String msg = "YOU HAVE EXHAUSTED THE ATTEMPTS. PLEASE PLAY ANOTHER TOURNAMENT";
                             UIPanelController.Instance.SetTourneyScrollActive(false);
                             UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, "OKAY", true, false, null, 0, "", "",
-                                                                    Panels.None, "OUT OF ATTEMPTS");
-                        }
+                                                                    Panels.TourneyPanel, "OUT OF ATTEMPTS", false, true);
                     }
                     else
                     {
                         FullLoadingPanel.SetActive(true);
-                        //_ = CommunicationController.Instance.PlayTourney("", TourneyId, "free", (data) => { PlayedSuccess(data); });
                         PlayAfterAttemptAnimation(tourneyDet);
                     }
-                    UserDataContainer.Instance.tempRewardsCount = tourneyDet._tournament.RewardList.RewardsDistribution.Count;
+                    int rewardsCount = tourneyDet._tournament.RewardList.RewardsDistribution.Count;
+                    if (rewardsCount > 0)
+                        UserDataContainer.Instance.tempRewardsCount = tourneyDet._tournament.RewardList.RewardsDistribution[rewardsCount - 1].End_Rank;
                 }
                 else
                 {
+                    //if (tourneyDet._tournament.JoinWithVideoAD)
+                    //{
+                    //    FullLoadingPanel.SetActive(true);
+                    //    UIPanelController.Instance.OnWatchVideo(tourneyDet._tournament.Tourneyid,
+                    //                                            prevPanel, ActionRequiredFromUser.AD_JOIN_TOURNEY);
+                    //    return;
+                    //}
+
                     long Money = 0;
-                    
-                    //UserDataContainer.Instance.currencyList.TryGetValue(tourneyDet._tournament.Currency, out currKey);
                     UserDataContainer.Instance.getUserMoney().TryGetValue(tourneyDet._tournament.Currency, out Money);
-                    //Money = 0;
                     if (Money < tourneyDet._tournament.EntryFee)
                     {
                         PlayJoinWatch.interactable = true;
@@ -502,8 +526,6 @@
                         String msg = "YOU DO NOT HAVE SUFFICIENT CHIPS TO PLAY THIS TOURNAMENT.PURCHASE SOME FROM OUR STORE AND ENJOY THE GAME";
                         String BtnTxt = "PURCHASE";
                         string Header = "OUT OF CHIPS";
-                        //if (!String.IsNullOrEmpty(JamboxSDKParams.Instance.PurchaseText.ToString()))
-                        //    msg = JamboxSDKParams.Instance.PurchaseText.ToString();
                         if (UIPanelController.Instance.EditableMessageData != null)
                         {
                             if (UIPanelController.Instance.EditableMessageData.ContainsKey("OutOfCurrencyMessage"))
@@ -537,18 +559,18 @@
                         string CurrKey = tourneyDet._tournament.Currency;
                         UserDataContainer.Instance.currencyList.TryGetValue(tourneyDet._tournament.Currency, out CurrKey);
                         UIPanelController.Instance.SetTourneyNoMoneyDialogue(true, msg, BtnTxt, true, true, null,
-                            (tourneyDet._tournament.EntryFee - (int)Money), CurrKey, tourneyDet._tournament.Tourneyid, prevPanel, Header);
+                            (tourneyDet._tournament.EntryFee - (int)Money), CurrKey, tourneyDet._tournament.Tourneyid, prevPanel, Header, false);
                     }
                     else
                     {
-                    #if !UNITY_EDITOR
+                    #if !UNITY_EDITOR && GAME_FIREBASE_ENABLED
                         Firebase.Analytics.FirebaseAnalytics.LogEvent("JoinTournament");
                     #endif
                         FullLoadingPanel.SetActive(true);
-                        _ = CommunicationController.Instance.JoinTourney(tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                        _ = CommunicationController.Instance.JoinTourney(tourneyDet._tournament.Tourneyid, (data) => { JoinedSucess(data); },
+                        (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
                         UserDataContainer.Instance.UpdateUserMoney (tourneyDet._tournament.EntryFee,
                                                                     tourneyDet._tournament.Currency, false);
-                        UIPanelController.Instance.UpdateMoneyOnTourneyPanel();
                     }
                 }
             }
@@ -562,12 +584,13 @@
 
         void PlayAfterAttemptAnimation(TourneyDetail tourneyDet)
         {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && GAME_FIREBASE_ENABLED
             Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
 #endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
-                _ = CommunicationController.Instance.PlayTourney(TourneyId, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(TourneyId, "free", (data) => { PlayedSuccess(data); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             }));
         }
 
@@ -603,10 +626,11 @@
             CompTourneyDet = UserDataContainer.Instance.CompletedTourney.Find((x) => x.LeaderBoardID == TourneyId);
 
             PlayJoinWatch.interactable = false;
-            Debug.LogError("OnClaimBtnClick 111111 >>>" + (CompTourneyDet == null));
-            Debug.LogError("OnClaimBtnClick 222222 >>>" + (CompTourneyDet.LeaderBoardID));
+            UnityDebug.Debug.LogInfo("OnClaimBtnClick 111111 >>>" + (CompTourneyDet == null));
+            UnityDebug.Debug.LogInfo("OnClaimBtnClick 222222 >>>" + (CompTourneyDet.LeaderBoardID));
             FullLoadingPanel.SetActive(true);
-            _ = CommunicationController.Instance.ClaimReward(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetClaim(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         private void OnClaimSuccess(IAPIClaimData dataRcvd)
@@ -653,12 +677,13 @@
             {
                 UserDataContainer.Instance.UpdatedTourneyData.TryGetValue(TourneyId, out tourneyDet);
             }
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && GAME_FIREBASE_ENABLED
             Firebase.Analytics.FirebaseAnalytics.LogEvent("PlayTournament");
 #endif
             StartCoroutine(AttemptAnimation(tourneyDet, () =>
             {
-                _ = CommunicationController.Instance.PlayTourney(TourneyId, "adv", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(TourneyId, "adv", (data) => { PlayedSuccess(data); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
             }));
         }
 
@@ -713,7 +738,7 @@
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             UIPanelController.Instance.ShowPanel(Panels.None, Panels.None, metadata);
             Match _matchData = new Match(TourneyId, data.LeaderBoardID, TourneyData._tournament.metadata,
-                TourneyData._tournament.Category, null, newleaderBoardList, CommonUserData.Instance.MyAvatarURL,
+                TourneyData._tournament.Category, TourneyData._tournament.SortOrder, TourneyData._tournament.ScoringMode, null, newleaderBoardList, CommonUserData.Instance.MyAvatarURL,
                 CommonUserData.Instance.userName, userAvatarSprite: CommonUserData.Instance.avatarSprite);
             ArenaSDKEvent.Instance.FireOnPlayClick(prevPanel, _matchData);
         }

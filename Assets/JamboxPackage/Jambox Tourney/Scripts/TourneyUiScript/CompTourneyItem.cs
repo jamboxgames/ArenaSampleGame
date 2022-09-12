@@ -126,10 +126,11 @@
         public void OnClaimBtnClick ()
         {
             ClaimButton.interactable = false;
-            Debug.LogError("OnClaimBtnClick 111111 >>>" + (CompTourneyDet == null) );
-            Debug.LogError("OnClaimBtnClick 222222 >>>" + (CompTourneyDet.LeaderBoardID));
+            UnityDebug.Debug.LogInfo("OnClaimBtnClick 111111 >>>" + (CompTourneyDet == null));
+            UnityDebug.Debug.LogInfo("OnClaimBtnClick 222222 >>>" + (CompTourneyDet.LeaderBoardID));
             UIPanelController.Instance.LoadingDialogue(true, false);
-            _ = CommunicationController.Instance.ClaimReward(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetClaim(CompTourneyDet.LeaderBoardID, (data) => { OnClaimSuccess(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         private void OnClaimSuccess (IAPIClaimData dataRcvd)

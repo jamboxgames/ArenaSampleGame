@@ -109,9 +109,9 @@ namespace Jambox.Common
             return $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
         }
 
-        public async Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret)
+        public async Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret, String Ad_ID, bool isDebug)
         {
-            return await _comApiClient.AuthenticateUser(GameID, UserID, UserName, AppSecret);
+            return await _comApiClient.AuthenticateUser(GameID, UserID, UserName, AppSecret, Ad_ID, isDebug);
         }
 
         public async Task<IAPIUpdateUserData> UpdateUserDetails(string authToken, string name, int avatarId, string avatarGroup)

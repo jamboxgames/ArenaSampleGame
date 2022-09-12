@@ -1,4 +1,4 @@
-﻿namespace Jambox.Tourney.Connector
+namespace Jambox.Tourney.Connector
 {
     using System;
     using System.Collections;
@@ -15,6 +15,8 @@
         private bool isTourney = false;
         private Panels PrevPanel = Panels.None;
         private String tourneyID;
+        private ActionRequiredFromUser actionRequired;
+
         public event Action<Match> OnPlay;
         public event Action OnBackToLobby;
         public event Action<int, string> OnPurchaseRequired;
@@ -31,22 +33,24 @@
 
         //Call this method to initialize the SDK
 
-        public void InitializeArenaSdk(string userName = null, string userID = null)
+        public void InitializeArenaSdk(string userName = null, string userID = null,bool isDebug = false)
         {
             Debug.Log("InitializeArenaSdk Hit >>>>");
             if (JamboxController.Instance.isGameIdSet())
             {
                 CommunicationController.Instance.Init(JamboxController.Instance.BaseClient());
-                _ = JamboxController.Instance.StartSession(userName, userID);
-                //if (UIPanelController.Instance != null)
-                //{
-                //    UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
-                //    UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
-                //}
-                //else
-                //{
-                //    Debug.LogError("Error in SDK setup");
-                //}
+                _ = JamboxController.Instance.StartSession(userName, userID, isDebug);
+                if (UIPanelController.Instance != null)
+                {
+                    UIPanelController.Instance.SetParentPanel(JamboxSDKParams.Instance.gameObject);
+                    UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
+                }
+                else
+                {
+                    Debug.LogError("Error in SDK setup");
+                }
+
+                UnityDebug.Debug.LogFormat("Arena SDK Version {0} is intialized successfully.", ArenaSDKVersion.VersionString);
             }
             else
             {
@@ -64,13 +68,13 @@
                 return;
             }
             if (string.IsNullOrEmpty(tourneyID)){
-                Debug.LogError("SubmitScore is called for non Tournament Gameplay");
+                UnityDebug.Debug.LogError("SubmitScore is called for non Tournament Gameplay");
                 return;
             }
             StartCoroutine(WaitndSubmit(score, subScore, displayScore));
         }
 
-        public void OpenArenaUI(Dictionary<string, long> currencyMap = null, Panels _targetpanel = Panels.TourneyPanel)
+        public void OpenArenaUI(Dictionary<string, long> currencyMap = null, string UserLevel = "", Panels _targetpanel = Panels.TourneyPanel)
         {
             if (!CheckRequiredDetail("OpenArenaUI"))
             {
@@ -83,14 +87,14 @@
                 PrevPanel = Panels.None;
             }
             Dictionary<string, string> metadata = new Dictionary<string, string>();
-            //metadata.Add("tourneyid", tourneyID);
+            JamboxController.Instance.SetUserLevel(UserLevel);
             tourneyID = String.Empty;
             if (currencyMap != null)
                 UserDataContainer.Instance.setUserMoney(currencyMap);
             UIPanelController.Instance.ShowPanel(toOpen, Panels.None, metadata, true);
         }
 
-        public void PlayAfterPurchase (bool PurchaseSuccess = true, Dictionary<string, long> currencyMap = null)
+        public void PlayAfterPurchase (bool PurchaseSuccess = true, Dictionary<string, long> currencyMap = null, Panels Selectpanel = Panels.None)
         {
             if (!CheckRequiredDetail("OpenArenaUI"))
             {
@@ -102,7 +106,13 @@
                 toOpen = PrevPanel;
                 PrevPanel = Panels.None;
             }
+            if (Selectpanel != Panels.None)
+            {
+                toOpen = PrevPanel;
+                PrevPanel = Panels.None;
+            }
             Dictionary<string, string> metadata = new Dictionary<string, string>();
+            metadata.Add("action", actionRequired.ToString());
             metadata.Add("tourneyid", tourneyID);
             tourneyID = String.Empty;
             if (currencyMap != null)
@@ -110,7 +120,7 @@
             UIPanelController.Instance.ShowPanel(toOpen, Panels.None, metadata);
         }
 
-        public void PlayAfterWatchAd(bool result)
+        public void PlayAfterWatchAd(bool result, Panels Selectpanel = Panels.None)
         {
             if (!CheckRequiredDetail("PlayAfterWatchAd"))
             {
@@ -122,10 +132,18 @@
                 toOpen = PrevPanel;
                 PrevPanel = Panels.None;
             }
+            if (Selectpanel != Panels.None)
+            {
+                toOpen = PrevPanel;
+                PrevPanel = Panels.None;
+            }
             UserDataContainer.Instance.UpdateUserMoney(1, "adwatched", true);
             Dictionary<string, string> metadata = new Dictionary<string, string>();
-            if(result)
+            if (result)
+            {
+                metadata.Add("action", actionRequired.ToString());
                 metadata.Add("tourneyid", tourneyID);
+            }
 
             tourneyID = String.Empty;
             UIPanelController.Instance.ShowPanel(toOpen, Panels.None, metadata);
@@ -146,7 +164,7 @@
                 return true;
             }
             else {
-                Debug.LogError("Replay Recorder is not initialized. Please call 'StartRecording' function ");
+                UnityDebug.Debug.LogError("Replay Recorder is not initialized. Please call 'StartRecording' function ");
                 return false;
             }
         }
@@ -160,7 +178,7 @@
             }
             else
             {
-                Debug.LogError("Replay Recorder is not initialized. Please call 'StartRecording' function ");
+                UnityDebug.Debug.LogError("Replay Recorder is not initialized. Please call 'StartRecording' function ");
                 return false;
             } 
         }
@@ -173,7 +191,7 @@
             }
             else
             {
-                Debug.LogError("Replay Recorder was not initialized. No replay data has been recorded");
+                UnityDebug.Debug.LogError("Replay Recorder was not initialized. No replay data has been recorded");
                 return null;
             }
         }
@@ -185,9 +203,9 @@
             if (string.IsNullOrEmpty(_replayString))
             {
                 if (UseConsecutiveReplayData)
-                    UnityDebug.Debug.Log("Provided Test Replay Data is Empty! - First Replay data returned will be Null");
+                    UnityDebug.Debug.LogWarning("Provided Test Replay Data is Empty! - First Replay data returned will be Null");
                 else
-                    UnityDebug.Debug.Log("Provided Test Replay Data is Empty! - Please provide a valid Test Data or Set \"UseConsecutiveReplayData\" to true");
+                    UnityDebug.Debug.LogError("Provided Test Replay Data is Empty! - Please provide a valid Test Data or Set \"UseConsecutiveReplayData\" to true");
                 return;
             }
             replayTestData = _replayString.FromJson<APIReplayData>();
@@ -205,7 +223,7 @@
                 if (useConsecutiveReplayData)
                 {
                     string _replayString = data.ToJson();
-                    UnityDebug.Debug.Log("Recorded Replay Data:\n" + _replayString);
+                    UnityDebug.Debug.LogInfo("Recorded Replay Data:\n" + _replayString);
                     replayTestData = _replayString.FromJson<APIReplayData>();
                 }
             }
@@ -221,24 +239,43 @@
             {
                 if (!JamboxController.Instance.isGameIdSet())
                 {
-                    Debug.LogError("You are trying to call " + methodName  + " without being Set up SDK Variables ");
+                    UnityDebug.Debug.LogError("You are trying to call " + methodName  + " without being Set up SDK Variables ");
                     return false;
                 }
-                Debug.LogError("You are trying to call " + methodName + " without Starting the session ");
+                UnityDebug.Debug.LogError("You are trying to call " + methodName + " without Starting the session ");
                 return true;
             }
             return true;
         }
 
-        public void InitializeRealtimeLeaderboard(List<leaderBoardData> data, bool scrollable, int NoOfRecordsToShow)
+        public void InitializeRealtimeLeaderboard(List<leaderBoardData> data, bool scrollable, int NoOfRecordsToShow, bool disappearingLB = false, bool fullLeaderboard = true, ESortOrder sortOrder = ESortOrder.ESortOrderDescending)
         {
-            RealtimeLeaderboard.Instance.InitializeRealtimeLeaderboard(data, scrollable, NoOfRecordsToShow);
+            RealtimeLeaderboard.Instance.InitializeRealtimeLeaderboard(data, scrollable, NoOfRecordsToShow, disappearingLB, fullLeaderboard, sortOrder);
         }
 
         public void UpdatePlayerScoreOnRealtimeLB(long _score)
         {
-            UnityDebug.Debug.Log("Update Player Score On RealtimeLB : Score : " + _score);
+            UnityDebug.Debug.LogInfo("Update Player Score On RealtimeLB : Score : " + _score);
             RealtimeLeaderboard.Instance.UpdatePlayerScore(_score);
+        }
+
+        public void InitializeTimeDuelReplay(Match matchData, bool useWidget = true, bool gradualScoreIncrease = false, float widgetOffsetFromTop = 0f)
+        {
+            if (matchData.replayData != null)
+            {
+                TimeReplayPlayer.Instance.SetOpponentReplayData(matchData.replayData);
+                DuelReplaySystem.Instance.PlayOpponentReplay(matchData, useWidget, gradualScoreIncrease, widgetOffsetFromTop);
+            }
+        }
+
+        public void ForceDisableRealtimetimeLeaderboard()
+        {
+            RealtimeLeaderboard.Instance.DisableRealtimeLbGameobject();
+        }
+
+        public void ForceDisableDuelWidget()
+        {
+            DuelReplaySystem.Instance.DestroyDuelReplayWidget();
         }
 
         //******************* SDK API *******************//
@@ -253,6 +290,7 @@
             isTourney = false;
             tourneyID = TourneyId;
             PrevPanel = prev;
+            actionRequired = ActionRequiredFromUser.PURCHASE_JOIN_TOURNEY;
 
             if (OnPurchaseRequired != null)
             {
@@ -286,7 +324,7 @@
             {
                 if (replayTestMode)
                 {
-                    UnityDebug.Debug.Log("Replacing Replay with Test Data");
+                    UnityDebug.Debug.LogInfo("Replacing Replay with Test Data");
                     matchdata.replayData = replayTestData;
                 }
             }
@@ -309,17 +347,18 @@
 
         public void OnErrorFromServer(Dictionary<String, String> ErrorMsg)
         {
-            Debug.Log("On Back to Lobby Hit >>>>");
+            UnityDebug.Debug.LogInfo("On Back to Lobby Hit >>>>");
             if (OnServerError != null)
             {
                 OnServerError(ErrorMsg);
             }
         }
 
-        public void FireOnWatchAD(String TourneyID, Panels previous)
+        public void FireOnWatchAD(String TourneyID, Panels previous, ActionRequiredFromUser action)
         {
             PrevPanel = previous;
             tourneyID = TourneyID;
+            actionRequired = action;
             if (OnWatchAdRequired != null)
             {
                 OnWatchAdRequired();

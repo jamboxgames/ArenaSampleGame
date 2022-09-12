@@ -5,6 +5,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
     using UnityEngine;
@@ -76,7 +77,8 @@
             }
             else
             {
-                keyValueAsString = recordingTimer.ToString();
+                int _timeInMilliseonds = Mathf.FloorToInt(recordingTimer * 1000);
+                keyValueAsString = _timeInMilliseonds.ToString(CultureInfo.InvariantCulture);
             }
             IntervalData newInterval = new IntervalData(keyValueAsString, _data);
             replayData.intervalData.Add(newInterval);
@@ -102,6 +104,9 @@
         [DataMember(Name = "game_data"), Preserve]
         public Dictionary<string, string> gameData;
 
+        [DataMember(Name = "time_type"), Preserve]
+        public bool timeInMilliseconds;
+
         /// <summary>
         /// Last interval is dummy, to find the end tie
         /// </summary>
@@ -111,12 +116,14 @@
         public ReplayData(Dictionary<string, string> _data)
         {
             intervalData = new List<IntervalData>();
+            timeInMilliseconds = true;
             gameData = _data;
         }
 
         public ReplayData(IAPIReplayData _data)
         {
             gameData = new Dictionary<string, string>();
+            timeInMilliseconds = _data.TimeInMilliseconds;
             foreach (var v in _data.GameData)
             {
                 gameData.Add(v.Key, v.Value);

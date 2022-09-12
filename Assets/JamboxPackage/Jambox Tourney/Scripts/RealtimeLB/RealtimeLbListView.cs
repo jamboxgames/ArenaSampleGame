@@ -59,8 +59,6 @@
                     UpdateContentHeight();
                     ignoreScrollChange = false;
                     ReorganiseContent(true);
-
-                    myPlayerIndex = rowCount - 1;
                 }
             }
         }
@@ -184,9 +182,14 @@
         {
 
             scrollRect.verticalNormalizedPosition = GetRowScrollPosition(row);
-            Debug.LogError(GetRowScrollPosition(row));
+            UnityDebug.Debug.LogInfo(GetRowScrollPosition(row));
             OnScrollChanged(new Vector2(0f, scrollRect.verticalNormalizedPosition));
 
+        }
+
+        public void UpdatePlayerIndex(int index)
+        {
+            myPlayerIndex = index;
         }
 
         public void FocusOnPlayer()
@@ -199,27 +202,30 @@
 
             if (!playerOnTop)
             {
-                if (myPlayerIndex == 0)
+                int _offsetIndex;
+                if (NoOfItemsShown % 2 == 0)
                 {
-                    playerOnTop = true;
-                }
-                scrollRect.content.anchoredPosition = new Vector2(0f, (myPlayerIndex - playerIndexInScrollView) * RowHeight());
-
-                int _tempCount = (rowCount - 1) - myPlayerIndex;
-
-                if (_tempCount >= (Mathf.FloorToInt(NoOfItemsShown / 2)))
-                {
-                    scrollRect.content.anchoredPosition = new Vector2(0f, (myPlayerIndex - playerIndexInScrollView) * RowHeight());
+                    _offsetIndex = (NoOfItemsShown / 2) - 1;
                 }
                 else
                 {
-                    scrollRect.content.anchoredPosition = new Vector2(0f, (myPlayerIndex - playerIndexInScrollView - ((Mathf.FloorToInt(NoOfItemsShown / 2) - _tempCount))) * RowHeight());
+                    _offsetIndex = (NoOfItemsShown - 1) / 2;
                 }
 
-                //scrollRect.content.anchoredPosition = new Vector2(0f, (myPlayerIndex) * RowHeight());
+                int _indexToShow = myPlayerIndex - _offsetIndex;
+
+                if ((RowCount - 1 - _indexToShow) < (NoOfItemsShown - 1))
+                {
+                    _indexToShow = rowCount - NoOfItemsShown;
+                }
+
+                if (_indexToShow < 0)
+                {
+                    _indexToShow = 0;
+                }
+                scrollRect.content.anchoredPosition = new Vector2(0f, _indexToShow * RowHeight());
             }
-            
-            
+
         }
 
         public void UpdatePlayerScore(long _score, int _playerIndex)
@@ -235,33 +241,31 @@
             {
                 if (playAnim)
                 {
-                    ChangeRankAnimation();
+                    ChangeRankAnimation(_playerIndex < _tempOldIndex);
                 }
             }
-            
+
         }
 
-        public void ChangeRankAnimation()
+        public void ChangeRankAnimation(bool moveUp = true)
         {
-
-            if (myPlayerIndex == 0)
-            {
-                playAnim = false;
-            }
-            StartCoroutine(StartChangeRankAnim());
+            StartCoroutine(StartChangeRankAnim(moveUp));
         }
 
-        IEnumerator StartChangeRankAnim()
+        IEnumerator StartChangeRankAnim(bool moveUp)
         {
             MyPlayerItemChanged();
 
             Vector2 endPos = myPlayerItem.anchoredPosition;
 
-            myPlayerItem.anchoredPosition -= new Vector2(0f, RowHeight());
+            if (moveUp)
+                myPlayerItem.anchoredPosition -= new Vector2(0f, RowHeight());
+            else
+                myPlayerItem.anchoredPosition += new Vector2(0f, RowHeight());
 
             while (myPlayerItem.anchoredPosition != endPos)
             {
-                if(myPlayerItem.GetComponent<RealtimeLBitem>().username.text == CommonUserData.Instance.userName)
+                if (myPlayerItem.GetComponent<RealtimeLBitem>().username.text == CommonUserData.Instance.userName)
                 {
                     myPlayerItem.anchoredPosition = Vector2.MoveTowards(myPlayerItem.anchoredPosition, endPos, rankChangeAnimRate * Time.deltaTime);
                     yield return null;
@@ -271,7 +275,7 @@
                 {
                     MyPlayerItemChanged();
                     continue;
-                }                
+                }
             }
         }
 

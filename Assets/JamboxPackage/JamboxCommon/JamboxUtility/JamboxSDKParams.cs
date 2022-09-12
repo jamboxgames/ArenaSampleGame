@@ -2,12 +2,14 @@ namespace Jambox.Common.Utility
 {
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.UI;
+    using UnityDebug;
     using UnityEngine.UIElements;
 
     public enum ThemeType
     {
-        //Theme1,
-        Theme2
+        ArenaTheme,
+        CustomTheme
     }
     //[System.Serializable]
     public class JamboxSDKParams : MonoBehaviour
@@ -15,17 +17,15 @@ namespace Jambox.Common.Utility
         [SerializeField]
         private string gameID;
         [SerializeField]
-        private string AppSecret;        
+        private string AppSecret;
         [SerializeField]
-        private bool LogEnabled = false;
+        public LogLevel LogLevel;
+        //[HideInInspector]
+        public ThemeType ActiveTheme = ThemeType.ArenaTheme;
 
-        [HideInInspector]
-        public ThemeType ActiveTheme = ThemeType.Theme2;
-        //static string sb = "<b>Arena ~ Use this if your using Arena SDK</b>";
         [Header("Arena ~ Use this if your using Arena SDK")]
         [Tooltip("All the arena related custom assets can be referenced inside this.")]
         public JamboxArenaSDKParams ArenaParameters;
-
         
         [Header("Rewards ~ Use this if your using Reward SDK")]
         [Tooltip("All the reward related custom assets can be referenced inside this.")]
@@ -33,12 +33,29 @@ namespace Jambox.Common.Utility
 
         private void Awake()
         {
-            UnityDebug.Debug.isDebugBuild = LogEnabled;
+            string AdvertisingID = "";
+            UnityDebug.Debug.LogLevel = LogLevel;
             if (m_Instance == null)
             {
                 m_Instance = this;
             }
-            JamboxController.Instance.SetupSDKVariable(gameID, AppSecret);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidJavaClass up = new AndroidJavaClass ("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject currentActivity = up.GetStatic<AndroidJavaObject> ("currentActivity");
+            AndroidJavaClass client = new AndroidJavaClass ("com.google.android.gms.ads.identifier.AdvertisingIdClient");
+            AndroidJavaObject adInfo = client.CallStatic<AndroidJavaObject> ("getAdvertisingIdInfo",currentActivity);
+
+            AdvertisingID = adInfo.Call<string> ("getId").ToString();
+            UnityDebug.Debug.Log("advertisingID : " + AdvertisingID);
+#elif !UNITY_EDITOR
+            Application.RequestAdvertisingIdentifierAsync(
+              (string advertisingId, bool trackingEnabled, string error) =>
+              {
+                  UnityDebug.Debug.Log("advertisingId : " + advertisingId + " trackingEnabled : " + trackingEnabled + " error : " + error);
+                  AdvertisingID = advertisingId;
+              });
+#endif
+            JamboxController.Instance.SetupSDKVariable(gameID, AppSecret, AdvertisingID);
         }
 
         private static JamboxSDKParams m_Instance = null;

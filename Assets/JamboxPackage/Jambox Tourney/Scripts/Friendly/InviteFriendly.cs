@@ -48,11 +48,6 @@
 
         public void TournamentEnded()
         {
-            if (mainContent == null || endedContent == null)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
             mainContent.SetActive(false);
             endedContent.SetActive(true);
         }
