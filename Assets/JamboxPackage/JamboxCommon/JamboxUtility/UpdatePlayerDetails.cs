@@ -17,21 +17,17 @@
         public Image selectedAvatar;
         public Button updateButton;
         public Button closeButton;
-
         public GameObject[] loadingObjects;
-
         public List<Avatars> avatarDetails;
-
         public GameObject avatarPrefab;
         public Transform scrollContent;
+        public GameObject tabsContainer;
         public Button[] allTabButtons;
         public GameObject loadingPanel;
-
         private AvatarType currenTab;
         private AvatarType currentAvatarGroup;
         private int selectedAvatarId = 1;
         private AvatarPrefab lastSelectedImage;
-
         private RectTransform rectTransform;
         public RectTransform RectTransform
         {
@@ -43,17 +39,48 @@
             }
         }
 
-        #region Tablet_Checks
+#region Tablet_Checks
         public void TabletCheck()
         {
             if (TabletDetect.IsTablet())
             {
-                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                if (IsLandScape())
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+                }
+                else
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                }
             }
             else
             {
                 this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToDefault();
             }
+        }
+        public bool IsLandScape()
+        {
+#if !UNITY_EDITOR
+            if (Screen.orientation == ScreenOrientation.Landscape)
+            {
+                //UnityDebug.Debug.Log("This game is in Landscapee >>>>>>>>");
+                return true;
+            }
+            if (Screen.orientation == ScreenOrientation.Portrait)
+            {
+                //UnityDebug.Debug.Log("This game is in Portrait >>>>>>>>");
+            }
+            return false;
+#elif UNITY_EDITOR
+            if (Screen.height > Screen.width)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+#endif
         }
         #endregion
 
@@ -63,23 +90,26 @@
             {
                 nameInput.text = "";
                 namePlaceholder.text = "Enter Valid Name";
-                UnityDebug.Debug.Log("Enter Valid Name >>>> ");
+                UnityDebug.Debug.LogInfo("Enter Valid Name >>>> ");
                 return;
             }
-            UnityDebug.Debug.Log("Updated Name : " + nameInput.text);
+            UnityDebug.Debug.LogInfo("Updated Name : " + nameInput.text);
             loadingPanel.SetActive(true);
             _ = UpdatePlayerDetailsTask();
         }
 
         async Task UpdatePlayerDetailsTask()
         {
-            await JamboxController.Instance.UpdateUserDetails(nameInput.text, selectedAvatarId, currentAvatarGroup.ToString(), null, null);
+            await JamboxController.Instance.UpdateUserDetails(nameInput.text, selectedAvatarId, currentAvatarGroup.ToString(),null,null);
             Destroy(this.gameObject);
         }
 
         private void OnEnable()
         {
             closeButton.gameObject.SetActive(false);
+            tabsContainer.SetActive(false);
+            updateButton.interactable = false;
+            nameInput.interactable = false;
             StartCoroutine(Loading());
         }
 
@@ -94,12 +124,10 @@
         IEnumerator Loading()
         {
             selectedAvatar.gameObject.SetActive(false);
-
             foreach (var v in loadingObjects)
             {
                 v.SetActive(true);
             }
-
             while (selectedAvatar.sprite == null)
             {
                 yield return null;
@@ -111,7 +139,7 @@
             }
         }
 
-        public void SetMetaData(string _name, Texture2D _avatar, bool isRewardSDK = false)
+        public void UpdateBG(bool isRewardSDK = false)
         {
             TabletCheck();
             if (isRewardSDK)
@@ -130,6 +158,10 @@
                     BG.color = Color.white;
                 }
             }
+        }
+
+        public void SetMetaData(string _name, Texture2D _avatar)
+        {
             CheckNameInput();
             //Hide Close button if no username already
             if (string.IsNullOrEmpty(CommonUserData.Instance.userName))
@@ -140,23 +172,21 @@
             {
                 closeButton.gameObject.SetActive(true);
             }
-
             SetDefaultAvatarDetails();
+            tabsContainer.SetActive(true);
+            nameInput.interactable = true;
             nameInput.text = _name;
             selectedAvatar.sprite = Sprite.Create(_avatar, new Rect(0, 0, _avatar.width, _avatar.height), new Vector2(0, 0));
-
             ChangeTab((int)currenTab);
         }
 
         public void ChangeTab(int _index)
         {
             Avatars _current = avatarDetails[_index];
-
             for (int i = 0; i < scrollContent.childCount; i++)
             {
                 scrollContent.GetChild(i).gameObject.SetActive(true);
             }
-
             //Creating required Avatar prefabs
             int _totalRequiredPrefabs = _current.avatars.Length;
             if (scrollContent.childCount < _current.avatars.Length)
@@ -175,18 +205,15 @@
                     scrollContent.GetChild(i).gameObject.SetActive(false);
                 }
             }
-
             for (int i = 0; i < _current.avatars.Length; i++)
             {
                 scrollContent.GetChild(i).GetComponent<AvatarPrefab>().SetData(_current.avatars[i], i + 1, this);
             }
-
             foreach (Button go in allTabButtons)
             {
                 go.interactable = true;
             }
             _current.tabButton.interactable = false;
-
             currenTab = _current.groupId;
             if (currentAvatarGroup == currenTab)
             {
@@ -242,6 +269,5 @@
                 updateButton.interactable = true;
             }
         }
-
     }
 }

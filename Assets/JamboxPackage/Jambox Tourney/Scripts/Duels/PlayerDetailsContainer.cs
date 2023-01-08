@@ -230,10 +230,10 @@
 
         IEnumerator GetTextureRequest(string url)
         {
-            UnityDebug.Debug.Log("GetTextureRequest HIt URL : " + url);
+            UnityDebug.Debug.LogInfo("GetTextureRequest HIt URL : " + url);
             if (string.IsNullOrEmpty(url))
             {
-                UnityDebug.Debug.Log("url String is Empty In GetTextureRequest >>>>>>>>");
+                UnityDebug.Debug.LogWarning("url String is Empty In GetTextureRequest >>>>>>>>");
             }
             while (url == null)
             {

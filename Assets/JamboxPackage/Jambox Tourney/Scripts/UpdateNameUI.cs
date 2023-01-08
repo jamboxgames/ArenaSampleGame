@@ -18,10 +18,10 @@ public class UpdateNameUI : MonoBehaviour
             || (nameInput.text).Equals("Enter Valid Name"))
         {
             nameInput.text = "Enter Valid Name";
-            UnityDebug.Debug.Log("Enter Valid Name >>>> ");
+            UnityDebug.Debug.LogInfo("Enter Valid Name >>>> ");
             return;
         }
-        UnityDebug.Debug.Log("Updated Name : " + nameInput.text);
+        UnityDebug.Debug.LogInfo("Updated Name : " + nameInput.text);
         //tourneyPanel.UpdateUserName(nameInput.text, _prevPanelDet, _currentpanel, _metaData);
         this.gameObject.SetActive(false);
     }

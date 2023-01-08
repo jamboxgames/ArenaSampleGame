@@ -1,4 +1,5 @@
 using Jambox.Tourney.Connector;
+using JBX.Leaderboard.Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -165,6 +166,7 @@ public class GameManager : MonoBehaviour
 
     void EndGame()
     {
+        _ = JBXLeaderboardCommunicator.Instance.SubmitLBRecord(TourneyManager.GlobalLeaderboardID, "", score, score.ToString(), (data) => {});
         endScreenScoreText.text = "" + score;
         endScreenContainer.SetActive(true);
 
@@ -178,6 +180,8 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(0);
             TourneyManager.Instance.SubmitScore(score);
+            
+            
         }
         else
         {

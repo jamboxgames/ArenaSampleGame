@@ -14,7 +14,18 @@ namespace Jambox
         NONE = 4
     }
 
-    public class Match
+    public enum ESortOrder {
+        ESortOrderDescending = 0,
+        ESortOrderAscending = 1
+    }
+
+    public enum EScoringMode {
+        EScoringModeBest = 1,
+        EScoringModeIncremental = 2,
+        EScoringModeLatest = 3
+    }
+
+    public class  Match
     {
         /// <summary>
         /// Match Identifier. To Check MatchType and enable corresponding Match UI. Use this variable.
@@ -24,6 +35,9 @@ namespace Jambox
         public readonly string tournamentID;
         public readonly string matchID;
         public readonly Dictionary<string, string> metadata;
+
+        public readonly ESortOrder SortOrder;
+        public readonly EScoringMode ScoringMode;
 
         /// <summary>
         /// This is competitive Leaderboard Which can be shown on GamePlayUI.
@@ -51,9 +65,9 @@ namespace Jambox
         /// <summary>
         /// Opponent Replay data to be shown in case of Showing opponent play data in duel play UI.
         /// </summary>
-        public IAPIReplayData replayData;
+        public IAPIReplayData replayData;        
 
-        public Match(string _tourneyID, string _matchID, Dictionary<string, string> _metadata, int _category,
+        public Match(string _tourneyID, string _matchID, Dictionary<string, string> _metadata, int _category,int _sortOrder, int _scoringMode,
             IAPIReplayData _duelReplayData = null, List<leaderBoardData> dataLB = null, string _userImage = "",
             string _userName = "", string OppImage = "", string OppName = "", Sprite userAvatarSprite = null, Sprite oppAvatarSprite = null)
         {
@@ -61,6 +75,8 @@ namespace Jambox
             tournamentID = _tourneyID;
             metadata = _metadata;
             matchType = (EMatchType)_category;
+            SortOrder = (ESortOrder)_sortOrder;
+            ScoringMode = (EScoringMode)_scoringMode;
             UserImage = _userImage;
             UserName = _userName;
             OpponentImage = OppImage;
@@ -69,6 +85,7 @@ namespace Jambox
             Leaderboard = dataLB;
             UserAvatarSprite = userAvatarSprite;
             OpponentAvatarSprite = oppAvatarSprite;
+
         } 
         public string GetMatchTypeString() {
             string retValue = "";

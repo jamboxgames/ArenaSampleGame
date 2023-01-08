@@ -76,7 +76,14 @@
         {
             if (TabletDetect.IsTablet())
             {
-                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                if (UIPanelController.Instance.IsLandScape())
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+                }
+                else
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                }
             }
             else
             {
@@ -105,9 +112,10 @@
             ReplayData _replayData = UIPanelController.Instance.tempScore.replayData;
             UIPanelController.Instance.tempScore = null;
             SetMyPlayerDetails(CommonUserData.Instance.userName, CommonUserData.Instance.avatarSprite, _Score, false);
+            DuelReplaySystem.Instance.DestroyDuelReplayWidget();
 
             _ = CommunicationController.Instance.SubmitDuelScore(LeaderBoardID, _Score, DisplayScore,(data) => { ScoreSubmitted(data); },
-                (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); }, _replayData);
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); }, _replayData);
         }
 
         public void UpdateWaitingDialogue(bool status, string DisplayText)
@@ -148,7 +156,7 @@
             }
             UpdateWaitingDialogue(false, "");
             //EnableButtons();
-            UnityDebug.Debug.Log("Result : " + data.result.resultDisplay.ToString());
+            UnityDebug.Debug.LogInfo("Result : " + data.result.resultDisplay.ToString());
             bool won = false;
             bool lose = false;
             if (data.result.resultDisplay.Equals("lose", System.StringComparison.CurrentCultureIgnoreCase))
@@ -312,7 +320,7 @@
         {
             TournamnetData DuelData = null;
             UserDataContainer.Instance.MyDuels.TryGetValue(TourneyID, out DuelData);
-            if (UserDataContainer.Instance.getUserMoney()[DuelData.Currency] < DuelData.EntryFee)
+            if (UserDataContainer.Instance.getUserMoney()[DuelData.Currency] < DuelData.EntryFee && (!DuelData.JoinWithVideoAD))
             {
                 ReturnHomeOnNoMoney();
             }
@@ -337,7 +345,7 @@
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             metadata.Add("NoMoney", "NoMoney");
-            UIPanelController.Instance.ShowPanel(Panels.DialoguePanel, Panels.None, metadata);
+            UIPanelController.Instance.ShowPanel(Panels.DialoguePanel, Panels.TourneyPanel, metadata);
             Destroy(this.gameObject);
         }
     }

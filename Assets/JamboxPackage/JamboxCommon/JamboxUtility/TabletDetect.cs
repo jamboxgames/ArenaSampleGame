@@ -27,7 +27,7 @@ namespace Jambox.Common.Utility
                 return false;
             }
 
-            return true;
+            return false;
 #elif UNITY_ANDROID
 
         float aspectRatio = (float)Mathf.Max(Screen.width, Screen.height) / (float)Mathf.Min(Screen.width, Screen.height);

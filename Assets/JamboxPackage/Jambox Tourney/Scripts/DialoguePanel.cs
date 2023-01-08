@@ -23,7 +23,7 @@ public class DialoguePanel : MonoBehaviour
 
     public void OnFirstButtonClick ()
     {
-        Debug.LogError("OnFirstButtonClick >>>>>>>>");
+        UnityDebug.Debug.LogInfo("OnFirstButtonClick >>>>>>>>");
         if (OnButtonOneClick != null)
             OnButtonOneClick();
         this.gameObject.SetActive(false);
@@ -31,7 +31,7 @@ public class DialoguePanel : MonoBehaviour
 
     public void OnSecondButtonClick ()
     {
-        Debug.LogError("OnSecondButtonClick >>>>>>>>");
+        UnityDebug.Debug.LogInfo("OnSecondButtonClick >>>>>>>>");
         if (OnButtonTwoClick != null)
             OnButtonTwoClick();
         this.gameObject.SetActive(false);
@@ -39,7 +39,7 @@ public class DialoguePanel : MonoBehaviour
 
     public void OnCentreButtonClick()
     {
-        Debug.LogError("OnCentreButtonClick >>>>>>>>");
+        UnityDebug.Debug.LogInfo("OnCentreButtonClick >>>>>>>>");
         if (OnButtonCentreClick != null)
             OnButtonCentreClick();
         this.gameObject.SetActive(false);

@@ -60,8 +60,6 @@ namespace Jambox.Server
     /// </summary>
     public static class IHttpAdapterUtil
     {
-        public static Action<string> OnErrorRcvd;
-
         /// <summary>
         /// Performs an in-place copy of data from Jambox's error response into
         /// the data dictionary of an <see cref="Jambox.ApiResponseException"/>.
@@ -85,12 +83,6 @@ namespace Jambox.Server
                     e.Data[keyVal.Key] = keyVal.Value;
                 }
             }
-        }
-
-        public static void SendError(string errorString, bool continueOnError)
-        {
-            if (!continueOnError)
-                OnErrorRcvd?.Invoke(errorString);
         }
     }
 }

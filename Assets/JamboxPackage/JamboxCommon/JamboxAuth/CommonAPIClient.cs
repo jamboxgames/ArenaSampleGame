@@ -27,7 +27,7 @@
             Timeout = timeout;
         }
 
-        public async Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret)
+        public async Task<IApiSession> AuthenticateUser(String GameID, String UserID, String UserName, String AppSecret, String Ad_ID, bool isDebug)
         {
             if (String.IsNullOrEmpty(appVersion))
             {
@@ -35,18 +35,17 @@
             }
             var urlpath = "/v1/authenticate";
             var queryParams = "";
-
             String androidID = UnityEngine.SystemInfo.deviceUniqueIdentifier;
-            String IOSAdvdID = "";// TourneyHelper.Instance.AdverTisingID;
+            String IOSAdvdID = Ad_ID;
             TimeZoneInfo infos = TimeZoneInfo.Local;
-            UnityDebug.Debug.Log("Time Zone Info : DisplayName : " + infos.DisplayName + "  BaseUtcOffset : " + infos.BaseUtcOffset.ToString()
+            UnityDebug.Debug.LogInfo("Time Zone Info : DisplayName : " + infos.DisplayName + "  BaseUtcOffset : " + infos.BaseUtcOffset.ToString()
                             + " Id : " + infos.Id + "   StandardName : " + infos.StandardName);
             String country = infos.StandardName;
             String timezone = infos.BaseUtcOffset.ToString();
             String deviceName = UnityEngine.SystemInfo.deviceName;
             String DeviceManufacturer = UnityEngine.SystemInfo.deviceModel;
 
-            UnityDebug.Debug.Log("AppVersion : " + appVersion + "  AndroidID : " + androidID + "  IOSAdvdID : " + IOSAdvdID + " Timezone : "
+            UnityDebug.Debug.LogInfo("AppVersion : " + appVersion + "  AndroidID : " + androidID + "  Advertising id : " + Ad_ID + " Timezone : "
                 + timezone + " DeviceName : " + deviceName + " DeviceManufacturer : " + DeviceManufacturer + " Country : " + country);
 
             var uri = new UriBuilder(_baseUri)
@@ -67,7 +66,7 @@
             DataLogin.Add("version", appVersion);
             DataLogin.Add("country", country);
             DataLogin.Add("android_id", androidID);
-            DataLogin.Add("advd_id", IOSAdvdID);
+            DataLogin.Add("advd_id", Ad_ID);
             DataLogin.Add("timezone", timezone);
             DataLogin.Add("device_name", deviceName);
             DataLogin.Add("device_manufacturer", DeviceManufacturer);
@@ -82,9 +81,16 @@
             DataNew2.Add("appsecret", AppSecret);
             DataNew2.Add("logindata", jsonLoginData);
 
+            if(isDebug)
+                DataNew2.Add("test_user", "true");
+            else
+                DataNew2.Add("test_user", "false");
+
             byte[] content = null;
             var jsonNew = DataNew2.ToJson();
             content = Encoding.UTF8.GetBytes(jsonNew);
+
+            UnityDebug.Debug.Log("=======>  " + jsonNew);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             UnityDebug.Debug.Log("Contents From server in authenticate : " + contents);
             return contents.FromJson<ApiSession>();

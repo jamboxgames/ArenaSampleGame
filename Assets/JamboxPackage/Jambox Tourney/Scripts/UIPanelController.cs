@@ -13,6 +13,7 @@
     using UnityEngine.Scripting;
     using Jambox.Common.TinyJson;
     using Jambox.Common.Utility;
+    using UnityEditor;
 
     public enum Panels
     {
@@ -82,11 +83,19 @@
         }
         private void Awake()
         {
-            //m_Instance = this;
-            IHttpAdapterUtil.OnErrorRcvd += ErrorFromServerRcvd;
             EditableMessageData = new Dictionary<string, string>();
             LoadMessageAsset();
-            bgSprite = JamboxSDKParams.Instance.ArenaParameters.bgSprite;
+            if(JamboxSDKParams.Instance.ArenaParameters != null &&
+                JamboxSDKParams.Instance.ArenaParameters.bgSprite != null)
+                bgSprite = JamboxSDKParams.Instance.ArenaParameters.bgSprite;
+        }
+
+        private void CheckFilesInResource()
+        {
+            string path2 = Application.dataPath + "/Resources";
+            string pathN = Path.Combine(path2, "Theme2", "Portrait");
+            //FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
+
         }
 
         private void LoadMessageAsset ()
@@ -94,7 +103,7 @@
             string filePath = "Assets/Resources/ConfigMessage.json";
             if(!File.Exists(filePath))
             {
-                UnityDebug.Debug.Log("The Data File Does not exist.");
+                UnityDebug.Debug.LogWarning("The Data File Does not exist.");
                 return;
             }
             TextAsset MessageData = Resources.Load<TextAsset>("ConfigMessage");
@@ -106,13 +115,13 @@
             }
         }
 
-        public void ErrorFromServerRcvd(string errorString)
+        public void ErrorFromServerRcvd(int errorcode, string errorString)
         {
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             metadata.Add("Header", "Server Error");
             if (string.IsNullOrEmpty(errorString))
                 errorString = "Our servers are not responding. Please try after sometime.";
-            metadata.Add("DialogBody" , errorString);
+            metadata.Add("DialogBody", errorString);
             metadata.Add("Btn1Name", "Home");
             ShowPanel(Panels.DialoguePanel, Panels.None, metadata);
         }
@@ -200,19 +209,25 @@
         {
             CompletedPanelLoaded.UpdateCurrency();
         }
-        public void OnWatchVideo (string TourneyID, Panels previous)
+        public void OnWatchVideo (string TourneyID, Panels previous, ActionRequiredFromUser actionRequired)
         {
-            ArenaSDKEvent.Instance.FireOnWatchAD(TourneyID, previous);
+            ArenaSDKEvent.Instance.FireOnWatchAD(TourneyID, previous, actionRequired);
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             ShowPanel(Panels.None, Panels.None, metadata);
         }
 
         public void SetTourneyNoMoneyDialogue(bool Status, string msg, string BtnTxt, bool isBuyBtn, bool isClosebtn,
-            Action OnBtnClick = null, int money = 0, string CurrKey = "", string _tID = "", Panels prev = Panels.None, string head = "")
+            Action OnBtnClick = null, int money = 0, string CurrKey = "", string _tID = "", Panels prev = Panels.None, string head = "", bool fromTourneyPanel = true, bool outOfAttempts = false)
         {
+
+            if (!fromTourneyPanel)
+            {
+                ShowPanel(Panels.DialoguePanel);
+            }
+
             if (TourneylistLoaded != null && TourneylistLoaded.gameObject.activeInHierarchy)
             {
-                TourneylistLoaded.SetNoMoneyDialogue(Status, msg, BtnTxt, isBuyBtn, isClosebtn, OnBtnClick, money, CurrKey, _tID, prev, head);
+                TourneylistLoaded.SetNoMoneyDialogue(Status, msg, BtnTxt, isBuyBtn, isClosebtn, OnBtnClick, money, CurrKey, _tID, prev, head, outOfAttempts);
             }
         }
         
@@ -278,16 +293,24 @@
 
         public String ThemePath(String basePrefab)
         {
-            string newPath = JamboxSDKParams.Instance.ActiveTheme + "/" ;
-            if (IsLandScape())
+            string newPath = "";
+            if (JamboxSDKParams.Instance.ActiveTheme == ThemeType.CustomTheme)
             {
-                newPath = newPath + "Landscape/" + basePrefab;
+                newPath = "JamboxArenaUI/" + basePrefab;
+                return newPath;
             }
-            else
-            {
-                newPath = newPath + "Portrait/" + basePrefab;
+            else {
+                if (IsLandScape())
+                {
+                    newPath = "Theme/Landscape/" + basePrefab;
+                    return newPath;
+                }
+                else
+                {
+                    newPath = "Theme/Portrait/" + basePrefab;
+                    return newPath;
+                }
             }
-            return newPath;
         }
 
         public void ShowPanel(Panels panelName, Panels prevPanel = Panels.None, Dictionary<string, string> metaData = null, bool checkUnclaimed = false, bool _friendlyCompleted = false)
@@ -302,6 +325,7 @@
             if (panelName == Panels.TourneyPanel || panelName == Panels.CompletedPanel ||
                 panelName == Panels.DuelPanel || panelName == Panels.FriendlyPanel)
             {
+                CheckFilesInResource();
                 resourcePath = ThemePath("TourneyPanel");
                 Debug.Log("resourcePath : " + resourcePath);
                 TourneylistLoaded = Instantiate(Resources.Load(resourcePath) as GameObject).GetComponent<TourneyPanel>();
@@ -369,7 +393,7 @@
             {
                 resourcePath = ThemePath("TourneyPanel");
                 TourneylistLoaded = Instantiate(Resources.Load(resourcePath) as GameObject).GetComponent<TourneyPanel>();
-                Debug.LogError("Inside ShowPanel  222 ParentPanel is null : " + (ParentPanel == null));
+                UnityDebug.Debug.LogInfo("Inside ShowPanel  222 ParentPanel is null : " + (ParentPanel == null));
                 TourneylistLoaded.RectTransform.SetParent(ParentPanel.GetComponent<RectTransform>(), false);
                 m_Viewport = TourneylistLoaded.GetComponent<RectTransform>();
                 SetPanelUI(m_Viewport);
@@ -426,6 +450,19 @@
             {
                 Destroy(MatchMakingLoaded.gameObject);
             }
+            if(DuelResultLoaded != null)
+            {
+                Destroy(DuelResultLoaded.gameObject);
+            }
         }
     }
+}
+
+public enum ActionRequiredFromUser
+{
+    AD_JOIN_TOURNEY,
+    AD_PLAY_TOURNEY,
+    AD_PLAY_DUEL,
+    PURCHASE_JOIN_TOURNEY,
+    NONE
 }

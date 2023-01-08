@@ -35,7 +35,8 @@
         {
             LoadingDialog(true);
             UpdateCurrency();
-            _ = CommunicationController.Instance.GetCompletedTourneyData("1", (data) => { CompletedTDataRcvd(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetCompletedTourneyData("1", (data) => { CompletedTDataRcvd(data); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         public void UpdateCurrency()
@@ -55,12 +56,12 @@
             if (isShow)
             {
                 //Show The loading Dialogue
-                UnityDebug.Debug.Log("Enabling Loading Dialogue Of TourneyPanel.");
+                UnityDebug.Debug.LogInfo("Enabling Loading Dialogue Of TourneyPanel.");
             }
             else
             {
                 //Hide The Loading Dialogue
-                UnityDebug.Debug.Log("Disabling Loading Dialogue Of TourneyPanel.");
+                UnityDebug.Debug.LogInfo("Disabling Loading Dialogue Of TourneyPanel.");
             }
         }
         public void ShowTourneyItem(Panels prevPanelDet)

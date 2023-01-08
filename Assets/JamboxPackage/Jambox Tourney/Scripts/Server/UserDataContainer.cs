@@ -134,10 +134,14 @@
         public string Description;
         public int CurrentPlayers;
         public int Category;
+        public bool JoinWithVideoAD;
         public bool PlayWithVideoAD;
+        public int SortOrder;  //0 - desc, 1 - asc
+        public int ScoringMode; // 1 ->  bestscore.  2 -> incremental , 3 - Latest
         //Adding this for Duels So that we don't have to save multiple data.
         public string LeaderBoardID;
         public Dictionary<string, string> metadata;
+
 
         public RewardList RewardList;
 
@@ -155,8 +159,11 @@
             Description = data_.Description;
             CurrentPlayers = data_.CurrentPlayers;
             Category = data_.Category;
+            SortOrder = data_.SortOrder;
+            ScoringMode = data_.ScoringMode;
+            JoinWithVideoAD = data_.EntryType.Equals("adv", StringComparison.CurrentCultureIgnoreCase);
             PlayWithVideoAD = data_.PlayWithAd;
-            //metadata = data_.MetaData;
+            
             if (!string.IsNullOrEmpty(data_.MetaData))
             {
                 metadata = Jambox.Common.TinyJson.JsonParser.FromJson<Dictionary<string, string>>(data_.MetaData);
@@ -293,7 +300,7 @@
                 if (bCurrencyFound)
                     displayString += kvp.Value.ToString();
                 else
-                    Debug.LogError("Currency key is not setup for the Game : " + kvp.Key);
+                    UnityDebug.Debug.LogError("Currency key is not setup for the Game : " + kvp.Key);
             }
             return displayString;
         }
@@ -324,7 +331,7 @@
                 userMoney.Remove(CurrencyKey);
                 userMoney.Add(CurrencyKey, money);
             }
-            UnityDebug.Debug.Log("Updated User Money :\nKey : " + CurrencyKey + "  Value : " + money);
+            UnityDebug.Debug.LogInfo("Updated User Money :\nKey : " + CurrencyKey + "  Value : " + money);
             ArenaSDKEvent.Instance.FireOnUpdateUserMoney(val, CurrencyKey, isIncrease);
         }
         public void setUserMoney(Dictionary<string, long> MoneyDet)

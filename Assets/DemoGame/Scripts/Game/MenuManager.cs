@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Jambox.Common.Utility;
+using Jambox.Leaderboard.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-
     public int coins = 0;
     public Text coinsText;
     public Transform coinsContainer;
@@ -143,6 +144,14 @@ public class MenuManager : MonoBehaviour
     {
         mainButtons.SetActive(false);
         shop.SetActive(true);
+    }
+
+    public void OnLeaderBoard()
+    {
+        MainMenuPanel.SetActive(false);
+        LeaderboardPanel lbPanel = Instantiate(Resources.Load("LeaderboardPanel") as GameObject, JamboxSDKParams.Instance.transform).GetComponent<LeaderboardPanel>();
+        lbPanel.RequestLeaderboardData(TourneyManager.GlobalLeaderboardID, showLastWeekResult: false);
+        lbPanel.SetActions(TourneyManager.Instance.OpenMainPanel);
     }
 
     public void CloseShop()

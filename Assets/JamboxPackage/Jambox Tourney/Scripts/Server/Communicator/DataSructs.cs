@@ -602,7 +602,13 @@ namespace Jambox.Tourney.Data
         /// </summary>
         int Category { get; }
 
+        string EntryType { get; }
+
         bool PlayWithAd { get; }
+
+        int SortOrder { get; }
+
+        int ScoringMode { get; }
 
         /// <summary>
         /// MetaData is the data send by client, it will be returned by server as it is.
@@ -668,8 +674,20 @@ namespace Jambox.Tourney.Data
         public int Category { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name = "entry_type"), Preserve]
+        public string EntryType { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name = "play_with_ads"), Preserve]
         public bool PlayWithAd { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name = "sort_order"), Preserve]
+        public int SortOrder { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name = "operator"), Preserve]
+        public int ScoringMode { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name = "metadata"), Preserve]
@@ -1246,6 +1264,11 @@ namespace Jambox.Tourney.Data
         int BestScore { get; }
 
         /// <summary>
+        /// Operator will have values if 1 ~ Best 2 ~ Incremental 3 ~ Set
+        /// </summary>
+        int Operator { get; }
+
+        /// <summary>
         /// Rank in this particular Tournament.
         /// </summary>
         int MyRank { get; }
@@ -1279,6 +1302,10 @@ namespace Jambox.Tourney.Data
         public int BestScore { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name = "operator"), Preserve]
+        public int Operator { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name = "rank"), Preserve]
         public int MyRank { get; set; }
 
@@ -1310,7 +1337,9 @@ namespace Jambox.Tourney.Data
 
         IApiRewardObject rewardList { get; }
 
-        int Rank { get; }      
+        int Rank { get; }
+
+        IAPIIntervalData replayData { get; }
     }
 
     internal class APIDuelResult : IAPIDuelResult
@@ -1325,7 +1354,12 @@ namespace Jambox.Tourney.Data
 
         [DataMember(Name = "rank"), Preserve]
         public int Rank { get; set; }
-        
+
+        // <inheritdoc />
+        [DataMember(Name = "replay_data"), Preserve]
+        public APIIntervalData _replayData { get; set; }
+        public IAPIIntervalData replayData => _replayData ?? new APIIntervalData();
+
         /*
         public override string ToString()
         {
@@ -1389,6 +1423,8 @@ namespace Jambox.Tourney.Data
     {
         IDictionary<string, string> GameData { get; }
 
+        bool TimeInMilliseconds { get; }
+
         IEnumerable<IAPIIntervalData> IntervalData { get; }
     }
 
@@ -1399,6 +1435,9 @@ namespace Jambox.Tourney.Data
         public IDictionary<string, string> GameData => _gameData ?? new Dictionary<string, string>();
         [DataMember(Name = "game_data"), Preserve]
         public Dictionary<string, string> _gameData { get; set; }
+
+        [DataMember(Name = "time_type"), Preserve]
+        public bool TimeInMilliseconds { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IAPIIntervalData> IntervalData => _intervalData ?? new List<APIIntervalData>(0);

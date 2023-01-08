@@ -46,7 +46,7 @@ public class MoneyText : MonoBehaviour
             }
             if (i == text.text.Length - 1)
             {
-                UnityDebug.Debug.Log("NO DIGIT");
+                UnityDebug.Debug.LogError("NO DIGIT");
                 return;
             }
         }
@@ -138,7 +138,7 @@ public class MoneyText : MonoBehaviour
         }
         else
         {
-            UnityDebug.Debug.Log("INVALID MONEY");
+            UnityDebug.Debug.LogError("INVALID MONEY");
         }
         previousValue = text.text;
     }

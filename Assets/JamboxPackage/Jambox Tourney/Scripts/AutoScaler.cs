@@ -15,9 +15,14 @@ public class AutoScaler : MonoBehaviour
     private float maxRatio;
     private float currentRatio;
 
+    public bool FitWithSafeArea = false;
+
     private void Start()
     {
-        currentRatio = (float)Screen.height / Screen.width;
+        if (FitWithSafeArea)
+            currentRatio = (float)Screen.safeArea.height / Screen.safeArea.width; 
+        else
+            currentRatio = (float)Screen.height / Screen.width;
         minRatio = minResolution.x / minResolution.y;
         maxRatio = maxResolution.x / maxResolution.y;
         SetRequiredScale();
@@ -40,6 +45,11 @@ public class AutoScaler : MonoBehaviour
 
         float heightDiffScale = (currentRatio - minRatio) / diffInRatio * diffInScale;
         float requiredScale = minScale + heightDiffScale;
+
+        if (requiredScale < minScale)
+            requiredScale = minScale;
+        else if (requiredScale > maxScale)
+            requiredScale = maxScale;
 
         transform.localScale = new Vector3(requiredScale, requiredScale, 1f);
 

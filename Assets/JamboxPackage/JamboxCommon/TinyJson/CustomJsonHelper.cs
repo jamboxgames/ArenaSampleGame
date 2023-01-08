@@ -23,7 +23,7 @@
 
         public static string ToJson<T>(T[] array, bool prettyPrint)
         {
-            Debug.Log("the Incoming Array size : " + array.Length);
+            UnityDebug.Debug.Log("the Incoming Array size : " + array.Length);
             Wrapper<T> wrapper = new Wrapper<T>();
             wrapper.Items = array;
             return JsonUtility.ToJson(wrapper, prettyPrint);

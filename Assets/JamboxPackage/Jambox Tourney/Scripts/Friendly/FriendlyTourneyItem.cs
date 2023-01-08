@@ -113,7 +113,8 @@
             {
                 //UIPanelController.Instance.SetTourneyScrollActive(false);
                 //_ = CommunicationController.Instance.PlayFriendlyTourney("", friendlyTourneyDet._tournament.Tourneyid, (data) => { PlayedSuccess(data); });
-                _ = CommunicationController.Instance.PlayTourney(friendlyTourneyDet._tournament.Tourneyid, "free", (data) => { PlayedSuccess(data); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+                _ = CommunicationController.Instance.PlayTourney(friendlyTourneyDet._tournament.Tourneyid, "free", (data) => { PlayedSuccess(data); },
+                    (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
 
                 UIPanelController.Instance.LoadingDialogue(true, false);
             }
@@ -142,7 +143,8 @@
             Dictionary<string, string> metadata = new Dictionary<string, string>();
             UIPanelController.Instance.ShowPanel(Panels.None, Panels.None, metadata);
             Match _matchData = new Match(friendlyTourneyDet._tournament.Tourneyid, data.LeaderBoardID,
-                friendlyTourneyDet._tournament.metadata, friendlyTourneyDet._tournament.Category, null, newleaderBoardList,
+                friendlyTourneyDet._tournament.metadata, friendlyTourneyDet._tournament.Category, friendlyTourneyDet._tournament.SortOrder,
+                friendlyTourneyDet._tournament.ScoringMode, null, newleaderBoardList,
                 CommonUserData.Instance.MyAvatarURL, CommonUserData.Instance.userName, userAvatarSprite: CommonUserData.Instance.avatarSprite);
             ArenaSDKEvent.Instance.FireOnPlayClick(Panels.FriendlyPanel, _matchData);
         }

@@ -34,11 +34,11 @@
             PlayerImageURL = dataNew.AvatarUrl;
         }
         //For Realtime leaderboard
-        public leaderBoardData(string _username,int _score)
+        public leaderBoardData(string _id, int _rank, string _username, int _score)
         {
             AttemptCount = 0;
-            PlayerId = null;
-            Rank = 0;
+            PlayerId = _id;
+            Rank = _rank;
             Score = _score;
             Username = _username;
         }
@@ -91,7 +91,14 @@
         {
             if (TabletDetect.IsTablet())
             {
-                this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                if (UIPanelController.Instance.IsLandScape())
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView(1.6f);
+                }
+                else
+                {
+                    this.gameObject.GetComponentInParent<CanvasScaleChange>().SetToTabletView();
+                }
             }
             else
             {
@@ -180,7 +187,8 @@
         {
             RealtimeLeaderboard.Instance.DisableRealtimeLbGameobject();
             LeaderboardRefreshing(true);
-            _ = CommunicationController.Instance.SubmitTournamentScore(LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.SubmitScore(LeaderBoardID, _Score, _displayScore, (data) => { ScoreSubmitted(data, prevPanel); },
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         public void OnBackbuttonClick()
@@ -217,7 +225,8 @@
             {
                 showConfetti = dataNew;
             }));
-            _ = CommunicationController.Instance.GetLeaderBoard(data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);}, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetLeaderBoard(data.LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);},
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
 
         public void RefreshLeaderBoard ()
@@ -225,9 +234,8 @@
             theList.RowCount = 0;
             LbLoadingPanel.gameObject.SetActive(true);
             LeaderboardRefreshing(true);
-            _ = CommunicationController.Instance.GetLeaderBoard(LeaderBoardID, (dataN) => {
-                OnLeaderBoardRcvd(dataN);
-            }, (errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorMsg); });
+            _ = CommunicationController.Instance.GetLeaderBoard(LeaderBoardID, (dataN) => { OnLeaderBoardRcvd(dataN);},
+                (errorCode, errorMsg) => { UIPanelController.Instance.ErrorFromServerRcvd(errorCode, errorMsg); });
         }
         private void OnLeaderBoardRcvd (IApiLeaderRecordList data)
         {
